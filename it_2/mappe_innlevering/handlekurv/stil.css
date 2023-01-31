@@ -1,0 +1,50 @@
+h1 {
+  display: flex;
+  justify-content: center;
+}
+
+#grid,
+#grid2 {
+  width: 50vh;
+  height: 50vh;
+  padding: 0px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+}
+
+#vare_kassalapp,
+#sum_kassalapp,
+button {
+  opacity: 1;
+  color: white;
+  background-color: #00adb5;
+  width: 300px;
+  height: 50px;
+  margin: 20px;
+  padding: 10px;
+}
+
+#bekreft {
+  background-color: green;
+}
+
+#handlekurv {
+  background-color: #eeeeee;
+  color: black;
+}
+
+#sum_kassalapp {
+  background-color: red;
+  border: 2px black solid;
+}
+
+#bekreft_kjøp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
+  background-color: #00adb5;
+  margin: 50px;
+}

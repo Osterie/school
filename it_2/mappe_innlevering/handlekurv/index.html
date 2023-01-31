@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+    <meta charset="utf-8" />
+    <title> Handlekurv </title>
+    <link rel="stylesheet" type="text/css" href="stil.css" />
+    <link rel="stylesheet" href="../style.css">
+
+    <script src="https://fulab.no/fulibs/fusionSDK.js"> </script>
+    <script src="https://fulab.no/skolemappe/faa-vgs/bibliotek/IT-2/teamtools.js"> </script>
+
+</head>
+
+<body>
+    <a href="../meny/index.html" id='back'>Back</a>
+
+    <h1> Handlenesstide </h1>
+
+    <div id="grid">
+
+        <p class="quadrants" id="varer"> Vare </p>
+        <p class="quadrants" id="antall"> Antall </p>
+        <p class="quadrants" id="pris_stk"> Pris/stk </p>
+        <p class="quadrants" id="total_sum"> Total </p>
+
+        <p class="quadrants" id="vare_melk"> Melk </p>
+        <input type="number" min="0" class="input_felter" id="melk">
+        <p class="quadrants" id="pris_melk"> 32 </p>
+        <p class="quadrants" id="sum_melk"> 0 </p>
+
+        <p class="quadrants" id="vare_egg"> Egg </p>
+        <input type="number" min="0" class="input_felter" id="egg">
+        <p class="quadrants" id="pris_egg"> 29 </p>
+        <p class="quadrants" id="sum_egg"> 0 </p>
+
+        <p class="quadrants" id="vare_brød"> Brød </p>
+        <input type="number" min="0" class="input_felter" id="brød">
+        <p class="quadrants" id="pris_brød"> 33 </p>
+        <p class="quadrants" id="sum_brød"> 0 </p>
+
+        <p class="quadrants" id="vare_ost"> Ost </p>
+        <input type="number" min="0" class="input_felter" id="ost">
+        <p class="quadrants" id="pris_ost"> 110 </p>
+        <p class="quadrants" id="sum_ost"> 0 </p>
+
+        <p class="quadrants" id="vare_troika"> Troika </p>
+        <input type="number" min="0" class="input_felter" id="troika">
+        <p class="quadrants" id="pris_troika"> 17 </p>
+        <p class="quadrants" id="sum_troika"> 0 </p>
+        <p class="quadrants" id="total_pris"> sum: </p>
+
+    </div>
+
+    <div id='handlekurv_side'>
+
+    </div>
+
+
+
+    <button id="handlekurv"> HANDLEKURV </button>
+
+    <script src="script.js"> </script>
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+
+		<meta charset="utf-8" />
+		<title>Grafisk fremstilling av temperaturer</title> 
+		<link   rel = "stylesheet" type="text/css" href="stil.css" />
+
+		<script src = "https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script> <!--For lagring av filer -->
+		<script src = "https://fulab.no/fulibs/fusionSDK.js" > </script> <!-- Python grensesnitt, tegnepakke osv -->
+		<script src = "https://fulab.no/skolemappe/faa-vgs/bibliotek/IT-2/teamtools.js" > </script>  <!--Eventuelt Fellesverktøy i faget --> 
+		<script src = "script.js"> </script> 	<!-- Programmets egendefinert kode -->
+	
+	</head>
+	
+	<body>	
+		<center>
+			<div>
+		<h1> Data om temperaturer i Norge </h1>
+		<h2> Sted: Norge, Tafjord - Stasjon: SN60500 - År: 2021 </h2>
+			</div>
+
+		<button 	id 	= "min_maks" 	> Maks og Min 				<br> Temperaturer </button> 
+		<button 	id 	= "gjennomsnitt"> Gjennomsnitt av Maks og Min 	<br> Temperaturer </button> 
+		<button 	id 	= "differanse"	> Differanse mellom Maks og Min 	<br> Temperaturer </button>  		
+		<button 	id 	= "søyle_maks"	> Søylediagram Maks 		<br> Temperaturer </button> 
+		<button 	id 	= "søyle_min"	> Søylediagram Min 			<br> Temperaturer </button> 
+		<button 	id 	= "viskut"		> Visk ut 					<br> canvas		  </button> 
+		<!-- <button 	id 	= "Bonus" 	    > Bonus						<br>  </button>  -->
+		
+		<br>
+		<canvas 	id 	= "canvas" width= "400px" height = "300px" > </canvas> <br>
+		
+		</center>
+
+
+		<!-- ---------------BONUS---------------------- -->
+		<canvas id="my-canvas" width="500" height="500" ></canvas>
+
+		<script src="bonus.js"></script>
+    </body>
+	
+</html>

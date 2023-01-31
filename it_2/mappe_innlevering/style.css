@@ -1,0 +1,40 @@
+body {
+  background-color: #222831;
+  color: #eeeeee;
+}
+
+a {
+  text-decoration: none;
+  background-color: #00adb5;
+  color: black;
+  margin: 4px;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 4px;
+}
+
+#back {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px;
+  margin: 5px;
+  top: 0px;
+  left: 0px;
+  width: 200px;
+  height: 75px;
+  font-size: 50px;
+  background-color: #00adb5;
+  text-decoration: "none";
+  color: #222831;
+  border: 3px solid black;
+}
+
+button {
+  margin: 4px;
+  padding: 8px;
+  background-color: #00adb5;
+  border: 1px solid black;
+  border-radius: 4px;
+}
