@@ -1,0 +1,163 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Project </title>
+
+    <link rel="stylesheet" href="./layout.css">
+    <link rel="stylesheet" href="./rps/style.css">
+    <link rel="stylesheet" href="./ttt/style.css">
+
+  </head>
+
+  <body>
+
+    <div id = "all_columns">
+      
+      <div class = "color_columns" id = column1>
+        
+        <h2> ROCK PAPER SCISSORS</h2>
+
+        <div class = "rps_column" id = "rps_left"> 
+
+            <div class = "hand">
+
+                <div class = "players">  Player </div>
+
+                <button class = "choice" id = 'rock'     onclick=" hand('rock')" >    <img src="./bilder/rps/rock.png" alt="Rock">         </button>
+                <button class = "choice" id = 'paper'    onclick=" hand('paper')">    <img src="./bilder/rps/paper.png" alt="Paper">       </button>
+                <button class = "choice" id = 'scissors' onclick=" hand('scissors')"> <img src="./bilder/rps/scissors.png" alt="Scissors"> </button>
+
+            </div>
+
+        </div>
+
+        
+        <div class = "rps_column" id = "rps_middle"> 
+
+          <a href="./rps"> FULLSCREEN </a>
+
+            <div id = "rps_score">
+
+                <h1 id = "rps_scoreboard">0:0</h1>
+
+            </div>
+
+            <div id = "rps_winner">
+
+                <h1 id="winner_text"> Press Play! </h1>
+            
+            </div>
+
+            <div id="PB">
+        
+              <button id = 'play' onclick= "play()" > Play! </button>
+            
+            </div>
+        
+        </div>
+        
+
+        <div class = "rps_column" id = "rps_right"> 
+
+            <div class = "hand">
+
+                <div class = "players"> Opponent </div>
+
+                <button class = "choice" id = 'rock_op'>   
+
+                    <img src="./bilder/rps/rock.png" alt="Rock">
+                    <span class="rps_streak"> </span>     
+
+                </button>
+
+                <button class = "choice" id = 'paper_op'>
+                
+                    <img src="./bilder/rps/paper.png" alt="Paper">          
+                    <span class="rps_streak"> </span>       
+                
+                </button>
+
+                <button class = "choice" id = 'scissors_op'> 
+                
+                    <img src="./bilder/rps/scissors.png" alt="Scissors">
+                    <span class="rps_streak"> </span>   
+                
+                </button>
+
+            </div>
+
+        </div>
+
+      </div>
+
+      <div class = "color_columns" id = column2>
+        
+        <h2>TIC TAC TOE</h2>
+
+        <button id ="ttt_gamemode1"> 1 PLAYER (WIP) </button>
+        <div id = "ttt_guider"> Gamemodes </div>
+        <button id ="ttt_gamemode2"> 2 PLAYERS</button>
+
+        <div id="ttt_player1"> PLAYER 1 SCORE</div>
+        <div id="ttt_player1_score"> 0 </div>
+
+        <a href="./ttt"> FULLSCREEN </a>
+
+        <div id = "ttt_board">
+                  
+            <button class = "ttt_quadrants" id = "ttt_q1">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q2">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q3">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q4">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q5">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q6">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q7">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q8">  </button>
+            <button class = "ttt_quadrants" id = "ttt_q9">  </button>
+
+        </div>
+
+        <div id="ttt_player2"> PLAYER 2 SCORE </div> 
+        <div id="ttt_player2_score"> 0 </div>
+
+      </div>  
+      
+      <div class = "color_columns" id = column3>
+        <h2> READ ME </h2>
+        
+        <div>
+
+          <h1> How to play rock paper scissors:</h1>
+
+          <ol>
+            <li> <h4> Choose one of the three images on the left side in the "ROCK PAPER SCISSORS" column. </h4></li>
+            <li> <h4> Click "PLAY"</h4></li>
+            <li> <h4>Hope for the best!</h4></li>
+          </ol>  
+
+          <h1> How to play tic tac toe</h1>
+
+          <ol>
+            <li> <h4> Player 1 chooses a quadrant in the tic tac toe grid to place their symbol in.  </h4></li>
+            <li> <h4> Player 2 does the same. </h4></li>
+            <li> <h4> Try to get three symbols in a row! Either vertical, horizontal or diagonal. </h4></li>
+          </ol> 
+
+        </div>
+
+        <a href="./more" id = "more"> MORE </a>
+
+      </div>
+      
+    </div>
+
+    <script src="./script.js"> </script>
+    <script src="./rps/script.js"></script>
+    <script src="./ttt/script.js"></script>
+
+  </body>
+</html>

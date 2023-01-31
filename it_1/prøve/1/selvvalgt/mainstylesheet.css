@@ -1,0 +1,45 @@
+body {
+    background-color: #F5D547;
+    font-family: Georgia, serif;
+  }
+  #hoved {
+    width: 50%;                  
+    margin: 50px auto;          
+    padding: 50px;                 
+    background-color: #DB3069;      
+    border: 3px solid black; 
+    text-align: center;
+    font-size: 50px;
+  }
+
+
+  .sub {
+    width: 50%;                  
+    margin: 50px auto;          
+    padding: 50px;                 
+    background-color: #1446A0;      
+    border: 5px solid black; 
+  }
+
+
+
+#sub1{
+  border: 5px dashed black;
+}
+
+#sub2 > p {
+  color: white;
+}
+
+h1, h2 {
+  font-weight: bold;
+  font-family: Arial, sans-serif; 
+  color:white
+}
+
+ul {
+  list-style-type: circle;
+  color: white;
+}
+
+

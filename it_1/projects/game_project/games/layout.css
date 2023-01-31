@@ -1,0 +1,83 @@
+html, body
+{
+  margin: 0%;
+  padding: 0%;
+  font-family: 'Roboto', sans-serif;
+  background-color:#F76C6C
+}
+
+html, body, #all_columns
+{
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Transition gives transitioning effect on style change. */
+* { transition: all 1s ease 0s; }
+
+#column1 { background-color: #24305E;}
+
+#column2 { background: #F0D43A; }
+
+#column3 { background:#F76C6C; }
+
+/* Makes all the columns flexboxes and hides content which overflows out of the body */
+#all_columns 
+{
+  display: flex;
+  overflow: hidden;  
+  align-items: stretch;
+}
+
+.color_columns 
+{
+  position: relative; 
+  flex: 1;
+  width: 33.33% ;
+  height: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 2vh 1vw;
+}
+
+/* Makes all column children invisible, which script.js changes when a column is hovered */
+.color_columns * { opacity: 0; }
+
+/* Places the texts which say "ROCK PAPER SCISSORS" and such.
+  Rotates the text so its sideways.  */
+.color_columns > h2 
+{
+  position: absolute;
+  z-index: 2;
+  width: 100%; 
+  min-width: 100vh; 
+  bottom: 2vh;
+  opacity: 1 !important;
+  
+  transform: rotate(90deg);
+  transform: rotate(-90deg);
+  transform-origin: 0 0 0;
+}
+
+
+#column3 *:not(h2) { text-align: left;}
+
+#column3 a
+{
+  display: flex;
+  height: 20%;
+  border: 3px solid #181818; 
+  border-radius: 10px;
+  background-color: aliceblue ;
+  color: #181818;
+  font-size: 3vw;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+#column3 a:hover 
+{
+  background-color: goldenrod;
+  color: black;
+}

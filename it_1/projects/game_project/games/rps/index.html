@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <title> RPS TESTING GROUNDS</title>
+
+    <link rel="stylesheet" href="style.css">
+
+
+
+</head>
+<body>
+
+    <div class = "color_columns" id = column1>
+
+
+        <div class = "rps_column" id = "rps_left"> 
+
+            <div class = "hand">
+
+                <div class = "players">  Player </div>
+
+                <button class = "choice" id = 'rock' onclick=" hand('rock')" >        <img src="../bilder/rps/rock.png" alt="Rock">         </button>
+
+                <button class = "choice" id = 'paper' onclick=" hand('paper')">       <img src="../bilder/rps/paper.png" alt="Paper">       </button>
+        
+                <button class = "choice" id = 'scissors' onclick=" hand('scissors')"> <img src="../bilder/rps/scissors.png" alt="Scissors"> </button>
+
+            </div>
+
+        </div>
+
+        
+        <div class = "rps_column" id = "rps_middle"> 
+
+            <a href="../index.html"> HOME </a>
+
+            <div id = "rps_score">
+
+                <h1 id = "rps_scoreboard">0:0</h1>
+
+            </div>
+
+
+            <div id = "rps_winner">
+
+                <h1 id="winner_text"> Press Play! </h1>
+            
+            </div>
+
+
+            <div id="PB">
+        
+              <button id = 'play' onclick= "play()" > Play! </button>
+            
+            </div>
+        
+        </div>
+        
+
+        <div class = "rps_column" id = "rps_right"> 
+
+            <div class = "hand">
+
+                <div class = "players"> Opponent </div>
+
+
+                <button class = "choice" id = 'rock_op'>   
+
+                    <img src="../bilder/rps/rock.png" alt="Rock">
+                    <span class="rps_streak"> </span>     
+
+                </button>
+
+
+                <button class = "choice" id = 'paper_op'>
+                
+                    <img src="../bilder/rps/paper.png" alt="Paper">          
+                    <span class="rps_streak"> </span>       
+                
+                </button>
+        
+
+                <button class = "choice" id = 'scissors_op'> 
+                
+                    <img src="../bilder/rps/scissors.png" alt="Scissors">
+                    <span class="rps_streak"> </span>   
+                
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>

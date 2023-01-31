@@ -1,0 +1,31 @@
+body, html
+{
+    background-color: #F76C6C;
+    padding: 0%;
+    margin: 0%;
+}
+
+#bildegalleri
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+}
+
+img
+{
+    border: 3px solid black;
+    background-color:aqua;
+}
+
+a 
+{
+    display: flex;
+    justify-content: center;
+    background-color: #24305E;
+    color: #F0D43A;
+    padding: 20px;
+    font-size: 30px;
+    font-weight: bold;
+}
