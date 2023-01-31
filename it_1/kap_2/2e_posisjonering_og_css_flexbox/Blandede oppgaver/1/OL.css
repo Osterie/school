@@ -1,0 +1,74 @@
+#area{
+    width: 500px;
+    height: 500px;
+    background-color: white;
+    border: none;
+    margin: auto;
+    position: relative;
+}
+
+div{
+
+    background-color: none;
+    border: 6px solid blue;
+    border-radius: 100px;
+    width: 115px;
+    height: 115px;
+
+}
+
+#gul{
+
+    position: absolute;
+
+    left: 185px;
+    top: 210px;
+    border: 6px solid #F4C300;
+
+}
+
+#blå{
+
+    position: absolute;
+
+    left: 120px;
+    top: 150px;
+    border: 6px solid #0085C7;
+
+
+}
+
+#svart{
+
+    position: absolute;
+    
+    left: 250px;
+    top: 150px;
+    border: 6px solid #000000;
+
+
+}
+
+#rød{
+
+    position: absolute;
+    
+    left: 380px;
+    top: 150px;
+    border: 6px solid #DF0024;
+
+
+}
+
+
+
+#grønn{
+
+    position: absolute;
+
+    left: 315px;
+    top: 210px;
+    border: 6px solid #009F3D;
+
+
+}

@@ -1,0 +1,22 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Arial, sans-serif; 
+  }
+  #hoved {
+    position: relative;
+    width: 60%;                  
+    margin: 50px auto;          
+    padding: 40px;	          
+    left: 100px;   
+    background-color: white; 	 
+    border: 1px solid #cccccc; 
+  }
+  #posisjonert {
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    position: absolute;
+    left: 100px;
+    top: 0px;
+    background-color: #B13E20;
+  }

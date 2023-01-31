@@ -1,0 +1,76 @@
+table {
+    border-collapse: collapse;
+    border-bottom: 2px solid #3f4259;
+  }
+
+th, td {
+    border: 2px solid black;
+    padding: 8px;
+  }
+
+thead > tr {
+    background-color: #3f4259;
+    color: #f6f7fa;
+  }
+
+tbody > tr:nth-child(odd) {
+    background-color: #f6f7fa;
+  } 
+  
+ body {
+    background-color: #f5f5f5; 
+    font-family: Georgia, serif; 
+  }
+
+#hoved {         
+    margin: 20px;         
+    padding: 20px;	             
+    background-color: white; 	 
+    border: 1px solid #cccccc;
+  }
+
+h1 {
+    font-family: Arial, sans-serif; 
+  }
+
+
+#matte{
+  background-color: red;
+}
+
+#norsk{
+  background-color: blue;
+}
+
+#kroppsøving{
+  background-color: blueviolet;
+}
+
+#it2{
+  background-color: green;
+}
+
+#it1{
+  background-color: gold;
+}
+
+#krle{
+  background-color: greenyellow;
+}
+
+#fri{
+  background-color: palevioletred;
+}
+
+#historie{
+  background-color: teal;
+}
+
+#fagdag{
+  background-color: tomato;
+}
+
+#k-time{
+  background-color: orangered;
+}
+

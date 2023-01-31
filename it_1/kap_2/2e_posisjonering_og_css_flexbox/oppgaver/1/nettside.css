@@ -1,0 +1,15 @@
+/* #øverst{
+
+} */
+
+div {
+    border: 3px solid #cccccc;
+    margin: 50px;
+}
+
+#øverst{
+    background-color: #c3c3f3;
+    text-align: center;
+    position: sticky;
+    top: 20px;
+}

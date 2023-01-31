@@ -1,0 +1,54 @@
+body{
+
+    background-color: #425F57;
+
+}
+
+div{
+    margin: auto;
+    
+}
+
+#top_bar{
+    background-color: #A8E890;
+    border: 3px solid #749F82;
+    border-radius: 5px;
+    text-align: center;
+}
+
+
+#columns{
+    
+    
+
+    display: flex;
+}
+
+#column{
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+
+
+#column:nth-child(1){
+    position: relative;
+    background-color: red;
+    width: 310px;
+    border: 3px solid wheat;
+    
+}
+
+#column:nth-child(2){
+    position: relative;
+    background-color: blue;
+    border: 3px solid wheat;
+    width: 259px;
+}
+
+#column:nth-child(3){
+    position: relative;
+    background-color: yellow;
+    border: 3px solid wheat;
+    width: 300px;
+}

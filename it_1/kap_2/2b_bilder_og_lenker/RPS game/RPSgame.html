@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Document</title>
+
+    <style> 
+    
+    #PB{
+
+        width: 220px;
+        height: 210px;
+        background-color: blue;
+
+        padding: 20px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+
+        
+        border: 3px solid green;
+
+
+    }
+
+    #play{
+        align-items: center;
+        width: 200px;
+        height: 200px;
+        
+    }
+
+    #stein{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+    #saks{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+
+    #papir{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+    #stein_opp{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+    #saks_opp{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+
+    #papir_opp{
+        padding: 20px;
+        background-color: white;
+    }
+
+
+    #winner{
+        visibility:visible;
+    }
+
+
+
+    </style>
+
+
+
+    <script>
+        var player
+        function cool(){
+            
+            var opponent_num = (Math.floor (Math.random() * 3));
+            var opponent 
+
+            const stein_opp = document.getElementById('stein_opp');
+
+            const saks_opp = document.getElementById('saks_opp');
+
+            const papir_opp = document.getElementById('papir_opp');
+
+            horse = ssp()
+            
+
+            if (opponent_num == 0){
+
+                opponent = 'stein'
+                stein_opp.style.backgroundColor = 'red';
+                saks_opp.style.backgroundColor = 'white';
+                papir_opp.style.backgroundColor = 'white';
+            }
+
+            else if (opponent_num == 1){
+
+                opponent = 'saks'
+                stein_opp.style.backgroundColor = 'white';
+                saks_opp.style.backgroundColor = 'red';
+                papir_opp.style.backgroundColor = 'white';
+            }
+
+            else if (opponent_num == 2){
+
+                opponent = 'papir'
+                stein_opp.style.backgroundColor = 'white';
+                saks_opp.style.backgroundColor = 'white';
+                papir_opp.style.backgroundColor = 'red';
+            }
+
+
+            if (player == 'stein')
+                var player_num = 0
+            
+            else if (player == 'saks')
+                var player_num = 1
+            
+            else if (player == 'papir')
+                var player_num = 2
+
+            
+
+            if (player_num == opponent_num+1 || player_num == opponent_num-2 ){
+
+                winner_text.innerHTML = 'You lose!'      //'Player lost ' +  'Player ' + player + ' Opponent: ' + opponent
+            }
+
+            
+
+            else if (player_num == opponent_num){
+      
+                winner_text.innerHTML = 'Draw!'            //'draw ' +  'Player ' + player + ' Opponent: ' + opponent
+            }
+
+
+            else {
+           
+                winner_text.innerHTML = 'You Win!'                 //'Player won ' +  'Player ' + player + ' Opponent: ' + opponent
+                
+     
+            }
+
+            
+
+        }
+
+        function ssp(button_name){
+
+            
+            if (button_name == undefined){
+                
+                return player
+            }
+
+            else{
+                player = button_name
+            }
+            
+        }
+
+    </script>
+
+</head>
+<body>
+    <div>
+
+    <h1> Player </h1>
+
+    <div id = 'player_hand'> 
+
+        <button id = 'stein' onclick=" ssp('stein')" >
+
+            Stein
+
+        </button>
+
+        <button id = 'saks' onclick=" ssp('saks')">
+
+            Saks
+
+        </button>
+
+        <button id = 'papir' onclick=" ssp('papir')">
+
+            Papir
+
+        </button>
+
+    </div>
+
+    <h1> Opponent </h1>
+
+
+
+    <script src="player.js"></script>
+
+   
+    
+    <div>
+
+        <button id = 'stein_opp'> Stein </button>
+
+        <button id = 'saks_opp'> Saks </button>
+
+        <button id = 'papir_opp'> Papir </button>
+
+
+    </div>
+
+
+    <h1>Winner:</h1>
+
+    <p1 id="winner_text">  </p1>
+
+    <div id="PB">
+
+        <button id = 'play' onclick= "cool()" > Play! </button>
+
+    </div>
+
+    <script src="play.js"></script>
+
+    
+</div>
+</body>
+</html>

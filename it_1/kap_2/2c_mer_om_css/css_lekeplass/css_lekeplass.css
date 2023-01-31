@@ -1,0 +1,66 @@
+html, body {
+    height: 180%;
+  }
+
+body {
+font-family: Georgia, serif;
+
+
+
+/* background: linear-gradient(
+    90deg,
+    rgba(2,0,36,1) 0%,
+    rgba(9,9,121,1) 35%, 
+    rgba(0,212,255,1) 100%);
+} */
+
+
+background: linear-gradient(90deg, #3F2B96 0%, #A8C0FF 100%);
+}
+
+div:first-child{
+    
+    position: relative;
+
+    border: 2px solid black;
+
+
+    margin: 0px;
+    font-size: 40px;
+
+    background-color: red;
+
+    text-align: center;
+    padding: 0px;
+}
+
+
+img {
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+p {
+    background-color:cornsilk;
+    border: 1px solid black;
+}
+
+div{
+    background-color: gainsboro;
+    border: 10px solid gray
+}
+
+.sitat{
+    border: 2px solid red;
+}
+  /* h1, h2 {
+    font-family: Arial, sans-serif;
+  }
+  div {
+    width: 60%;
+    margin: 100px auto;          
+    padding: 40px;	
+    border: 1px solid #cccccc;
+    margin: 20px auto;
+    background-color: rgba(255, 255, 255, 0.8);
+  }  */

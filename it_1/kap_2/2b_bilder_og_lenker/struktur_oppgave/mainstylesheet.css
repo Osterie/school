@@ -1,0 +1,23 @@
+body {
+    background-color: #F5D547;
+    font-family: Georgia, serif;
+  }
+  #hoved {
+    width: 50%;                  
+    margin: 50px auto;          
+    padding: 50px;                 
+    background-color: #DB3069;      
+    border: 3px solid black; 
+  }
+
+  #sub {
+    width: 50%;                  
+    margin: 50px auto;          
+    padding: 50px;                 
+    background-color: #1446A0;      
+    border: 5px solid black; 
+  }
+
+  h1, h2 {
+    font-family: Arial, sans-serif; 
+  }
