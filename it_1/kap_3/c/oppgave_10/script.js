@@ -2,20 +2,19 @@ const input_field = document.getElementById('input')
 const button = document.getElementById('button')
 const output = document.getElementById('output')
 
-input_field.addEventListener('change', () =>> {    
-    input_handler(input_field)
-})
-
-button.addEventListener('click', () =>>{
+button.addEventListener('click', () =>{
     button_handler(input_field)
 })
 
-function input_handler(input){
-
-    const input_verdi = input.value
-    output.innerHTML = 'output'
-}
-
 function button_handler(input) {
-    //do stuff
+    const input_verdi = input.value
+
+    if(!input_verdi.includes("?")){
+        output.innerHTML = 'du må stille et spørsmål'
+        return
+    }
+
+    const respons = ["Ja, garantert", "Skjer ikke", "Ikke regn med det", "Spør senere", "Tviler på det", "Prøv igjen"]
+    random_num = Math.floor(Math.random()*6)
+    output.innerHTML = respons[random_num]
 }

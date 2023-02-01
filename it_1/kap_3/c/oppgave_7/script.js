@@ -1,21 +1,10 @@
-const input_field = document.getElementById('input')
 const button = document.getElementById('button')
-const output = document.getElementById('output')
-
-input_field.addEventListener('change', () => {    
-    input_handler(input_field)
-})
 
 button.addEventListener('click', () =>{
-    button_handler(input_field)
+    button_handler()
 })
 
-function input_handler(input){
-
-    const input_verdi = input.value
-    output.innerHTML = 'output'
-}
-
-function button_handler(input) {
-    //do stuff
+function button_handler() {
+    random_num = Math.floor(Math.random()*7)
+    output.innerHTML = 'terningen sier:' +random_num
 }
