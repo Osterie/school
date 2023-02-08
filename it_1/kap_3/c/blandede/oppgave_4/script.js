@@ -19,21 +19,15 @@ function button_handler(spiller_tall, antall_spill) {
         if (spiller_tall == tilfeldig_tall){
             output.innerHTML += 'DU VANT! MED TALL:'
         }
-        output.innerHTML += tilfeldig_tall + '\n\n\n\n'
-        
+        output.innerHTML += tilfeldig_tall + '\n'
     }
-    // output.innerHTML = tilfeldig_tall
-    //do stuff
 }
 
 //b
-
 const trekk_vokal = document.getElementById('trekk_vokal')
 const trekk_konsonant = document.getElementById('trekk_konsonant')
 const fjern_ord = document.getElementById('fjern_ord')
 const output_random_ord = document.getElementById('output_random_ord')
-
-
 
 fjern_ord.addEventListener('click', () =>{
     output_random_ord.innerHTML = ''

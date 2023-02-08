@@ -21,7 +21,6 @@ while (b_while <= 80) {
 
 
 //c
-
 let c_while = 0
 
 while (c_while < 100) {

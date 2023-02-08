@@ -21,7 +21,6 @@ function størst_tall_3(tall1, tall2, tall3) {
     if (tall3 > max){
         max = tall3
     }
-
     return max
 }
 
