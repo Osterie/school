@@ -1,94 +1,131 @@
-class Ball {
-  constructor(xpos, ypos, deltax, deltay, xdir, farge) {
+class Moving_square {
+  constructor(ctx, xpos, deltax, xdir, ypos, deltay, ydir, hue, square_size) {
+    this.ctx = ctx;
+
     this.xpos = xpos;
+    this.deltax = deltax
+    this.xdir = xdir
+
     this.ypos = ypos;
-
-    this.deltax = deltax;
-    this.deltay = deltay;
-
-    this.xdir = xdir;
-    this.ydir = 1;
-
-    this.farge = farge;
+    this.deltay = deltay
+    this.ydir = ydir
+    
+    this.hue = hue;
+    this.square_size = square_size;
   }
 
-  tegn() {
-    //Ball hits lef/right bound
-    if (this.xpos >= 55 || this.xpos <= -60) {
-      this.xdir *= -1;
-    }
-
-    //Ball hits top
-    if (this.ypos >= 120) {
-      this.ydir *= -1;
-    }
-
-    //If ball hits paddle (-5 and +5 are because of ball width)
-    if (
-      this.xpos >= player_x - 5 &&
-      this.xpos <= player_x + paddle_width + 5 &&
-      this.ypos <= -70 &&
-      this.ypos >= -75
-    ) {
-
-      //List of possible colors for balls
-      var colors = ["red", "green", "blue", "yellow", "white", "orange", "pink", "purple",];
-
-      //Random number with and between 0 to 7, serves as index for the above declared colors array
-      var rand_color = Math.round(Math.random() * 7);
-
-      // Random delta x and y, from ca. 0.2 to 2.2
-      var rand_x = Math.random() * 2 + 0.2;
-      var rand_y = Math.random() * 2 + 0.2;
-
-      //Random direction is chosen as 1(right moving)
-      var rand_dir_x = 1;
-      // ca. 50/50 chance for rand_dir_x to change to -1(left moving)
-      if (Math.random() <= 0.5) {
-        rand_dir_x = -1;
-      }
-
-      //Amount of balls increases,
-      ball_count += 1;
-      //Since amount of balls increases, new array item can get created
-      balls[ball_count] = new Ball(
-        0,
-        120,
-        rand_x,
-        rand_y,
-        rand_dir_x,
-        colors[rand_color]
-      );
-
-      //Ball changes direction (upwards) and this.ypos changes to ensure consistency
-      this.ydir = 1;
-      this.ypos = -70;
-      score += 1;
-      score_el.innerHTML = score;
-    }
-
-    if (this.ypos <= -90) {
-      stopAnim();
-      tegnBrukBakgrunn("white");
-      paddle_width = 0;
-      tegnTekst(
-        "GAME OVER",
-        -45,
-        70,
-        "black",
-        0,
-        "left",
-        40,
-        "Roboto",
-        "bottom"
-      );
-    }
-
-    this.xpos += this.deltax * this.xdir;
-    this.ypos += this.deltay * this.ydir;
-    tegnFyltRektangel(this.xpos, this.ypos, 5, 5, this.farge);
+  draw() {
+    this.color = `hsl( ${this.hue}, ${75}%, ${50}%)`;
+    this.ctx.fillStyle = this.color;
+    this.ctx.fillRect(this.xpos, this.ypos, this.square_size, this.square_size);
+  }
+  change_xdir(){
+    this.xdir *= -1
+  }
+  change_ydir(){
+    this.ydir *= -1
   }
 }
+
+
+
+// class Ball {
+//   constructor(xpos, ypos, deltax, deltay, xdir, farge) {
+//     this.xpos = xpos;
+//     this.ypos = ypos;
+
+//     this.deltax = deltax;
+//     this.deltay = deltay;
+
+//     this.xdir = xdir;
+//     this.ydir = 1;
+
+//     this.farge = farge;
+//   }
+
+//   tegn() {
+//     //Ball hits lef/right bound
+//     if (this.xpos >= 55 || this.xpos <= -60) {
+//       this.xdir *= -1;
+//     }
+
+//     //Ball hits top
+//     if (this.ypos >= 120) {
+//       this.ydir *= -1;
+//     }
+
+//     //If ball hits paddle (-5 and +5 are because of ball width)
+//     if (
+//       this.xpos >= player_x - 5 &&
+//       this.xpos <= player_x + paddle_width + 5 &&
+//       this.ypos <= -70 &&
+//       this.ypos >= -75
+//     ) {
+
+//       //List of possible colors for balls
+//       var colors = ["red", "green", "blue", "yellow", "white", "orange", "pink", "purple",];
+
+//       //Random number with and between 0 to 7, serves as index for the above declared colors array
+//       var rand_color = Math.round(Math.random() * 7);
+
+//       // Random delta x and y, from ca. 0.2 to 2.2
+//       var rand_x = Math.random() * 2 + 0.2;
+//       var rand_y = Math.random() * 2 + 0.2;
+
+//       //Random direction is chosen as 1(right moving)
+//       var rand_dir_x = 1;
+//       // ca. 50/50 chance for rand_dir_x to change to -1(left moving)
+//       if (Math.random() <= 0.5) {
+//         rand_dir_x = -1;
+//       }
+
+//       //Amount of balls increases,
+//       ball_count += 1;
+//       //Since amount of balls increases, new array item can get created
+//       balls[ball_count] = new Ball(
+//         0,
+//         120,
+//         rand_x,
+//         rand_y,
+//         rand_dir_x,
+//         colors[rand_color]
+//       );
+
+//       //Ball changes direction (upwards) and this.ypos changes to ensure consistency
+//       this.ydir = 1;
+//       this.ypos = -70;
+//       score += 1;
+//       score_el.innerHTML = score;
+//     }
+
+//     if (this.ypos <= -90) {
+//       stopAnim();
+//       tegnBrukBakgrunn("white");
+//       paddle_width = 0;
+//       tegnTekst(
+//         "GAME OVER",
+//         -45,
+//         70,
+//         "black",
+//         0,
+//         "left",
+//         40,
+//         "Roboto",
+//         "bottom"
+//       );
+//     }
+
+//     this.xpos += this.deltax * this.xdir;
+//     this.ypos += this.deltay * this.ydir;
+//     tegnFyltRektangel(this.xpos, this.ypos, 5, 5, this.farge);
+//   }
+//   change_x_dir(){
+//     this.xdir *= -1
+//   }
+//   change_y_dir(){
+//     this.ydir *= -1
+//   }
+// }
 
 class Paddle{
   
@@ -165,8 +202,9 @@ var score_el = document.getElementById("score");
 function spill() {
   tegnBrukBakgrunn("black");
   tegnFyltRektangel(player_x, -73, paddle_width, 3, "blue");
-  for (let i = 0; i < balls.length; i++) {
-    balls[i].tegn();
+
+  for (let i = 0; i < squares_amount; i++) {
+    moving_squares_array[i].draw()
   }
 }
 
@@ -184,6 +222,9 @@ function winInit() {
   tegnBrukCanvas("canvas"); // Kobler canvas i html sammen med tegnepakka. Viktig ved lokal koding
 
   const paddle = new Paddle(paddle_x, paddle_width, paddle_speed)
+  const moving_squares_array = []
+  new Moving_square(ctx, 0, 10, 1, 0, 10, 1, 100, 5)
+  
 
   document.addEventListener("keydown", function(event){
     paddle.key_pressed(event)
@@ -191,4 +232,85 @@ function winInit() {
   document.addEventListener("keyup", function(event){
     paddle.key_pressed(event)
   })
+}
+
+
+function check_collision(){
+
+}
+function check_ball_position(ball_x, ball_y, paddle_width, paddle_start_x){
+      //Ball hits lef/right bound
+      if (ball_x >= 55 || ball_x <= -60) {
+        this.xdir *= -1;
+      }
+  
+      //Ball hits top
+      if (this.ypos >= 120) {
+        this.ydir *= -1;
+      }
+  
+      //If ball hits paddle (-5 and +5 are because of ball width)
+      if (
+        ball_x >= player_x - 5 &&
+        ball_x <= player_x + paddle_width + 5 &&
+        this.ypos <= -70 &&
+        this.ypos >= -75
+      ) {
+  
+        //List of possible colors for balls
+        var colors = ["red", "green", "blue", "yellow", "white", "orange", "pink", "purple",];
+  
+        //Random number with and between 0 to 7, serves as index for the above declared colors array
+        var rand_color = Math.round(Math.random() * 7);
+  
+        // Random delta x and y, from ca. 0.2 to 2.2
+        var rand_x = Math.random() * 2 + 0.2;
+        var rand_y = Math.random() * 2 + 0.2;
+  
+        //Random direction is chosen as 1(right moving)
+        var rand_dir_x = 1;
+        // ca. 50/50 chance for rand_dir_x to change to -1(left moving)
+        if (Math.random() <= 0.5) {
+          rand_dir_x = -1;
+        }
+  
+        //Amount of balls increases,
+        ball_count += 1;
+        //Since amount of balls increases, new array item can get created
+        balls[ball_count] = new Ball(
+          0,
+          120,
+          rand_x,
+          rand_y,
+          rand_dir_x,
+          colors[rand_color]
+        );
+  
+        //Ball changes direction (upwards) and this.ypos changes to ensure consistency
+        this.ydir = 1;
+        this.ypos = -70;
+        score += 1;
+        score_el.innerHTML = score;
+      }
+  
+      if (this.ypos <= -90) {
+        stopAnim();
+        tegnBrukBakgrunn("white");
+        paddle_width = 0;
+        tegnTekst(
+          "GAME OVER",
+          -45,
+          70,
+          "black",
+          0,
+          "left",
+          40,
+          "Roboto",
+          "bottom"
+        );
+      }
+  
+      ball_x += this.deltax * this.xdir;
+      this.ypos += this.deltay * this.ydir;
+      tegnFyltRektangel(ball_x, this.ypos, 5, 5, this.farge);
 }
