@@ -1,246 +1,185 @@
-class Moving_rectangle {
-  constructor(ctx, xpos, width, deltax, xdir, ypos, heigth, deltay, ydir, hue) {
-    this.ctx = ctx;
-
+class Rectangle {
+  constructor(ctx, xpos, width, ypos, heigth, hue) {
     this.xpos = xpos;
-    this.width = width;
-    this.deltax = deltax
-    this.xdir = xdir
-    
+    this.width = width
     this.ypos = ypos;
-    this.heigth = heigth;
-    this.deltay = deltay
-    this.ydir = ydir
-    
+    this.heigth = heigth
     this.hue = hue;
+    this.ctx = ctx;
+    this.x_change = 0
+    this.x_dir = 0
+    this.y_change = 0
+    this.y_dir = 0
+    this.moving(1, 1, 10, 1);
+
   }
 
-  move_square() {
-    this.xpos += this.deltax * this.xdir
-    this.ypos += this.deltay * this.ydir
- 
+  draw() {
+    this.xpos += this.x_change * this.x_dir
+    this.ypos += this.y_change * this.y_dir
     this.color = `hsl( ${this.hue}, ${75}%, ${50}%)`;
     this.ctx.fillStyle = this.color;
     this.ctx.fillRect(this.xpos, this.ypos, this.width, this.heigth);
   }
-  change_xdir(){
-    this.xdir *= -1
-  }
-  change_ydir(){
-    this.ydir *= -1
+
+  moving(x_change, x_dir, y_change, y_dir){
+    this.x_change = x_change
+    this.x_dir = x_dir
+    this.y_change = y_change
+    this.y_dir = y_dir
+
+    //more general if this is not here?
+    this.draw()
   }
 
-  stop(){
-    this.deltax = 0
-    this.deltay = 0
+  change_x_dir(){
+    this.x_dir *= -1
   }
-}
-
-class Paddle{
-  
-  constructor(paddle_x, paddle_width, paddle_speed){
-    this.paddle_x = paddle_x
-    this.paddle_width = paddle_width
-    this.paddle_speed = paddle_speed
-
-    this.move_paddle_left
-    this.move_paddle_right
-
-    this.moving = false
-
+  change_y_dir(){
+    this.y_dir *= -1
   }
-  key_pressed(event) {
-    if (event.keyCode === 37) {
-      if (event.type == "keydown" && this.moving == false) {
-        this.moving = true;
-        this.move_paddle_left = setInterval(pad_left, 1000 / this.paddle_speed);
-      }
-  
-      if (event.type == "keyup") {
-        this.moving = false;
-        clearInterval(this.move_paddle_left);
-      }
-    }
-  
-    if (event.keyCode === 39) {
-      if (event.type == "keydown" && this.moving == false) {
-        this.moving = true;
-        this.move_paddle_right = setInterval(pad_right, 1000 / this.paddle_speed);
-      }
-  
-      if (event.type == "keyup") {
-        this.moving = false;
-        clearInterval(this.move_paddle_right);
-      }
-    }
-    this.ctx.fillRect(this.xpos, this.ypos, this.square_size, this.square_size);
 
-    tegnFyltRektangel(this.paddle_x, -73, this.paddle_width, 3, "blue");
-  }
-  
-  pad_left() {
-    if (this.paddle_x >= -60) {
-      this.paddle_x -= 3;
-    }
-  }
-  
-  pad_right() {
-    if (this.paddle_x <= 60 - this.paddle_width) {
-      this.paddle_x += 3;
-    }
+  get_rectangle(){
+    const xpos = this.xpos
+    const ypos = this.ypos
+    const width = this.width
+    const heigth = this.heigth
+    return {xpos, ypos, width, heigth}
   }
 }
 
+var canvas, ctx;
+window.onload = winInit;
+canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
+ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
+
+
+
+
+var ball_count = 0; //Dont change me...
+
+var balls = [new Rectangle(ctx, 5, 10, 6, 11, 255)];
+
+const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, 255)
 
 var runspeed = 50; //Changeable
-var animId = setInterval(spill, 1000 / runspeed);
 
 var paddle_x = -10; //Dont change me...
 var paddle_width = 50; //Change me! (try >= 120!)
 
-tegnBrukXY(-50, 50, -100, 100);
 
 var leftId;
 var rightId;
 var moving = false;
 var paddle_speed = 50;
 var score = 0;
-
-const square_size = 20
-
 var score_el = document.getElementById("score");
 
+
+
+function winInit() {
+  canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
+  ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
+
+  var animId = setInterval(spill, 1000 / runspeed);
+  document.onkeydown = key_pressed;
+  document.onkeyup = key_pressed;
+
+}
+
+//Creates balls, draws background and calls player function
 function spill() {
-  tegnBrukBakgrunn("black");
-  tegnFyltRektangel(paddle_x, -73, paddle_width, 3, "blue");
 
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = 0; i < moving_squares_array.length; i++) {
-    moving_squares_array[i].move_square()
-    const paddle_x_lower = paddle.paddle_x
-    const paddle_x_upper = paddle.paddle_x + paddle.paddle_width
-    const ball_x_lower = moving_squares_array[i].xpos
-    const ball_x_upper = moving_squares_array[i].xpos + moving_squares_array[i].square_size
-    console.log({ball_x_lower}, {ball_x_upper}, {paddle_x_lower}, {paddle_x_upper})
-    if (collides_axis(ball_x_lower, ball_x_upper, paddle_x_lower, paddle_x_upper)){
-      // moving_squares_array.push(new Moving_rectangle(ctx, 0, 10, 1, 0, 10, 1, 100, square_size))
-      moving_squares_array[i].xdir *= -1
+  const x_change = 1
+  const x_dir = 1
+  const y_change = 1
+  const y_dir = 1
+
+  paddle.draw()
+  paddle.moving(0, 0, 0, 0)
+  paddle_position = paddle.get_rectangle()
+
+  paddle_y1 = paddle_position.ypos
+  paddle_y2 = paddle_position.ypos + paddle_position.height
+
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].draw();
+    ball_position = balls[i].get_rectangle()
+
+    const ball_x1 = ball_position.xpos
+    const ball_x2 = ball_position.xpos + ball_position.width
+
+    const ball_y1 = ball_position.ypos
+    const ball_y2 = ball_position.ypos + ball_position.heigth
+
+    if( a_collides_b_axis(ball_x1, ball_x2, 0, canvas.width)){
+      balls[i].change_x_dir();
+      balls.push(new Rectangle(ctx, 5, 10, 6, 11, 255))
+    }
+
+    if( a_collides_b_axis(ball_y1, ball_y2, 0, canvas.height)){
+      balls[i].change_y_dir();
+      balls.push(new Rectangle(ctx, 5, 10, 6, 11, 255))
+    }
+    if( a_collides_b_axis(ball_y1, ball_y2, paddle_y1, paddle_y2)){
+      balls[i].change_y_dir();
+      balls.push(new Rectangle(ctx, 5, 10, 6, 11, 255))
     }
   }
 }
 
+function a_collides_b_axis(object_1_lower, object_1_upper, object_2_lower, object_2_upper){
 
-function stopAnim() {
-  clearInterval(animId);
-}
-var canvas, ctx;
-canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
-ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
-
-const paddle = new Paddle(paddle_x, paddle_width, paddle_speed)
-const moving_squares_array = []
-moving_squares_array.push(new Moving_rectangle(ctx, 0, 10, 1, 0, 10, 1, 100, square_size))
-
-window.onload = winInit;
-
-function winInit() {
-  tegnBrukCanvas("canvas"); // Kobler canvas i html sammen med tegnepakka. Viktig ved lokal koding
-
-  
-
-
-  document.addEventListener("keydown", function(event){
-    paddle.key_pressed(event)
-  })
-  document.addEventListener("keyup", function(event){
-    paddle.key_pressed(event)
-  })
-}
-
-//checks if object1 collides with wall of object2
-//x1 left, x2 right
-//y1 up, y2 down
-function collides_axis(object_1_coordinate_lower, object_1_coordinate_upper, object_2_coordinate_lower, object_2_coordinate_upper){
-
-  if (object_1_coordinate_lower <= object_2_coordinate_lower && object_1_coordinate_upper >= object_2_coordinate_upper) {
+  if (object_1_lower <= object_2_lower && object_2_lower <= object_1_upper){
     return true
   }
+  else if (object_1_lower <= object_2_upper && object_2_upper <= object_1_upper){
+    return true
+  }
+
   return false
 }
 
-function check_ball_position(ball_x, ball_y, paddle_width, paddle_start_x){
-      //Ball hits lef/right bound
-      if (ball_x >= 55 || ball_x <= -60) {
-        this.xdir *= -1;
-      }
-  
-      //Ball hits top
-      if (this.ypos >= 120) {
-        this.ydir *= -1;
-      }
-  
-      //If ball hits paddle (-5 and +5 are because of ball width)
-      if (
-        ball_x >= paddle_x - 5 &&
-        ball_x <= paddle_x + paddle_width + 5 &&
-        this.ypos <= -70 &&
-        this.ypos >= -75
-      ) {
-  
-        //List of possible colors for balls
-        var colors = ["red", "green", "blue", "yellow", "white", "orange", "pink", "purple",];
-  
-        //Random number with and between 0 to 7, serves as index for the above declared colors array
-        var rand_color = Math.round(Math.random() * 7);
-  
-        // Random delta x and y, from ca. 0.2 to 2.2
-        var rand_x = Math.random() * 2 + 0.2;
-        var rand_y = Math.random() * 2 + 0.2;
-  
-        //Random direction is chosen as 1(right moving)
-        var rand_dir_x = 1;
-        // ca. 50/50 chance for rand_dir_x to change to -1(left moving)
-        if (Math.random() <= 0.5) {
-          rand_dir_x = -1;
-        }
-  
-        //Amount of balls increases,
-        ball_count += 1;
-        //Since amount of balls increases, new array item can get created
-        balls[ball_count] = new Ball(
-          0,
-          120,
-          rand_x,
-          rand_y,
-          rand_dir_x,
-          colors[rand_color]
-        );
-  
-        //Ball changes direction (upwards) and this.ypos changes to ensure consistency
-        this.ydir = 1;
-        this.ypos = -70;
-        score += 1;
-        score_el.innerHTML = score;
-      }
-  
-      if (this.ypos <= -90) {
-        stopAnim();
-        tegnBrukBakgrunn("white");
-        paddle_width = 0;
-        tegnTekst(
-          "GAME OVER",
-          -45,
-          70,
-          "black",
-          0,
-          "left",
-          40,
-          "Roboto",
-          "bottom"
-        );
-      }
-  
-      ball_x += this.deltax * this.xdir;
-      this.ypos += this.deltay * this.ydir;
-      tegnFyltRektangel(ball_x, this.ypos, 5, 5, this.farge);
+function key_pressed(event) {
+  if (event.keyCode === 37) {
+    if (event.type == "keydown" && moving == false) {
+      moving = true;
+      leftId = setInterval(pad_left, 1000 / paddle_speed);
+    }
+
+    if (event.type == "keyup") {
+      moving = false;
+      clearInterval(leftId);
+    }
+  }
+
+  if (event.keyCode === 39) {
+    if (event.type == "keydown" && moving == false) {
+      moving = true;
+      rightId = setInterval(pad_right, 1000 / paddle_speed);
+    }
+
+    if (event.type == "keyup") {
+      moving = false;
+      clearInterval(rightId);
+    }
+  }
+}
+
+function pad_left() {
+  if (paddle_x >= -60) {
+    paddle_x -= 3;
+  }
+}
+
+function pad_right() {
+  if (paddle_x <= 60 - paddle_width) {
+    paddle_x += 3;
+  }
+}
+function stopAnim() {
+  clearInterval(animId);
 }
