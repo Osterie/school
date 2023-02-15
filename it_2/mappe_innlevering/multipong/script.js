@@ -10,8 +10,6 @@ class Rectangle {
     this.x_dir = 0
     this.y_change = 0
     this.y_dir = 0
-    // this.moving(1, 1, 10, 1);
-
   }
 
   draw() {
@@ -74,6 +72,7 @@ function winInit() {
   document.addEventListener("keydown", () => {
     if (event.key === "ArrowLeft"){
       paddle.moving(1, -1, 0, 0)
+    
     }
 
     else if (event.key === "ArrowRight"){
@@ -97,7 +96,6 @@ function spill() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
   paddle_position = paddle.get_rectangle()
 
   const paddle_y1 = paddle_position.ypos
@@ -106,18 +104,23 @@ function spill() {
   const paddle_x1 = paddle_position.xpos
   const paddle_x2 = paddle_position.xpos + paddle_position.width
 
-  if ( a_collides_b_axis(paddle_x1, paddle_x2, 0, canvas.width) ) {
+  
+  if ( a_collides_b_axis(paddle_x1, paddle_x2, 0, canvas.width) ){
     paddle.moving(0,0,0,0)
-  }
-
-  else{
   }
   paddle.draw()
 
+  draw_squares()
+}
 
 
+function draw_squares(){
+  paddle_position = paddle.get_rectangle()
 
+  const paddle_y1 = paddle_position.ypos
+  const paddle_y2 = paddle_position.ypos + paddle_position.height
   for (let i = 0; i < balls.length; i++) {
+
     balls[i].draw();
     ball_position = balls[i].get_rectangle()
 
@@ -146,14 +149,35 @@ function spill() {
   }
 }
 
+function print_to_element(statement, element){
+
+}
+
+//takes axis as arguments, if one of the axis of object 2 is between the two axis of object 1, returns true
 function a_collides_b_axis(object_1_lower, object_1_upper, object_2_lower, object_2_upper){
 
-  if (object_1_lower <= object_2_lower && object_2_lower <= object_1_upper){
+  // object 2 lower value axis is between object 1 lower value of axis and object 1 upper value of axis
+  if (is_between_or_equal(object_2_lower, object_1_lower, object_1_upper)){
     return true
   }
-  else if (object_1_lower <= object_2_upper && object_2_upper <= object_1_upper){
+  // object 2 upper value axis is between object 1 lower value of axis and object 1 upper value of axis
+  else if (is_between_or_equal(object_2_upper, object_1_lower, object_1_upper)){
     return true
   }
-
   return false
 }
+
+function is_between_or_equal(value_1, value_2, value_3){
+  const value_array = sort_numerically([value_1, value_2, value_3])
+  if (value_array[1] === value_1){
+    return true
+  }
+  return false
+
+}
+
+function sort_numerically(array){
+  array.sort(function(a, b) {return a - b;});
+  return array
+}
+
