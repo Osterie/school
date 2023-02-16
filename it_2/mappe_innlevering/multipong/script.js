@@ -1,3 +1,4 @@
+//TODO change hue with "color" and give hue as argument bruv, seperation of concerns or whatever
 class Rectangle {
   constructor(ctx, xpos, width, ypos, heigth, hue) {
     this.xpos = xpos;
@@ -35,6 +36,7 @@ class Rectangle {
   }
 
   get_rectangle(){
+    //TODO: should return all values?
     const xpos = this.xpos
     const ypos = this.ypos
     const width = this.width
@@ -62,37 +64,61 @@ ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
 
 const balls = [new Rectangle(ctx, 5, 10, 6, 11, 255)];
 balls[0].moving(5,1,5,1)
+
 const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, 255)
 
 
 function winInit() {
 
-  animation_id = setInterval(spill, 1000 / runspeed);
+  animation_id = setInterval(play, 1000 / runspeed);
   
   document.addEventListener("keydown", () => {
+
     if (event.key === "ArrowLeft"){
-      paddle.moving(1, -1, 0, 0)
-    
+      paddle.moving(5, -1, 0, 0)
     }
 
     else if (event.key === "ArrowRight"){
-      paddle.moving(1, 1, 0, 0)
+      paddle.moving(5, 1, 0, 0)
     }
+
+
+    paddle_position = paddle.get_rectangle()
+
+    const paddle_y1 = paddle_position.ypos
+    const paddle_y2 = paddle_position.ypos + paddle_position.height
+  
+    const paddle_x1 = paddle_position.xpos
+    const paddle_x2 = paddle_position.xpos + paddle_position.width
+
+
+  //Paddle hits wall
+  if ( a_collides_b_axis(paddle_x1, paddle_x2, 0, canvas.width) ){
+    paddle.moving(0,0,0,0)
+  }
+
   })
 
   document.addEventListener("keyup", () => {
+
     if (event.key === "ArrowLeft"){
       paddle.moving(0, 0, 0, 0)
+
     }
+
     else if (event.key === "ArrowRight"){
       paddle.moving(0, 0, 0, 0)
     }
   })
-
 }
 
-//Creates balls, draws background and calls player function
-function spill() {
+function paddle_move(speed, direction){
+  paddle.moving(speed, direction, 0, 0)
+}
+
+
+//Creates balls, draws background and detects ball collision
+function play() {
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -104,21 +130,8 @@ function spill() {
   const paddle_x1 = paddle_position.xpos
   const paddle_x2 = paddle_position.xpos + paddle_position.width
 
-  
-  if ( a_collides_b_axis(paddle_x1, paddle_x2, 0, canvas.width) ){
-    paddle.moving(0,0,0,0)
-  }
   paddle.draw()
 
-  draw_squares()
-}
-
-
-function draw_squares(){
-  paddle_position = paddle.get_rectangle()
-
-  const paddle_y1 = paddle_position.ypos
-  const paddle_y2 = paddle_position.ypos + paddle_position.height
   for (let i = 0; i < balls.length; i++) {
 
     balls[i].draw();
@@ -147,6 +160,18 @@ function draw_squares(){
       balls[balls.length -1].moving(5,1,5,1)
     }
   }
+
+}
+
+
+function draw_squares(){
+
+
+}
+
+
+function paddle_handler(){
+
 }
 
 function print_to_element(statement, element){
@@ -180,4 +205,3 @@ function sort_numerically(array){
   array.sort(function(a, b) {return a - b;});
   return array
 }
-
