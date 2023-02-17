@@ -49,6 +49,26 @@ class Rectangle {
     this.y_dir = y_dir
   }
 
+  rectangle_collides_direction(obstacle_lower, obstacle_upper, dir){
+
+    let rectangle_lower
+    let rectangle_upper
+
+    if (dir.toLowerCase() == "x"){
+      rectangle_lower = this.xpos
+      rectangle_upper = this.xpos + this.width
+    }
+    else if (dir.toLowerCase() == "y"){
+      rectangle_lower = this.ypos
+      rectangle_upper = this.ypos + this.heigth
+    }
+
+    if( object_collides(rectangle_lower, rectangle_upper, obstacle_lower, obstacle_upper)){
+      return true
+    }
+    return false
+  }
+
   change_x_dir(){
     this.x_dir *= -1
   }
@@ -74,43 +94,51 @@ class All_rectangles {
     this.rectangles = []
   }
 
+  draw_rectangles(){
+    for (let i = 0; i < this.rectangles.length; i++) {
+      this.rectangles[i].draw()      
+    }
+  }
+
+  add_rectangle(rectangle){
+    this.rectangles.push(rectangle)
+  }
+
   rectangle_collides_direction(obstacle_lower, obstacle_upper, dir){
-
-
     for (let i = 0; i < this.rectangles.length; i++) {
 
-      rectangle_object = this.rectangles[i].get_rectangle()
+      const rectangle_object = this.rectangles[i].get_rectangle()
 
       let rectangle_lower
       let rectangle_upper
 
-      if (dir == "x"){
+      if (dir.toLowerCase() == "x"){
         rectangle_lower = rectangle_object.xpos
         rectangle_upper = rectangle_object.xpos + rectangle_object.width
       }
-      else if (dir == "y"){
+      else if (dir.toLowerCase() == "y"){
         rectangle_lower = rectangle_object.ypos
         rectangle_upper = rectangle_object.ypos + rectangle_object.height
       }
 
-
       if( object_collides(rectangle_lower, rectangle_upper, obstacle_lower, obstacle_upper)){
-        if (dir == "x"){
-          this.rectangles[i].change_x_dir();
-        }
-        else if (dir == "y"){
-          this.rectangles[i].change_y_dir();
-        }
+        return true
       }
+      return false
     }
   }
 }
 
+const ball_array = new All_rectangles()
 
-const balls = [new Rectangle(ctx, 5, 10, 6, 11, 255)];
-balls[0].moving(5,1,5,1)
+const rectangle = new Rectangle(ctx, 5, 10, 6, 11, 255)
+rectangle.moving(3,1,3,1)
+
+ball_array.add_rectangle(rectangle)
+
+// const balls = [new Rectangle(ctx, 5, 10, 6, 11, 255)];
+// balls[0].moving(5,1,5,1)
 const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, 255)
-
 
 function winInit() {
 
@@ -155,7 +183,42 @@ function play() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   draw_paddle(canvas, paddle)
-  draw_squares(canvas, balls, paddle)
+
+  // draw_squares(canvas, balls, paddle)
+
+  paddle_info = paddle.get_rectangle()
+  const paddle_x1 = paddle_info.xpos
+  const paddle_x2 = paddle_info.xpos + paddle_info.width
+  const paddle_y1 = paddle_info.ypos
+  const paddle_y2 = paddle_info.ypos + paddle_info.height
+  
+
+  ball_array.draw_rectangles()
+  
+  for (let i = 0; i < ball_array.rectangles.length; i++) {
+    //ball hits roof
+    if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" )){
+      ball_array.rectangles[i].change_y_dir()      
+    }
+
+
+    //ball hits wall
+    if (ball_array.rectangles[i].rectangle_collides_direction(0, canvas.width, "x")) {
+      ball_array.rectangles[i].change_x_dir()      
+    }
+
+
+    // ball hits paddle
+    if (ball_array.rectangles[i].rectangle_collides_direction( paddle_y1, paddle_y2, "y" ) ){
+      
+      // console.log("paddle")
+      ball_array.rectangles[i].change_y_dir()      
+      // create another ball
+    }
+
+  }
+
+
 
 }
 
