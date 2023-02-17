@@ -1,12 +1,12 @@
-//TODO change hue with "color" and give hue as argument bruv, seperation of concerns or whatever
 class Rectangle {
-  constructor(ctx, xpos, width, ypos, heigth, hue) {
-    this.xpos = xpos;
+  constructor(ctx, position_x, width, position_y, height, color) {
+    this.position_x = position_x;
     this.width = width
-    this.ypos = ypos;
-    this.heigth = heigth
-    this.hue = hue;
+    this.position_y = position_y;
+    this.height = height
+    this.color = color;
     this.ctx = ctx;
+
     this.x_change = 0
     this.x_dir = 0
     this.y_change = 0
@@ -14,11 +14,10 @@ class Rectangle {
   }
 
   draw() {
-    this.xpos += this.x_change * this.x_dir
-    this.ypos += this.y_change * this.y_dir
-    this.color = `hsl( ${this.hue}, ${75}%, ${50}%)`;
+    this.position_x += this.x_change * this.x_dir
+    this.position_y += this.y_change * this.y_dir
     this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(this.xpos, this.ypos, this.width, this.heigth);
+    this.ctx.fillRect(this.position_x, this.position_y, this.width, this.height);
   }
 
   moving(x_change, x_dir, y_change, y_dir){
@@ -26,6 +25,26 @@ class Rectangle {
     this.x_dir = x_dir
     this.y_change = y_change
     this.y_dir = y_dir
+  }
+
+  rectangle_collides_direction(obstacle_lower, obstacle_upper, dir){
+
+    let rectangle_lower
+    let rectangle_upper
+
+    if (dir.toLowerCase() == "x"){
+      rectangle_lower = this.position_x
+      rectangle_upper = this.position_x + this.width
+    }
+    else if (dir.toLowerCase() == "y"){
+      rectangle_lower = this.position_y
+      rectangle_upper = this.position_y + this.height
+    }
+
+    if( object_collides(rectangle_lower, rectangle_upper, obstacle_lower, obstacle_upper)){
+      return true
+    }
+    return false
   }
 
   change_x_dir(){
@@ -37,43 +56,74 @@ class Rectangle {
 
   get_rectangle(){
     //TODO: should return all values?
-    const xpos = this.xpos
-    const ypos = this.ypos
+    const position_x = this.position_x
+    const position_y = this.position_y
+    const x_dir = this.x_dir
+    const y_dir = this.y_dir
     const width = this.width
-    const heigth = this.heigth
-    return {xpos, ypos, width, heigth}
+    const height = this.height
+    return {position_x, position_y, x_dir, y_dir, width, height}
   }
 }
 
-var score = 0;
-const score_el = document.getElementById("score");
+class Collection_rectangles {
 
-//FPS
-var runspeed = 50;
+  constructor(){
+    this.rectangles = []
+  }
 
-var paddle_x = -10;
-var paddle_width = 50;
+  draw_rectangles(){
+    this.rectangles.forEach( rectangle => rectangle.draw() )
+  }
 
-var paddle_move_id, animation_id 
+  add_rectangle(rectangle){
+    this.rectangles.push(rectangle)
+  }
+}
 
+let paddle_move_id, animation_id 
 var canvas, ctx;
 window.onload = winInit;
 canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
 ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
 
 
-const balls = [new Rectangle(ctx, 5, 10, 6, 11, 255)];
-balls[0].moving(5,1,5,1)
+const ball_array = new Collection_rectangles()
+let random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
 
-const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, 255)
+const rectangle = new Rectangle(ctx, canvas.width/2, 10 , 6, 10, random_color)
+rectangle.moving(3,1,3,1)
+ball_array.add_rectangle(rectangle)
+
+random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
+const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, random_color)
+
+
+const get_score_elemenet = document.getElementById("score");
+let score = 0;
+
+//FPS
+const runspeed = 50;
+
+
 
 
 function winInit() {
 
-  animation_id = setInterval(play, 1000 / runspeed);
-  
-  document.addEventListener("keydown", () => {
+  animation_id = setInterval(draw_game, 1000 / runspeed);
 
+  document.addEventListener("keydown", function(event){
+    paddle_handler(event)
+  })
+  document.addEventListener("keyup", function(event) {
+    paddle_handler(event)
+  })
+}
+
+
+function paddle_handler(event){
+
+  if (event.type === "keydown"){
     if (event.key === "ArrowLeft"){
       paddle.moving(5, -1, 0, 0)
     }
@@ -81,106 +131,105 @@ function winInit() {
     else if (event.key === "ArrowRight"){
       paddle.moving(5, 1, 0, 0)
     }
-
-
-    paddle_position = paddle.get_rectangle()
-
-    const paddle_y1 = paddle_position.ypos
-    const paddle_y2 = paddle_position.ypos + paddle_position.height
-  
-    const paddle_x1 = paddle_position.xpos
-    const paddle_x2 = paddle_position.xpos + paddle_position.width
-
-
-  //Paddle hits wall
-  if ( a_collides_b_axis(paddle_x1, paddle_x2, 0, canvas.width) ){
-    paddle.moving(0,0,0,0)
   }
 
-  })
-
-  document.addEventListener("keyup", () => {
-
+  if (event.type === "keyup") {
     if (event.key === "ArrowLeft"){
       paddle.moving(0, 0, 0, 0)
-
     }
 
     else if (event.key === "ArrowRight"){
       paddle.moving(0, 0, 0, 0)
     }
-  })
+  }
 }
-
-function paddle_move(speed, direction){
-  paddle.moving(speed, direction, 0, 0)
-}
-
 
 //Creates balls, draws background and detects ball collision
-function play() {
+function draw_game() {
+
+  //draw background
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  paddle_position = paddle.get_rectangle()
+  draw_paddle(canvas, paddle)
 
-  const paddle_y1 = paddle_position.ypos
-  const paddle_y2 = paddle_position.ypos + paddle_position.height
+  draw_squares()
 
-  const paddle_x1 = paddle_position.xpos
-  const paddle_x2 = paddle_position.xpos + paddle_position.width
+  text_to_element(ball_array.rectangles.length - 1, get_score_elemenet)
+}
 
+//relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
+function draw_paddle(canvas, paddle){
+  paddle_info = paddle.get_rectangle()
+  const paddle_x1 = paddle_info.position_x
+  const paddle_x2 = paddle_info.position_x + paddle_info.width
+  const paddle_direction = paddle_info.x_dir
+
+  //Paddle hits wall
+  if ( object_collides(paddle_x1, paddle_x2, 0, canvas.width) ){
+    if (paddle_direction === 1 && paddle_x2 >= canvas.width){
+      paddle.moving(0,0,0,0)
+    }
+    else if (paddle_direction === -1 && paddle_x1 <= 0){
+      paddle.moving(0,0,0,0)
+    }
+  }
   paddle.draw()
+}
 
-  for (let i = 0; i < balls.length; i++) {
+function draw_squares(){
 
-    balls[i].draw();
-    ball_position = balls[i].get_rectangle()
+  paddle_info = paddle.get_rectangle()
+  const paddle_x1 = paddle_info.position_x
+  const paddle_x2 = paddle_info.position_x + paddle_info.width
+  //top of paddle
+  const paddle_y2 = paddle_info.position_y
 
-    const ball_x1 = ball_position.xpos
-    const ball_x2 = ball_position.xpos + ball_position.width
-
-    const ball_y1 = ball_position.ypos
-    const ball_y2 = ball_position.ypos + ball_position.heigth
-
-    //ball hits walls of canvas
-    if( a_collides_b_axis(ball_x1, ball_x2, 0, canvas.width)){
-      balls[i].change_x_dir();
+  ball_array.draw_rectangles()
+  
+  for (let i = 0; i < ball_array.rectangles.length; i++) {
+    //ball hits roof
+    if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" )){
+      ball_array.rectangles[i].change_y_dir()      
     }
 
-    //ball hits roof or floor of canvas
-    if( a_collides_b_axis(ball_y1, ball_y2, 0, canvas.height)){
-      balls[i].change_y_dir();
+    //ball hits wall
+    if (ball_array.rectangles[i].rectangle_collides_direction(0, canvas.width, "x")) {
+      ball_array.rectangles[i].change_x_dir()      
     }
 
-    //ball hits paddle
-    if( a_collides_b_axis(ball_y1, ball_y2, paddle_y1, paddle_y2) && a_collides_b_axis(paddle_x1, paddle_x2, ball_x1, ball_x2)){
-      balls[i].change_y_dir();
-      balls.push(new Rectangle(ctx, 5, 10, 6, 11, 255))
-      balls[balls.length -1].moving(5,1,5,1)
+    const ball_x1 =  ball_array.rectangles[i].position_x + ball_array.rectangles[i].width
+    const ball_x2 =  ball_array.rectangles[i].position_x
+    //bottom of ball
+    const ball_y1 = ball_array.rectangles[i].height + ball_array.rectangles[i].position_y
+
+    // ball hits paddle
+    if ( ball_array.rectangles[i].rectangle_collides_direction( paddle_y2, paddle_y2, "y" ) && object_collides(paddle_x1, paddle_x2, ball_x1, ball_x2) ){
+      ball_array.rectangles[i].change_y_dir()      
+      //ensures ball does not get stuck in paddle, if f.x middle of ball hits paddle, ball is moved ball_height/2 up from paddle
+      ball_array.rectangles[i].position_y -= (ball_y1 - paddle_y2)
+
+      const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
+      const random_x_speed = random_integer_in_range(1, 5)
+      const random_y_speed = random_integer_in_range(1, 5)
+      const random_size = random_integer_in_range(7, 37)
+      let random_dir_x = 1;
+      if ( Math.random() <= 0.5 ) { random_dir_x = -1; }
+
+      const rectangle = new Rectangle(ctx, canvas.width/2, random_size , 10, random_size, random_color)
+      rectangle.moving(random_x_speed,random_dir_x,random_y_speed,1)
+      ball_array.add_rectangle(rectangle)
     }
   }
 
 }
 
-
-function draw_squares(){
-
-
-}
-
-
-function paddle_handler(){
-
-}
-
-function print_to_element(statement, element){
-
+function text_to_element(text, element){
+  element.innerHTML = text
 }
 
 //takes axis as arguments, if one of the axis of object 2 is between the two axis of object 1, returns true
-function a_collides_b_axis(object_1_lower, object_1_upper, object_2_lower, object_2_upper){
-
+function object_collides(object_1_lower, object_1_upper, object_2_lower, object_2_upper){
   // object 2 lower value axis is between object 1 lower value of axis and object 1 upper value of axis
   if (is_between_or_equal(object_2_lower, object_1_lower, object_1_upper)){
     return true
@@ -198,10 +247,14 @@ function is_between_or_equal(value_1, value_2, value_3){
     return true
   }
   return false
-
 }
 
 function sort_numerically(array){
   array.sort(function(a, b) {return a - b;});
   return array
 }
+
+function random_integer_in_range(lower_limit, upper_limit){
+  return Math.floor( (Math.random() * (upper_limit - lower_limit)) + lower_limit)
+}
+
