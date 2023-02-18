@@ -86,6 +86,19 @@ class Collection_rectangles {
   add_rectangle(rectangle){
     this.rectangles.push(rectangle)
   }
+  add_random_rectangle(){
+
+    const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
+    const random_x_speed = random_integer_in_range(1, 5)
+    const random_y_speed = random_integer_in_range(1, 5)
+    const random_size = random_integer_in_range(7, 37)
+    let random_dir_x = 1;
+    if ( Math.random() <= 0.5 ) { random_dir_x = -1; }
+
+    const rectangle = new Rectangle(ctx, canvas.width/2, random_size , 10, random_size, random_color)
+    rectangle.moving(random_x_speed,random_dir_x,random_y_speed,1)
+    this.rectangles.push(rectangle)
+  }
 }
 
 const get_score_elemenet = document.getElementById("score");
@@ -96,7 +109,7 @@ const ball_speed = 15;
 
 let paddle_move_id, animation_id 
 var canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
-const ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
+const ctx = canvas.getContext("2d");
 
 const ball_array = new Collection_rectangles()
 let random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
@@ -194,6 +207,13 @@ function draw_squares(){
   ball_array.draw_rectangles()
   
   for (let i = 0; i < ball_array.rectangles.length; i++) {
+
+    const ball_x1 =  ball_array.rectangles[i].position_x + ball_array.rectangles[i].width
+    const ball_x2 =  ball_array.rectangles[i].position_x
+    //bottom of ball
+    const ball_y1 = ball_array.rectangles[i].height + ball_array.rectangles[i].position_y
+
+
     //ball hits roof
     if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" )){
       ball_array.rectangles[i].change_y_dir()      
@@ -204,81 +224,78 @@ function draw_squares(){
       ball_array.rectangles[i].change_x_dir()      
     }
 
-    const ball_x1 =  ball_array.rectangles[i].position_x + ball_array.rectangles[i].width
-    const ball_x2 =  ball_array.rectangles[i].position_x
-    //bottom of ball
-    const ball_y1 = ball_array.rectangles[i].height + ball_array.rectangles[i].position_y
 
     // ball hits paddle
     if ( ball_array.rectangles[i].rectangle_collides_direction( paddle_y2, paddle_y2, "y" ) && object_collides(paddle_x1, paddle_x2, ball_x1, ball_x2) ){
-      ball_array.rectangles[i].change_y_dir()      
-      //ensures ball does not get stuck in paddle, if f.x middle of ball hits paddle, ball is moved ball_height/2 up from paddle
+      //ensures ball does not get stuck in paddle
       ball_array.rectangles[i].position_y -= (ball_y1 - paddle_y2)
-
-      const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
-      const random_x_speed = random_integer_in_range(1, 5)
-      const random_y_speed = random_integer_in_range(1, 5)
-      const random_size = random_integer_in_range(7, 37)
-      let random_dir_x = 1;
-      if ( Math.random() <= 0.5 ) { random_dir_x = -1; }
-
-      const rectangle = new Rectangle(ctx, canvas.width/2, random_size , 10, random_size, random_color)
-      rectangle.moving(random_x_speed,random_dir_x,random_y_speed,1)
-      ball_array.add_rectangle(rectangle)
+      ball_array.rectangles[i].change_y_dir()      
+      
+      ball_array.add_random_rectangle()
     }
 
     //ball misses paddle
     if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
+      
       clearInterval(animation_id)
       ball_array.rectangles[i].moving(0, 0, 0, 0)
-      
-      const grow_ball_interval_id = setInterval( function() {
-
-        ball_array.rectangles[i].grow(30)
-        ball_array.rectangles[i].draw()  
-
-        if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" ) && ball_array.rectangles[i].rectangle_collides_direction( -canvas.width, canvas.width*2, "x" )){
-          clearInterval(grow_ball_interval_id)
-
-          fill_canvas_centered_text(canvas, "WWWWWWWWWWWWwwwwwwwwwwwwwwwwwwwww", canvas.height, "black")
-
-        }
-      }, 1000/50)
+      death_drawing(i)
     }
   }
 }
 
-// console.log("á́́́́́́́́́́́́́́́́́́́́́́́́́́́́́")
+function death_drawing(rectangle_id){
 
-function fill_canvas_centered_text(canvas, text, y_postion, color){
+  const grow_ball_interval_id = setInterval( function() {
 
-  const descenders = ["g", "j", "q", "p", "y"]
+    ball_array.rectangles[rectangle_id].grow(30)
+    ball_array.rectangles[rectangle_id].draw()  
+
+    if (ball_array.rectangles[rectangle_id].rectangle_collides_direction( 0, 0, "y" ) && ball_array.rectangles[rectangle_id].rectangle_collides_direction( -canvas.width, canvas.width*2, "x" )){
+      clearInterval(grow_ball_interval_id)
+
+      let j = 0
+      const death_text_interval_id = setInterval( function() {
+        j += 1
+        const color = `hsl( ${j}, ${75}%, ${50}%)`
+
+        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%10), color)
+
+      }, 1000/30)
+    }
+  }, 1000/50)
+}
+
+
+
+function fill_largest_font_centered(canvas, text, font, y_postion, color){
   
-  const ctx = canvas.getContext("2d"); 
-  const smallest_canvas_size = smallest(canvas.height, canvas.width)
-  let font_size
-  console.log({smallest_canvas_size})
-  //1:2 ratio monospace font, hence these checks
-  if (smallest_canvas_size === canvas.height){
-    // font_size = Math.floor(smallest_canvas_size / text.length)
-    font_size = canvas.height
-  }
-  console.log(text.length)
-  if (font_size * text.length >= canvas.width){
-    font_size = (canvas.width / text.length+2) * 2
-  }
+  const ctx = canvas.getContext("2d");
+  let font_size = largest_font_size(canvas, text, font)
 
-  // else if (smallest_canvas_size === canvas.width){
-  //   font_size = Math.floor( (smallest_canvas_size / (text.length+1)) * 2 )
-  // }
+  const canvas_center_x = canvas.width / 2;
 
-  console.log({font_size})
-  console.log(text.length)
-  console.log({smallest_canvas_size})
+  ctx.font = `${font_size}px ${font}`;
+
+  // Draw the text
   ctx.fillStyle = color
-  ctx.font = `${font_size}px monospace`;
   ctx.textAlign = "center";
-  ctx.fillText(text, canvas.width/2, y_postion);
+  ctx.fillText(text, canvas_center_x, y_postion);
+}
+
+function largest_font_size(canvas, text, font){
+  const ctx = canvas.getContext("2d");
+  let font_size = smallest(canvas.height, canvas.width)
+
+  ctx.font = `${font_size}px ${font}`;
+  let text_metrics = ctx.measureText(text);
+
+  //makes sure text is onscreen
+  while (text_metrics.width > canvas.width){
+    font_size -= 1
+    ctx.font = `${font_size}px ${font}`;
+    text_metrics = ctx.measureText(text);
+  }
 }
 
 
