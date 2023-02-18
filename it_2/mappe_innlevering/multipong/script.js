@@ -27,6 +27,13 @@ class Rectangle {
     this.y_dir = y_dir
   }
 
+  grow(growth_margin){
+    this.position_y -= growth_margin        
+    this.position_x -= growth_margin        
+    this.width += growth_margin * 2        
+    this.height += growth_margin * 2        
+  }
+
   rectangle_collides_direction(obstacle_lower, obstacle_upper, dir){
 
     let rectangle_lower
@@ -81,36 +88,32 @@ class Collection_rectangles {
   }
 }
 
-let paddle_move_id, animation_id 
-var canvas, ctx;
-window.onload = winInit;
-canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
-ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
+const get_score_elemenet = document.getElementById("score");
+let score = 0;
 
+const runspeed = 50;
+const ball_speed = 15;
+
+let paddle_move_id, animation_id 
+var canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
+const ctx = canvas.getContext("2d"); // Objekt som inneholder tegneverktøyet i canvas
 
 const ball_array = new Collection_rectangles()
 let random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
 
 const rectangle = new Rectangle(ctx, canvas.width/2, 10 , 6, 10, random_color)
-rectangle.moving(3,1,3,1)
+rectangle.moving(ball_speed,1,ball_speed,1)
 ball_array.add_rectangle(rectangle)
 
 random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
-const paddle = new Rectangle(ctx, canvas.width/2 - 75, 150, canvas.height - 60, 20, random_color)
+
+const paddle_width = 100 
+const paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height - 60, 20, random_color)
 
 
-const get_score_elemenet = document.getElementById("score");
-let score = 0;
-
-//FPS
-const runspeed = 50;
-
-
-
+window.onload = winInit;
 
 function winInit() {
-
-  animation_id = setInterval(draw_game, 1000 / runspeed);
 
   document.addEventListener("keydown", function(event){
     paddle_handler(event)
@@ -118,44 +121,47 @@ function winInit() {
   document.addEventListener("keyup", function(event) {
     paddle_handler(event)
   })
+
+  animation_id = setInterval(draw_game, 1000 / runspeed);
 }
 
-
-function paddle_handler(event){
-
-  if (event.type === "keydown"){
-    if (event.key === "ArrowLeft"){
-      paddle.moving(5, -1, 0, 0)
-    }
-
-    else if (event.key === "ArrowRight"){
-      paddle.moving(5, 1, 0, 0)
-    }
-  }
-
-  if (event.type === "keyup") {
-    if (event.key === "ArrowLeft"){
-      paddle.moving(0, 0, 0, 0)
-    }
-
-    else if (event.key === "ArrowRight"){
-      paddle.moving(0, 0, 0, 0)
-    }
-  }
-}
 
 //Creates balls, draws background and detects ball collision
 function draw_game() {
-
   //draw background
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   draw_paddle(canvas, paddle)
-
   draw_squares()
-
   text_to_element(ball_array.rectangles.length - 1, get_score_elemenet)
+}
+
+
+function paddle_handler(event){
+
+  paddle_info = paddle.get_rectangle()
+  const paddle_direction = paddle_info.x_dir
+
+  if (event.type === "keydown"){
+    if (event.key === "ArrowLeft"){
+      paddle.moving(14, -1, 0, 0)
+    }
+
+    else if (event.key === "ArrowRight"){
+      paddle.moving(14, 1, 0, 0)
+    }
+  }
+
+  if (event.type === "keyup") {
+    if (event.key === "ArrowLeft" && paddle_direction !== 1){
+      paddle.moving(0, 0, 0, 0)
+    }
+
+    else if (event.key === "ArrowRight" && paddle_direction !== -1){
+      paddle.moving(0, 0, 0, 0)
+    }
+  }
 }
 
 //relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
@@ -220,9 +226,61 @@ function draw_squares(){
       rectangle.moving(random_x_speed,random_dir_x,random_y_speed,1)
       ball_array.add_rectangle(rectangle)
     }
+
+    //ball misses paddle
+    if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
+      clearInterval(animation_id)
+      ball_array.rectangles[i].moving(0, 0, 0, 0)
+      
+      const grow_ball_interval_id = setInterval( function() {
+
+        ball_array.rectangles[i].grow(30)
+        ball_array.rectangles[i].draw()  
+
+        if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" ) && ball_array.rectangles[i].rectangle_collides_direction( -canvas.width, canvas.width*2, "x" )){
+          clearInterval(grow_ball_interval_id)
+
+          fill_canvas_centered_text(canvas, "WWWWWWWWWWWWwwwwwwwwwwwwwwwwwwwww", canvas.height, "black")
+
+        }
+      }, 1000/50)
+    }
+  }
+}
+
+// console.log("á́́́́́́́́́́́́́́́́́́́́́́́́́́́́́")
+
+function fill_canvas_centered_text(canvas, text, y_postion, color){
+
+  const descenders = ["g", "j", "q", "p", "y"]
+  
+  const ctx = canvas.getContext("2d"); 
+  const smallest_canvas_size = smallest(canvas.height, canvas.width)
+  let font_size
+  console.log({smallest_canvas_size})
+  //1:2 ratio monospace font, hence these checks
+  if (smallest_canvas_size === canvas.height){
+    // font_size = Math.floor(smallest_canvas_size / text.length)
+    font_size = canvas.height
+  }
+  console.log(text.length)
+  if (font_size * text.length >= canvas.width){
+    font_size = (canvas.width / text.length+2) * 2
   }
 
+  // else if (smallest_canvas_size === canvas.width){
+  //   font_size = Math.floor( (smallest_canvas_size / (text.length+1)) * 2 )
+  // }
+
+  console.log({font_size})
+  console.log(text.length)
+  console.log({smallest_canvas_size})
+  ctx.fillStyle = color
+  ctx.font = `${font_size}px monospace`;
+  ctx.textAlign = "center";
+  ctx.fillText(text, canvas.width/2, y_postion);
 }
+
 
 function text_to_element(text, element){
   element.innerHTML = text
@@ -258,3 +316,16 @@ function random_integer_in_range(lower_limit, upper_limit){
   return Math.floor( (Math.random() * (upper_limit - lower_limit)) + lower_limit)
 }
 
+function largest(number_1, number_2){
+  if (number_1 >= number_2){
+    return number_1
+  }
+  return number_2
+}
+
+function smallest(number_1, number_2){
+  if (number_1 <= number_2){
+    return number_1
+  }
+  return number_2
+}
