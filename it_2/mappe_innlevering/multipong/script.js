@@ -82,11 +82,14 @@ class Collection_rectangles {
   draw_rectangles(){
     this.rectangles.forEach( rectangle => rectangle.draw() )
   }
+  remove_rectangle(rectangle_id){
+    this.rectangles.splice(rectangle_id, 1)
+  }
 
   add_rectangle(rectangle){
     this.rectangles.push(rectangle)
   }
-  add_random_rectangle(){
+  add_random_rectangle(random_factor){
 
     const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
     const random_x_speed = random_integer_in_range(1, 5)
@@ -101,6 +104,10 @@ class Collection_rectangles {
   }
 }
 
+
+//TODO: store all variables in local storage
+
+const play_button = document.getElementById("play_button")
 const get_score_elemenet = document.getElementById("score");
 let score = 0;
 
@@ -115,8 +122,8 @@ const ball_array = new Collection_rectangles()
 let random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
 
 const rectangle = new Rectangle(ctx, canvas.width/2, 10 , 6, 10, random_color)
-rectangle.moving(ball_speed,1,ball_speed,1)
-ball_array.add_rectangle(rectangle)
+ball_array.add_random_rectangle(rectangle)
+ball_array.rectangles[0].moving(1,1,10,1)
 
 random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
 
@@ -128,6 +135,12 @@ window.onload = winInit;
 
 function winInit() {
 
+  play_button.addEventListener("click", function() {
+    if (!animation_id){
+      animation_id = setInterval(draw_game, 1000 / runspeed);
+    }
+  })
+
   document.addEventListener("keydown", function(event){
     paddle_handler(event)
   })
@@ -135,7 +148,6 @@ function winInit() {
     paddle_handler(event)
   })
 
-  animation_id = setInterval(draw_game, 1000 / runspeed);
 }
 
 
@@ -236,47 +248,58 @@ function draw_squares(){
 
     //ball misses paddle
     if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
-      
-      clearInterval(animation_id)
-      ball_array.rectangles[i].moving(0, 0, 0, 0)
-      death_drawing(i)
+      lives -= 1
+      console.log(lives)
+      if (lives === 0){
+        clearInterval(animation_id)
+        ball_array.rectangles[i].moving(0, 0, 0, 0)
+        const random_rectangle_id = random_integer_in_range(0, ball_array.rectangles.length)
+        death_drawing(random_rectangle_id)
+      }
+      ball_array.remove_rectangle(i)
+      ball_array.add_random_rectangle()
     }
   }
 }
 
-function death_drawing(rectangle_id){
+let lives = 1
 
+function death_drawing(rectangle_id){
+  i = 1.0000001
   const grow_ball_interval_id = setInterval( function() {
 
-    ball_array.rectangles[rectangle_id].grow(30)
+    ball_array.rectangles[rectangle_id].grow(i)
     ball_array.rectangles[rectangle_id].draw()  
 
+    i = f(i)
     if (ball_array.rectangles[rectangle_id].rectangle_collides_direction( 0, 0, "y" ) && ball_array.rectangles[rectangle_id].rectangle_collides_direction( -canvas.width, canvas.width*2, "x" )){
       clearInterval(grow_ball_interval_id)
 
       let j = 0
       const death_text_interval_id = setInterval( function() {
         j += 1
-        const color = `hsl( ${j}, ${75}%, ${50}%)`
-
-        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%10), color)
+        const color = `hsl( ${j*3}, ${75}%, ${50}%)`
+        // largest_font_size(canvas, "You Are Dead", "monspace")
+        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%13), color)
 
       }, 1000/30)
     }
   }, 1000/50)
 }
 
-
+function f(x){
+  return x**2
+}
 
 function fill_largest_font_centered(canvas, text, font, y_postion, color){
   
   const ctx = canvas.getContext("2d");
   let font_size = largest_font_size(canvas, text, font)
-
   const canvas_center_x = canvas.width / 2;
-
+  
   ctx.font = `${font_size}px ${font}`;
-
+  
+  // console.log(font_size)
   // Draw the text
   ctx.fillStyle = color
   ctx.textAlign = "center";
@@ -284,18 +307,31 @@ function fill_largest_font_centered(canvas, text, font, y_postion, color){
 }
 
 function largest_font_size(canvas, text, font){
-  const ctx = canvas.getContext("2d");
+
+  const temp_canvas = document.createElement('canvas');
+  temp_canvas.width = canvas.width;
+  temp_canvas.height = canvas.height;
+  const ctx = temp_canvas.getContext("2d");
+
   let font_size = smallest(canvas.height, canvas.width)
 
   ctx.font = `${font_size}px ${font}`;
   let text_metrics = ctx.measureText(text);
 
-  //makes sure text is onscreen
+  //TODO: improve algorithm, perhaps find height to width ratio and so on
   while (text_metrics.width > canvas.width){
-    font_size -= 1
+    font_size *= 0.9
     ctx.font = `${font_size}px ${font}`;
     text_metrics = ctx.measureText(text);
   }
+
+  while (text_metrics.width + 1 < canvas.width){
+    font_size += 1
+    ctx.font = `${font_size}px ${font}`;
+    text_metrics = ctx.measureText(text);
+  }
+
+  return font_size
 }
 
 
