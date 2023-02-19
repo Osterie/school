@@ -12,15 +12,69 @@
 </head>
 
 <body>
-	<center>
 
-		<br>
-		<a href="../meny/index.html" id='back'>Back</a>
-		<div>Score:</div>
-		<div id="score"> 0 </div>
-		<canvas id="canvas" width="300px" height="600px"> </canvas> <br>
+	<!-- <a href="../meny/index.html" id='back'>Back</a> -->
 
-	</center>
+
+	<div id = "container_all_content">
+		
+		<div id ='randomness_variable' class = "paramater_container"> 
+
+			<p class="informative_text"> Ball Randomness Factor </p>
+			<input id='randomness_factor' class="variables" value="3">
+		
+			<p class="informative_text"> Lives </p>
+			<input id='lives' class="variables" value="1">
+		
+		</div>
+
+
+		<div id = "canvas_variables" class = "paramater_container">
+
+			<p class="informative_text"> Canvas Width(px) </p>
+			<input id='canvas_width' class="variables" value="300">
+			
+			<p class="informative_text"> Canvas Height(px) </p>
+			<input id='canvas_height' class="variables" value="600">
+
+		</div>
+
+		<div id ='paddle_varialbes' class = "paramater_container">
+
+			<p class="informative_text"> Paddle Width(ox) </p>
+			<input id='paddle_width' class="variables" value="150">
+			
+			<p class="informative_text"> Paddle Height(px) </p>
+			<input id='paddle_height' class="variables" value="30">
+	
+			<p class="informative_text"> Paddle Speed (px/frame) </p>
+			<input id='paddle_speed' class="variables" value="50">
+
+		</div>
+		
+		<div id ='score_lives'>
+
+			<div id = "lives_container">
+				<p> Lives </p>
+				<p id = "lives_placeholder"></p>
+			</div>
+
+			<div id = "score_container"> 
+				<p> Score:</p>
+				<p id = "score_placeholder"></p>
+			</div>
+
+		</div>
+		
+		<div id = "container_canvas">
+			<canvas id="canvas" width="600px" height="600px"> </canvas> <br>
+		</div>
+		
+		<button id='play_button'> Play Game! </button>
+		<button id='restart_button'> Restart Game </button>
+	
+	</div>
+
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 	<script src="https://fulab.no/fulibs/fusionSDK.js"> </script>
