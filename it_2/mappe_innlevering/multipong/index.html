@@ -32,23 +32,37 @@
 		<div id = "canvas_variables" class = "paramater_container">
 
 			<p class="informative_text"> Canvas Width(px) </p>
-			<input id='hue_expression' class="variables" value="300">
+			<input id='canvas_width' class="variables" value="300">
 			
 			<p class="informative_text"> Canvas Height(px) </p>
-			<input id='hue_expression' class="variables" value="600">
+			<input id='canvas_height' class="variables" value="600">
 
 		</div>
 
 		<div id ='paddle_varialbes' class = "paramater_container">
 
 			<p class="informative_text"> Paddle Width(ox) </p>
-			<input id='hue_expression' class="variables" placeholder="Hue" cols="40" rows="5" value="X*Y">
+			<input id='paddle_width' class="variables" value="150">
 			
 			<p class="informative_text"> Paddle Height(px) </p>
-			<input id='hue_expression' class="variables" placeholder="Hue" cols="40" rows="5" value="X*Y">
+			<input id='paddle_height' class="variables" value="30">
 	
 			<p class="informative_text"> Paddle Speed (px/frame) </p>
-			<input id='hue_expression' class="variables" placeholder="Hue" cols="40" rows="5" value="X*Y">
+			<input id='paddle_speed' class="variables" value="50">
+
+		</div>
+		
+		<div id ='score_lives'>
+
+			<div id = "lives_container">
+				<p> Lives </p>
+				<p id = "lives_placeholder"></p>
+			</div>
+
+			<div id = "score_container"> 
+				<p> Score:</p>
+				<p id = "score_placeholder"></p>
+			</div>
 
 		</div>
 		
@@ -57,6 +71,7 @@
 		</div>
 		
 		<button id='play_button'> Play Game! </button>
+		<button id='restart_button'> Restart Game </button>
 	
 	</div>
 

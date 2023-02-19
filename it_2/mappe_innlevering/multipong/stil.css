@@ -94,12 +94,16 @@ input:focus {
   grid-area: score;
 }
 
+#lives_score{
+  grid-area: lives_score;
+}
+
 #container_all_content {
   display: grid;
   /* grid-template-columns: 400px 400px 400px 400px;
   grid-template-rows: auto; */
   grid-template-areas: 
     "randomness canvas_variables canvas canvas"
-    "paddle     .                canvas canvas"
-    "play       score            canvas canvas";
+    "paddle     lives_score      canvas canvas"
+    "play       lives_score      canvas canvas";
 }
