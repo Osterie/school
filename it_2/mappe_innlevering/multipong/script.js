@@ -240,7 +240,6 @@ function draw_paddle(canvas, paddle){
   else if (paddle_direction === -1 && paddle_x1 <= 0){
     paddle.moving(0,0,0,0)
   }
-
   paddle.draw()
 }
 
@@ -249,6 +248,7 @@ function draw_squares(){
   paddle_info = paddle.get_rectangle()
   const paddle_x1 = paddle_info.position_x
   const paddle_x2 = paddle_info.position_x + paddle_info.width
+  
   //top of paddle
   const paddle_y2 = paddle_info.position_y
 
@@ -272,20 +272,16 @@ function draw_squares(){
       ball_array.rectangles[i].change_x_dir()      
     }
 
-
     // ball hits paddle
     if ( ball_array.rectangles[i].rectangle_collides_direction( paddle_y2, paddle_y2, "y" ) && object_collides(paddle_x1, paddle_x2, ball_x1, ball_x2) ){
       //ensures ball does not get stuck in paddle
       ball_array.rectangles[i].position_y -= (ball_y1 - paddle_y2)
       ball_array.rectangles[i].change_y_dir()      
-      // get_score_elemenet.innerHTML = ball_array.rectangles.length - 1
-      // get_lives_elemenet.innerHTML = lives
-
       ball_array.add_random_rectangle(random_factor)
     }
 
     //ball misses paddle
-    if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
+    else if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
 
       lives -= 1
 
@@ -302,23 +298,23 @@ function draw_squares(){
 }
 
 function death_drawing(rectangle_id){
-  i = 1.01
+
+  growth_number = 1.01
   const grow_ball_interval_id = setInterval( function() {
 
-    i *= 1.1
-    ball_array.rectangles[rectangle_id].grow(i)
+    growth_number *= 1.1
+    ball_array.rectangles[rectangle_id].grow(growth_number)
     ball_array.rectangles[rectangle_id].draw()  
     if (ball_array.rectangles[rectangle_id].width > canvas.width*2.5 && ball_array.rectangles[rectangle_id].height > canvas.height* 2.5 ){
       
       clearInterval(grow_ball_interval_id)
 
-      let j = 0
+      let i = 0
       setInterval( function() {
-        j += 1
-        const color = `hsl( ${j*3}, ${75}%, ${50}%)`
-        // largest_font_size(canvas, "You Are Dead", "monspace")
-        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%13), color)
-
+        i += 1
+        const color = `hsl( ${i*3}, ${75}%, ${50}%)`
+        //TODO find a way to determine the distance between text, probably make a function:)
+        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(i%13), color)
       }, 1000/50)
     }
   }, 1000/50)
