@@ -311,16 +311,17 @@ function death_drawing(rectangle_id){
     ball_array.rectangles[rectangle_id].draw()  
 
     if (ball_array.rectangles[rectangle_id].width > canvas.width*2.5 && ball_array.rectangles[rectangle_id].height > canvas.height* 2.5 ){
+      
       clearInterval(grow_ball_interval_id)
 
       let j = 0
-      const death_text_interval_id = setInterval( function() {
+      setInterval( function() {
         j += 1
         const color = `hsl( ${j*3}, ${75}%, ${50}%)`
         // largest_font_size(canvas, "You Are Dead", "monspace")
         fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%13), color)
 
-      }, 1000/30)
+      }, 1000/50)
     }
   }, 1000/50)
 }
