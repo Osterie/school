@@ -93,9 +93,13 @@ class Collection_rectangles {
   add_random_rectangle(random_factor){
 
     const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
-    const random_x_speed = random_integer_in_range(1, 5)
-    const random_y_speed = random_integer_in_range(1, 5)
-    const random_size = random_integer_in_range(7, 37)
+
+    const lower_range = random_factor
+    const upper_range = random_factor * random_integer_in_range(1, 4)
+    const random_x_speed = random_integer_in_range(lower_range, upper_range)
+    const random_y_speed = random_integer_in_range(lower_range, upper_range)
+
+    const random_size = random_integer_in_range(random_factor*3, random_factor*10)
     let random_dir_x = 1;
     if ( Math.random() <= 0.5 ) { random_dir_x = -1; }
 
@@ -106,38 +110,36 @@ class Collection_rectangles {
 }
 
 
-
 const play_button = document.getElementById("play_button")
 const restart_button = document.getElementById("restart_button")
 const get_score_elemenet = document.getElementById("score_placeholder");
 const get_lives_elemenet = document.getElementById("lives_placeholder");
 
 let lives = parseInt(document.getElementById("lives").value)
-let random_factor = parseInt(document.getElementById("randomness_factor").value)
+let random_factor = parseFloat(document.getElementById("randomness_factor").value)
 let canvas_width = parseInt(document.getElementById("canvas_width").value)
 let paddle_width = parseInt(document.getElementById("paddle_width").value)
 let canvas_height = parseInt(document.getElementById("canvas_height").value)
 let paddle_speed = parseInt(document.getElementById("paddle_speed").value)
 
 
+
 //TODO: store all variables in local storage
-const runspeed = 50;
-const ball_speed = 15;
 
 let paddle_move_id, animation_id 
-var canvas = elGetId("canvas"); // Hentes fra klassens kodebibliotek teamtools.js (document.getElmentById("canvas")
-const ctx = canvas.getContext("2d");
+var canvas, ctx
 
 let ball_array = new Collection_rectangles()
 let paddle
 
 
 
-
-
-
 window.onload = winInit;
 function winInit() {
+
+  canvas = elGetId("canvas");
+  ctx = canvas.getContext("2d");
+
 
   play_button.addEventListener("click", function() {
 
@@ -155,12 +157,12 @@ function winInit() {
 
 
 
-    ball_array.add_random_rectangle()
+    ball_array.add_random_rectangle(random_factor)
 
     const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
     paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height - 60, 20, random_color)
 
-    animation_id = setInterval(draw_game, 1000 / runspeed);
+    animation_id = setInterval(draw_game, 1000 / 50);
   })
 
   restart_button.addEventListener("click", function(){
@@ -232,15 +234,11 @@ function draw_paddle(canvas, paddle){
   const paddle_x2 = paddle_info.position_x + paddle_info.width
   const paddle_direction = paddle_info.x_dir
 
-  //Paddle hits wall
-  if ( object_collides(paddle_x1, paddle_x2, 0, canvas.width) ){
-    if (paddle_direction === 1 && paddle_x2 >= canvas.width){
-      paddle.moving(0,0,0,0)
-    }
-    else if (paddle_direction === -1 && paddle_x1 <= 0){
-      paddle.moving(0,0,0,0)
-
-    }
+  if (paddle_direction === 1 && paddle_x2 >= canvas.width){
+    paddle.moving(0,0,0,0)
+  }
+  else if (paddle_direction === -1 && paddle_x1 <= 0){
+    paddle.moving(0,0,0,0)
   }
   paddle.draw()
 }
@@ -250,6 +248,7 @@ function draw_squares(){
   paddle_info = paddle.get_rectangle()
   const paddle_x1 = paddle_info.position_x
   const paddle_x2 = paddle_info.position_x + paddle_info.width
+  
   //top of paddle
   const paddle_y2 = paddle_info.position_y
 
@@ -273,20 +272,16 @@ function draw_squares(){
       ball_array.rectangles[i].change_x_dir()      
     }
 
-
     // ball hits paddle
     if ( ball_array.rectangles[i].rectangle_collides_direction( paddle_y2, paddle_y2, "y" ) && object_collides(paddle_x1, paddle_x2, ball_x1, ball_x2) ){
       //ensures ball does not get stuck in paddle
       ball_array.rectangles[i].position_y -= (ball_y1 - paddle_y2)
       ball_array.rectangles[i].change_y_dir()      
-      // get_score_elemenet.innerHTML = ball_array.rectangles.length - 1
-      // get_lives_elemenet.innerHTML = lives
-
-      ball_array.add_random_rectangle()
+      ball_array.add_random_rectangle(random_factor)
     }
 
     //ball misses paddle
-    if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
+    else if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
 
       lives -= 1
 
@@ -297,34 +292,36 @@ function draw_squares(){
         death_drawing(random_rectangle_id)
       }
       ball_array.remove_rectangle(i)
-      ball_array.add_random_rectangle()
+      ball_array.add_random_rectangle(random_factor)
     }
   }
 }
 
 function death_drawing(rectangle_id){
-  i = 1.01
+
+  growth_number = 1.01
   const grow_ball_interval_id = setInterval( function() {
 
-    i *= 1.1
-    ball_array.rectangles[rectangle_id].grow(i)
+    growth_number *= 1.1
+    ball_array.rectangles[rectangle_id].grow(growth_number)
     ball_array.rectangles[rectangle_id].draw()  
-
     if (ball_array.rectangles[rectangle_id].width > canvas.width*2.5 && ball_array.rectangles[rectangle_id].height > canvas.height* 2.5 ){
+      
       clearInterval(grow_ball_interval_id)
 
-      let j = 0
-      const death_text_interval_id = setInterval( function() {
-        j += 1
-        const color = `hsl( ${j*3}, ${75}%, ${50}%)`
-        // largest_font_size(canvas, "You Are Dead", "monspace")
-        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(j%13), color)
-
-      }, 1000/30)
+      let i = 0
+      setInterval( function() {
+        i += 1
+        const color = `hsl( ${i*3}, ${75}%, ${50}%)`
+        //TODO find a way to determine the distance between text, probably make a function:)
+        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(i%13), color)
+      }, 1000/50)
     }
   }, 1000/50)
 }
 
+
+//----------------------General Functions----------------------------------
 
 function fill_largest_font_centered(canvas, text, font, y_postion, color){
   
@@ -333,9 +330,6 @@ function fill_largest_font_centered(canvas, text, font, y_postion, color){
   const canvas_center_x = canvas.width / 2;
   
   ctx.font = `${font_size}px ${font}`;
-  
-  // console.log(font_size)
-  // Draw the text
   ctx.fillStyle = color
   ctx.textAlign = "center";
   ctx.fillText(text, canvas_center_x, y_postion);
@@ -353,7 +347,6 @@ function largest_font_size(canvas, text, font){
   ctx.font = `${font_size}px ${font}`;
   let text_metrics = ctx.measureText(text);
 
-  //TODO: improve algorithm, perhaps find height to width ratio and so on
   while (text_metrics.width > canvas.width){
     font_size *= 0.9
     ctx.font = `${font_size}px ${font}`;
