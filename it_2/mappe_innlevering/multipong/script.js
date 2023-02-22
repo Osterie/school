@@ -296,14 +296,14 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle, lives){
 function death_drawing_rectangle(rectangle){
 
   growth_number = 1.01
-  const grow_ball_interval_id = setInterval( function() {
+  const grow_rectangle_interval_id = setInterval( function() {
 
     growth_number *= 1.1
     rectangle.grow(growth_number)
     rectangle.draw()  
     if (rectangle.width > canvas.width*2.5 && rectangle.height > canvas.height* 2.5 ){
       
-      clearInterval(grow_ball_interval_id)
+      clearInterval(grow_rectangle_interval_id)
 
       let i = 0
       setInterval( function() {
