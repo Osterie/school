@@ -1,51 +1,50 @@
 class Rectangle {
-  constructor(ctx, position_x, width, position_y, height, color) {
-    this.position_x = position_x;
+  constructor(ctx, x_position, width, y_postion, height, color) {
+    this.x_position = x_position;
     this.width = width
-    this.position_y = position_y;
+    this.y_postion = y_postion;
     this.height = height
     this.color = color;
     this.ctx = ctx;
 
-    this.x_change = 0
-    this.x_dir = 0
-    this.y_change = 0
-    this.y_dir = 0
+    this.x_velocity = 0
+    this.x_direction = 0
+    this.y_velocity = 0
+    this.y_direction = 0
   }
 
   draw() {
-    this.position_x += this.x_change * this.x_dir
-    this.position_y += this.y_change * this.y_dir
+    this.x_position += this.x_velocity * this.x_direction
+    this.y_postion += this.y_velocity * this.y_direction
     this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(this.position_x, this.position_y, this.width, this.height);
+    this.ctx.fillRect(this.x_position, this.y_postion, this.width, this.height);
   }
 
-  moving(x_change, x_dir, y_change, y_dir){
-    this.x_change = x_change
-    this.x_dir = x_dir
-    this.y_change = y_change
-    this.y_dir = y_dir
+  move(x_velocity, x_direction, y_velocity, y_direction){
+    this.x_velocity = x_velocity
+    this.x_direction = x_direction
+    this.y_velocity = y_velocity
+    this.y_direction = y_direction
   }
 
   grow(growth_margin){
-    this.position_y -= growth_margin        
-    this.position_x -= growth_margin        
+    this.y_postion -= growth_margin        
+    this.x_position -= growth_margin        
     this.width += growth_margin * 2        
     this.height += growth_margin * 2        
   }
 
   rectangle_collides_direction(obstacle_lower, obstacle_upper, dir){
 
-    let rectangle_lower
-    let rectangle_upper
+    let rectangle_lower, rectangle_upper
 
-    if (dir.toLowerCase() == "x"){
-      rectangle_lower = this.position_x
-      rectangle_upper = this.position_x + this.width
+    if (dir.toLowerCase() === "x"){
+      rectangle_lower = this.x_position
+      rectangle_upper = this.x_position + this.width
     }
-    else if (dir.toLowerCase() == "y"){
-      rectangle_lower = this.position_y
-      rectangle_upper = this.position_y + this.height
+    else if (dir.toLowerCase() === "y"){
+      rectangle_lower = this.y_postion
+      rectangle_upper = this.y_postion + this.height
     }
 
     if( object_collides(rectangle_lower, rectangle_upper, obstacle_lower, obstacle_upper)){
@@ -54,22 +53,22 @@ class Rectangle {
     return false
   }
 
-  change_x_dir(){
-    this.x_dir *= -1
+  change_x_direction(){
+    this.x_direction *= -1
   }
-  change_y_dir(){
-    this.y_dir *= -1
+  change_y_direction(){
+    this.y_direction *= -1
   }
 
-  get_rectangle(){
+  get_values(){
     //TODO: should return all values?
-    const position_x = this.position_x
-    const position_y = this.position_y
-    const x_dir = this.x_dir
-    const y_dir = this.y_dir
+    const x_position = this.x_position
+    const y_postion = this.y_postion
+    const x_direction = this.x_direction
+    const y_direction = this.y_direction
     const width = this.width
     const height = this.height
-    return {position_x, position_y, x_dir, y_dir, width, height}
+    return {x_position, y_postion, x_direction, y_direction, width, height}
   }
 }
 
@@ -79,7 +78,7 @@ class Collection_rectangles {
     this.rectangles = []
   }
 
-  draw_rectangles(){
+  draw_colliding_rectangles(){
     this.rectangles.forEach( rectangle => rectangle.draw() )
   }
   remove_rectangle(rectangle_id){
@@ -89,24 +88,33 @@ class Collection_rectangles {
   add_rectangle(rectangle){
     this.rectangles.push(rectangle)
   }
-  //TODO random_factro must do something
+  
   add_random_rectangle(random_factor){
 
-    const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
+    if (random_factor){
+      this.random_factor = random_factor
+    }
 
-    const lower_range = random_factor
-    const upper_range = random_factor * random_integer_in_range(1, 4)
+    const random_color = create_hsl_expression( random_integer_in_range(0,256) , 75 , 50 )
+
+    const lower_range = this.random_factor
+    const upper_range = this.random_factor * random_integer_in_range(1, 4)
     const random_x_speed = random_integer_in_range(lower_range, upper_range)
     const random_y_speed = random_integer_in_range(lower_range, upper_range)
 
-    const random_size = random_integer_in_range(random_factor*3, random_factor*10)
-    let random_dir_x = 1;
-    if ( Math.random() <= 0.5 ) { random_dir_x = -1; }
+    const random_size = random_integer_in_range(this.random_factor*3, this.random_factor*10)
+    let random_direction_x = 1;
+    if ( Math.random() <= 0.5 ) { random_direction_x = -1; }
 
     const rectangle = new Rectangle(ctx, canvas.width/2, random_size , 10, random_size, random_color)
-    rectangle.moving(random_x_speed,random_dir_x,random_y_speed,1)
+    rectangle.move(random_x_speed,random_direction_x,random_y_speed,1)
     this.rectangles.push(rectangle)
   }
+
+  add_random_factor(random_factor){
+    this.random_factor = random_factor
+  }
+
 }
 
 
@@ -114,15 +122,6 @@ const play_button = document.getElementById("play_button")
 const restart_button = document.getElementById("restart_button")
 const get_score_elemenet = document.getElementById("score_placeholder");
 const get_lives_elemenet = document.getElementById("lives_placeholder");
-
-let lives = parseInt(document.getElementById("lives").value)
-let random_factor = parseFloat(document.getElementById("randomness_factor").value)
-let canvas_width = parseInt(document.getElementById("canvas_width").value)
-let paddle_width = parseInt(document.getElementById("paddle_width").value)
-let canvas_height = parseInt(document.getElementById("canvas_height").value)
-let paddle_speed = parseInt(document.getElementById("paddle_speed").value)
-
-
 
 //TODO: store all variables in local storage
 
@@ -140,159 +139,156 @@ function winInit() {
   canvas = elGetId("canvas");
   ctx = canvas.getContext("2d");
 
+  let paddle_speed
 
   play_button.addEventListener("click", function() {
 
-    if (animation_id){
-      return  
-    }
+    if (animation_id){ return }
 
     //TODO stuff like paddle and such must be made here? make another function bruv
-    lives = parseInt(document.getElementById("lives").value)
-    random_factor = parseInt(document.getElementById("randomness_factor").value)
-    canvas_width = parseInt(document.getElementById("canvas_width").value)
-    paddle_width = parseInt(document.getElementById("paddle_width").value)
-    canvas_height = parseInt(document.getElementById("canvas_height").value)
+
+    const lives = parseInt(document.getElementById("lives").value)
+    const random_factor = parseInt(document.getElementById("randomness_factor").value)
+    const canvas_width = parseInt(document.getElementById("canvas_width").value)
+    const canvas_height = parseInt(document.getElementById("canvas_height").value)
+    const paddle_width = parseInt(document.getElementById("paddle_width").value)
     paddle_speed = parseInt(document.getElementById("paddle_speed").value)
 
 
-
     ball_array.add_random_rectangle(random_factor)
-
-    const random_color = `hsl( ${random_integer_in_range(0, 256)}, ${75}%, ${50}%)`
-    paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height - 60, 20, random_color)
-
-    animation_id = setInterval(draw_game, 1000 / 50);
+    ball_array.add_random_factor(random_factor)
+    const random_color = create_hsl_expression( random_integer_in_range(0,256) , 75 , 50 )
+    paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height* 0.9, 20, random_color)
+    
+    animation_id = setInterval( function () {
+      draw_multipong_game(canvas, paddle, lives, ball_array)
+    }, 1000 / 50);
   })
 
   restart_button.addEventListener("click", function(){
 
     clear_all_intervals()
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    draw_background(canvas, "black")
     animation_id = null
-
     ball_array = new Collection_rectangles()
   })
 
-  document.addEventListener("keydown", function(event){
-    paddle_handler(event)
-  })
-  document.addEventListener("keyup", function(event) {
-    paddle_handler(event)
-  })
+  document.addEventListener("keydown", function(event){ rectangle_event_handler(event, paddle, paddle_speed) })
+  document.addEventListener("keyup", function(event) { rectangle_event_handler(event, paddle, paddle_speed) })
 }
 
-
-
-
 //Creates balls, draws background and detects ball collision
-function draw_game() {
-  //draw background
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+function draw_multipong_game(canvas, paddle, lives, balls) {
 
-  draw_paddle(canvas, paddle)
-  draw_squares()
-  text_to_element(ball_array.rectangles.length - 1, get_score_elemenet)
+  draw_background(canvas, "black")
+
+  draw_rectangle(canvas, paddle)
+  
+
+  draw_colliding_rectangles(canvas, balls, paddle, lives)
+
+
+  text_to_element(balls.rectangles.length - 1, get_score_elemenet)
   text_to_element(lives, get_lives_elemenet)
 }
 
 //TODO, more arguments, change name to rectangle, add x_speed, y_speed and 
-//also event.key for up and down keys
-function paddle_handler(event){
+//TODO: also event.key for up and down keys
+function rectangle_event_handler(event, rectangle, speed){
 
-  paddle_info = paddle.get_rectangle()
-  const paddle_direction = paddle_info.x_dir
+  rectangle_info = rectangle.get_values()
+  const rectangle_direction = rectangle_info.x_direction
 
   if (event.type === "keydown"){
     if (event.key === "ArrowLeft"){
-      paddle.moving(14, -1, 0, 0)
+      rectangle.move(speed, -1, 0, 0)
     }
 
     else if (event.key === "ArrowRight"){
-      paddle.moving(14, 1, 0, 0)
+      rectangle.move(speed, 1, 0, 0)
     }
   }
 
   if (event.type === "keyup") {
-    if (event.key === "ArrowLeft" && paddle_direction !== 1){
-      paddle.moving(0, 0, 0, 0)
+    if (event.key === "ArrowLeft" && rectangle_direction !== 1){
+      rectangle.move(0, 0, 0, 0)
     }
 
-    else if (event.key === "ArrowRight" && paddle_direction !== -1){
-      paddle.moving(0, 0, 0, 0)
+    else if (event.key === "ArrowRight" && rectangle_direction !== -1){
+      rectangle.move(0, 0, 0, 0)
     }
   }
 }
+
+//TODO: add ability to use mouse for movement, use already made functions for movement
 
 //relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
-function draw_paddle(canvas, paddle){
+function draw_rectangle(canvas, rectangle){
 
-  paddle_info = paddle.get_rectangle()
-  const paddle_x1 = paddle_info.position_x
-  const paddle_x2 = paddle_info.position_x + paddle_info.width
-  const paddle_direction = paddle_info.x_dir
+  rectangle_info = rectangle.get_values()
+  const rectangle_x1 = rectangle_info.x_position
+  const rectangle_x2 = rectangle_info.x_position + rectangle_info.width
+  const rectangle_direction = rectangle_info.x_direction
 
-  if (paddle_direction === 1 && paddle_x2 >= canvas.width){
-    paddle.moving(0,0,0,0)
+  if (rectangle_direction === 1 && rectangle_x2 >= canvas.width){
+    rectangle.move(0,0,0,0)
   }
-  else if (paddle_direction === -1 && paddle_x1 <= 0){
-    paddle.moving(0,0,0,0)
+  else if (rectangle_direction === -1 && rectangle_x1 <= 0){
+    rectangle.move(0,0,0,0)
   }
-  paddle.draw()
+  rectangle.draw()
 }
 
-function draw_squares(){
+//TODO create a loop to check if obstacles get hit (incase of multiple obstacles, more general)
+function draw_colliding_rectangles(canvas, rectangle_array, obstacle, lives){
 
-  paddle_info = paddle.get_rectangle()
-  const paddle_x1 = paddle_info.position_x
-  const paddle_x2 = paddle_info.position_x + paddle_info.width
+  obstacle_info = obstacle.get_values()
+  const obstacle_x1 = obstacle_info.x_position
+  const obstacle_x2 = obstacle_info.x_position + obstacle_info.width
   
-  //top of paddle
-  const paddle_y2 = paddle_info.position_y
+  //top of obstacle
+  const obstacle_y2 = obstacle_info.y_postion
 
-  ball_array.draw_rectangles()
+  rectangle_array.draw_colliding_rectangles()
   
-  for (let i = 0; i < ball_array.rectangles.length; i++) {
+  for (let i = 0; i < rectangle_array.rectangles.length; i++) {
 
-    const ball_x1 =  ball_array.rectangles[i].position_x + ball_array.rectangles[i].width
-    const ball_x2 =  ball_array.rectangles[i].position_x
-    //bottom of ball
-    const ball_y1 = ball_array.rectangles[i].height + ball_array.rectangles[i].position_y
+    const rectangle_x1 =  rectangle_array.rectangles[i].x_position + rectangle_array.rectangles[i].width
+    const rectangle_x2 =  rectangle_array.rectangles[i].x_position
+    //bottom of rectangle
+    const rectangle_y1 = rectangle_array.rectangles[i].height + rectangle_array.rectangles[i].y_postion
 
-
-    //ball hits roof
-    if (ball_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" )){
-      ball_array.rectangles[i].change_y_dir()      
+    //rectangle hits roof
+    if (rectangle_array.rectangles[i].rectangle_collides_direction( 0, 0, "y" )){
+      rectangle_array.rectangles[i].change_y_direction()      
     }
 
-    //ball hits wall
-    if (ball_array.rectangles[i].rectangle_collides_direction(0, canvas.width, "x")) {
-      ball_array.rectangles[i].change_x_dir()      
+    //rectangle hits wall
+    if (rectangle_array.rectangles[i].rectangle_collides_direction(0, canvas.width, "x")) {
+      rectangle_array.rectangles[i].change_x_direction()      
     }
 
-    // ball hits paddle
-    if ( ball_array.rectangles[i].rectangle_collides_direction( paddle_y2, paddle_y2, "y" ) && object_collides(paddle_x1, paddle_x2, ball_x1, ball_x2) ){
-      //ensures ball does not get stuck in paddle
-      ball_array.rectangles[i].position_y -= (ball_y1 - paddle_y2)
-      ball_array.rectangles[i].change_y_dir()      
-      ball_array.add_random_rectangle(random_factor)
+    // rectangle hits obstacle
+    if ( rectangle_array.rectangles[i].rectangle_collides_direction( obstacle_y2, obstacle_y2, "y" ) && object_collides(obstacle_x1, obstacle_x2, rectangle_x1, rectangle_x2) ){
+      //ensures rectangle does not get stuck in obstacle
+      rectangle_array.rectangles[i].y_postion -= (rectangle_y1 - obstacle_y2)
+      rectangle_array.rectangles[i].change_y_direction()      
+      rectangle_array.add_random_rectangle()
     }
 
-    //ball misses paddle
-    else if ( ball_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
+    //rectangle misses obstacle
+    else if ( rectangle_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
 
       lives -= 1
 
       if (lives === 0){
         clearInterval(animation_id)
-        ball_array.rectangles[i].moving(0, 0, 0, 0)
-        const random_rectangle_id = random_integer_in_range(0, ball_array.rectangles.length)
+        rectangle_array.rectangles[i].move(0, 0, 0, 0)
+        const random_rectangle_id = random_integer_in_range(0, rectangle_array.rectangles.length)
         death_drawing(random_rectangle_id)
       }
-      ball_array.remove_rectangle(i)
-      ball_array.add_random_rectangle(random_factor)
+      rectangle_array.remove_rectangle(i)
+      rectangle_array.add_random_rectangle()
     }
   }
 }
@@ -311,17 +307,23 @@ function death_drawing(rectangle_id){
 
       let i = 0
       setInterval( function() {
+
         i += 1
-        const color = `hsl( ${i*3}, ${75}%, ${50}%)`
+        const color = create_hsl_expression( i*3 , 75 , 50 )
+
         //TODO find a way to determine the distance between text, probably make a function:)
-        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", 50*(i%13), color)
+        
+        const distance_text = largest_font_size(canvas, "You Are Dead!", "Monospace")
+        const vertical_space = Math.ceil(canvas.height / distance_text)
+
+        fill_largest_font_centered(canvas, "You Are Dead!", "monospace", distance_text*(i%vertical_space), color)
       }, 1000/50)
     }
   }, 1000/50)
 }
 
+//----------------------Generaler General Functions----------------------------------
 
-//----------------------General Functions----------------------------------
 
 function fill_largest_font_centered(canvas, text, font, y_postion, color){
   
@@ -415,3 +417,15 @@ function clear_all_intervals(){
     window.clearInterval(i)    
   }
 }
+
+function draw_background(canvas, color){
+  ctx = canvas.getContext("2d");
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function create_hsl_expression(hue, saturation, lightness){
+  return `hsl( ${hue}, ${saturation}%, ${lightness}%)`
+}
+
+//TODO: when done here, add the general functions (and classes?) to library
