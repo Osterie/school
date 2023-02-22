@@ -285,7 +285,7 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle, lives){
         clearInterval(animation_id)
         rectangle_array.rectangles[i].move(0, 0, 0, 0)
         const random_rectangle_id = random_integer_in_range(0, rectangle_array.rectangles.length)
-        death_drawing(random_rectangle_id)
+        death_drawing_rectangle(ball_array.rectangles[random_rectangle_id])
       }
       rectangle_array.remove_rectangle(i)
       rectangle_array.add_random_rectangle()
@@ -293,15 +293,15 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle, lives){
   }
 }
 
-function death_drawing(rectangle_id){
+function death_drawing_rectangle(rectangle){
 
   growth_number = 1.01
   const grow_ball_interval_id = setInterval( function() {
 
     growth_number *= 1.1
-    ball_array.rectangles[rectangle_id].grow(growth_number)
-    ball_array.rectangles[rectangle_id].draw()  
-    if (ball_array.rectangles[rectangle_id].width > canvas.width*2.5 && ball_array.rectangles[rectangle_id].height > canvas.height* 2.5 ){
+    rectangle.grow(growth_number)
+    rectangle.draw()  
+    if (rectangle.width > canvas.width*2.5 && rectangle.height > canvas.height* 2.5 ){
       
       clearInterval(grow_ball_interval_id)
 
