@@ -154,6 +154,8 @@ function winInit() {
     const paddle_width = parseInt(document.getElementById("paddle_width").value)
     paddle_speed = parseInt(document.getElementById("paddle_speed").value)
 
+    canvas.width = canvas_width
+    canvas.height = canvas_height
 
     ball_array.add_random_rectangle(random_factor)
     ball_array.add_random_factor(random_factor)
