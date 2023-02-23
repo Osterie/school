@@ -117,21 +117,17 @@ class Collection_rectangles {
 
 }
 
-
 const play_button = document.getElementById("play_button")
 const restart_button = document.getElementById("restart_button")
 const get_score_elemenet = document.getElementById("score_placeholder");
 const get_lives_elemenet = document.getElementById("lives_placeholder");
 
 //TODO: store all variables in local storage
-
 let paddle_move_id, animation_id 
 var canvas, ctx
 
 let ball_array = new Collection_rectangles()
 let paddle
-
-
 
 window.onload = winInit;
 function winInit() {
@@ -145,8 +141,6 @@ function winInit() {
 
     if (animation_id){ return }
 
-    //TODO stuff like paddle and such must be made here? make another function bruv
-
     const lives = parseInt(document.getElementById("lives").value)
     const random_factor = parseInt(document.getElementById("randomness_factor").value)
     const canvas_width = parseInt(document.getElementById("canvas_width").value)
@@ -154,6 +148,8 @@ function winInit() {
     const paddle_width = parseInt(document.getElementById("paddle_width").value)
     paddle_speed = parseInt(document.getElementById("paddle_speed").value)
 
+    canvas.width = canvas_width
+    canvas.height = canvas_height
 
     ball_array.add_random_rectangle(random_factor)
     ball_array.add_random_factor(random_factor)
@@ -173,8 +169,8 @@ function winInit() {
     ball_array = new Collection_rectangles()
   })
 
-  document.addEventListener("keydown", function(event){ rectangle_event_handler(event, paddle, paddle_speed) })
-  document.addEventListener("keyup", function(event) { rectangle_event_handler(event, paddle, paddle_speed) })
+  document.addEventListener("keydown", function(event){ rectangle_event_handler(event, paddle, paddle_speed, 0) })
+  document.addEventListener("keyup", function(event) { rectangle_event_handler(event, paddle, paddle_speed, 0) })
 }
 
 //Creates balls, draws background and detects ball collision
@@ -192,34 +188,49 @@ function draw_multipong_game(canvas, paddle, lives, balls) {
   text_to_element(lives, get_lives_elemenet)
 }
 
-//TODO, more arguments, change name to rectangle, add x_speed, y_speed and 
-//TODO: also event.key for up and down keys
-function rectangle_event_handler(event, rectangle, speed){
+function rectangle_event_handler(event, rectangle, x_speed, y_speed){
 
   rectangle_info = rectangle.get_values()
-  const rectangle_direction = rectangle_info.x_direction
+  const rectangle_x_direction = rectangle_info.x_direction
+  const rectangle_y_direction = rectangle_info.y_direction
 
   if (event.type === "keydown"){
     if (event.key === "ArrowLeft"){
-      rectangle.move(speed, -1, 0, 0)
+      rectangle.move(x_speed, -1, 0, 0)
     }
 
     else if (event.key === "ArrowRight"){
-      rectangle.move(speed, 1, 0, 0)
+      rectangle.move(x_speed, 1, 0, 0)
+    }
+
+    else if (event.key === "ArrowUp"){
+      rectangle.move(0, 0, y_speed, -1)
+    }
+
+    else if (event.key === "ArrowDown"){
+      rectangle.move(0, 0, y_speed, 1)
     }
   }
 
   if (event.type === "keyup") {
-    if (event.key === "ArrowLeft" && rectangle_direction !== 1){
+    if (event.key === "ArrowLeft" && rectangle_x_direction !== 1){
       rectangle.move(0, 0, 0, 0)
     }
 
-    else if (event.key === "ArrowRight" && rectangle_direction !== -1){
+    else if (event.key === "ArrowRight" && rectangle_x_direction !== -1){
+      rectangle.move(0, 0, 0, 0)
+    }
+    else if (event.key === "ArrowUp" && rectangle_y_direction !== 1){
+      rectangle.move(0, 0, 0, 0)
+    }
+
+    else if (event.key === "ArrowDown" && rectangle_y_direction !== -1){
       rectangle.move(0, 0, 0, 0)
     }
   }
 }
 
+//TODO: lives does not work, fix it!
 //TODO: add ability to use mouse for movement, use already made functions for movement
 
 //relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
