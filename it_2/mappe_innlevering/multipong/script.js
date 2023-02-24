@@ -128,6 +128,7 @@ var canvas, ctx
 
 let ball_array = new Collection_rectangles()
 let paddle
+let lives
 
 window.onload = winInit;
 function winInit() {
@@ -141,7 +142,7 @@ function winInit() {
 
     if (animation_id){ return }
 
-    const lives = parseInt(document.getElementById("lives").value)
+    lives = parseInt(document.getElementById("lives").value)
     const random_factor = parseInt(document.getElementById("randomness_factor").value)
     const canvas_width = parseInt(document.getElementById("canvas_width").value)
     const canvas_height = parseInt(document.getElementById("canvas_height").value)
@@ -157,7 +158,7 @@ function winInit() {
     paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height* 0.9, 20, random_color)
     
     animation_id = setInterval( function () {
-      draw_multipong_game(canvas, paddle, lives, ball_array)
+      draw_multipong_game(canvas, paddle, ball_array)
     }, 1000 / 50);
   })
 
@@ -174,14 +175,14 @@ function winInit() {
 }
 
 //Creates balls, draws background and detects ball collision
-function draw_multipong_game(canvas, paddle, lives, balls) {
+function draw_multipong_game(canvas, paddle, balls) {
 
   draw_background(canvas, "black")
 
   draw_rectangle(canvas, paddle)
   
 
-  draw_colliding_rectangles(canvas, balls, paddle, lives)
+  draw_colliding_rectangles(canvas, balls, paddle)
 
 
   text_to_element(balls.rectangles.length - 1, get_score_elemenet)
@@ -230,7 +231,7 @@ function rectangle_event_handler(event, rectangle, x_speed, y_speed){
   }
 }
 
-//TODO: lives does not work, fix it!
+//TODO: lives makes functions non-general, fix it!
 //TODO: add ability to use mouse for movement, use already made functions for movement
 
 //relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
@@ -251,7 +252,7 @@ function draw_rectangle(canvas, rectangle){
 }
 
 //TODO create a loop to check if obstacles get hit (incase of multiple obstacles, more general)
-function draw_colliding_rectangles(canvas, rectangle_array, obstacle, lives){
+function draw_colliding_rectangles(canvas, rectangle_array, obstacle){
 
   obstacle_info = obstacle.get_values()
   const obstacle_x1 = obstacle_info.x_position
