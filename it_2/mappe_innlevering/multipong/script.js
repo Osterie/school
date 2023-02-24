@@ -231,7 +231,7 @@ function rectangle_event_handler(event, rectangle, x_speed, y_speed){
   }
 }
 
-//TODO: lives does not work, fix it!
+//TODO: lives makes functions non-general, fix it!
 //TODO: add ability to use mouse for movement, use already made functions for movement
 
 //relyes on the Rectangle class, paddle paramater ask for initialized class object of Rectangle class
