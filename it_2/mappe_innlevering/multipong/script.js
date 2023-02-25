@@ -113,7 +113,7 @@ class Collection_rectangles {
   }
 }
 
-//TODO: store all variables in local storage
+//TODO: store all variables in local storage? and make some function(s) for easy storage
 let animation_id 
 var canvas, ctx
 let lives
@@ -129,6 +129,7 @@ function winInit() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   let paddle_speed
+
   play_button.addEventListener("click", function() {
 
     if (animation_id){ return }
@@ -144,11 +145,11 @@ function winInit() {
     canvas.height = canvas_height
 
     const ball_array = new Collection_rectangles()
-    ball_array.add_random_rectangle(random_factor)
     ball_array.add_random_factor(random_factor)
-    const random_color = create_hsl_expression( random_integer_in_range(0,256) , 75 , 50 )
+    ball_array.add_random_rectangle()
     
-    const paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height* 0.9, 20, random_color)
+    const random_paddle_color = create_hsl_expression( random_integer_in_range(0,256) , 75 , 50 )
+    const paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height* 0.9, 20, random_paddle_color)
     
     animation_id = setInterval( function () { draw_multipong_game(canvas, paddle, ball_array, lives, get_lives_element, get_score_element) }, 1000 / 50);
 
@@ -186,35 +187,32 @@ function rectangle_key_handler(event, rectangle, x_speed, y_speed){
   const rectangle_y_direction = rectangle_info.y_direction
 
   if (event.type === "keydown"){
+
     if (event.key === "ArrowLeft"){
       rectangle.move(x_speed, -1, 0, 0)
     }
-
     else if (event.key === "ArrowRight"){
       rectangle.move(x_speed, 1, 0, 0)
     }
-
     else if (event.key === "ArrowUp"){
       rectangle.move(0, 0, y_speed, -1)
     }
-
     else if (event.key === "ArrowDown"){
       rectangle.move(0, 0, y_speed, 1)
     }
   }
 
   if (event.type === "keyup") {
+
     if (event.key === "ArrowLeft" && rectangle_x_direction !== 1){
       rectangle.move(0, 0, 0, 0)
     }
-
     else if (event.key === "ArrowRight" && rectangle_x_direction !== -1){
       rectangle.move(0, 0, 0, 0)
     }
     else if (event.key === "ArrowUp" && rectangle_y_direction !== 1){
       rectangle.move(0, 0, 0, 0)
     }
-
     else if (event.key === "ArrowDown" && rectangle_y_direction !== -1){
       rectangle.move(0, 0, 0, 0)
     }
@@ -251,9 +249,7 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle){
 
   obstacle_info = obstacle.get_values()
   const obstacle_x1 = obstacle_info.x_position
-  const obstacle_x2 = obstacle_info.x_position + obstacle_info.width
-  
-  //top of obstacle
+  const obstacle_x2 = obstacle_info.x_position + obstacle_info.width  
   const obstacle_y2 = obstacle_info.y_postion
 
   rectangle_array.draw_colliding_rectangles()
@@ -262,7 +258,6 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle){
 
     const rectangle_x1 =  rectangle_array.rectangles[i].x_position + rectangle_array.rectangles[i].width
     const rectangle_x2 =  rectangle_array.rectangles[i].x_position
-    //bottom of rectangle
     const rectangle_y1 = rectangle_array.rectangles[i].height + rectangle_array.rectangles[i].y_postion
 
     //rectangle hits roof
@@ -285,7 +280,6 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle){
 
     //rectangle misses obstacle
     else if ( rectangle_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
-
       //stops pong animation, and does death drawing for a random ball
       if (lives === 0){
         clearInterval(animation_id)
@@ -308,7 +302,6 @@ function death_drawing_rectangle(canvas, rectangle){
     growth_number *= 1.1
     rectangle.grow(growth_number)
     rectangle.draw()
-    
     //the growing rectangle fills the canvas
     if (rectangle.width > canvas.width*2.5 && rectangle.height > canvas.height* 2.5 ){
       
@@ -342,29 +335,28 @@ function fill_largest_font_centered(canvas, text, font, y_postion, color){
 }
 
 function largest_font_size(canvas, text, font){
-
-  const temp_canvas = document.createElement('canvas');
-  temp_canvas.width = canvas.width;
-  temp_canvas.height = canvas.height;
-  const ctx = temp_canvas.getContext("2d");
+  
+  const temporary_canvas = document.createElement('canvas');
+  const temporary_ctx = temporary_canvas.getContext("2d");
+  temporary_canvas.width = canvas.width;
+  temporary_canvas.height = canvas.height;
 
   let font_size = smallest(canvas.height, canvas.width)
 
-  ctx.font = `${font_size}px ${font}`;
-  let text_metrics = ctx.measureText(text);
+  temporary_ctx.font = `${font_size}px ${font}`;
+  let text_metrics = temporary_ctx.measureText(text);
 
+  //algorithm to quickly find the largest possible font size
   while (text_metrics.width > canvas.width){
     font_size *= 0.9
-    ctx.font = `${font_size}px ${font}`;
-    text_metrics = ctx.measureText(text);
+    temporary_ctx.font = `${font_size}px ${font}`;
+    text_metrics = temporary_ctx.measureText(text);
   }
-
   while (text_metrics.width + 1 < canvas.width){
     font_size += 1
-    ctx.font = `${font_size}px ${font}`;
-    text_metrics = ctx.measureText(text);
+    temporary_ctx.font = `${font_size}px ${font}`;
+    text_metrics = temporary_ctx.measureText(text);
   }
-
   return font_size
 }
 
@@ -433,7 +425,7 @@ function create_hsl_expression(hue, saturation, lightness){
 }
 
 function get_cursor_position(event) {
-  //finds the absolute coordinates clicked, given as distence from top left.
+  //returns cursor position as an array
   return [event.offsetX, event.offsetY];
-  }
+}
 //TODO: when done here, add the general functions (and classes?) to library
