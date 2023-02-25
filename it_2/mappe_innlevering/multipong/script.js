@@ -170,26 +170,24 @@ function winInit() {
     ball_array = new Collection_rectangles()
   })
 
-  document.addEventListener("keydown", function(event){ rectangle_event_handler(event, paddle, paddle_speed, 0) })
-  document.addEventListener("keyup", function(event) { rectangle_event_handler(event, paddle, paddle_speed, 0) })
+
+
+  canvas.addEventListener("mousemove", function(event){ rectangle_mouse_handler(event, paddle) })
+  document.addEventListener("keydown", function(event){ rectangle_key_handler(event, paddle, paddle_speed, 0) })
+  document.addEventListener("keyup", function(event) { rectangle_key_handler(event, paddle, paddle_speed, 0) })
 }
 
 //Creates balls, draws background and detects ball collision
 function draw_multipong_game(canvas, paddle, balls) {
 
   draw_background(canvas, "black")
-
   draw_rectangle(canvas, paddle)
-  
-
   draw_colliding_rectangles(canvas, balls, paddle)
-
-
   text_to_element(balls.rectangles.length - 1, get_score_elemenet)
   text_to_element(lives, get_lives_elemenet)
 }
 
-function rectangle_event_handler(event, rectangle, x_speed, y_speed){
+function rectangle_key_handler(event, rectangle, x_speed, y_speed){
 
   rectangle_info = rectangle.get_values()
   const rectangle_x_direction = rectangle_info.x_direction
@@ -229,6 +227,19 @@ function rectangle_event_handler(event, rectangle, x_speed, y_speed){
       rectangle.move(0, 0, 0, 0)
     }
   }
+}
+
+function rectangle_mouse_handler(event, rectangle){
+  
+  rectangle_info = rectangle.get_values()
+  const rectangle_x_direction = rectangle_info.x_direction
+  const rectangle_y_direction = rectangle_info.y_direction
+  const rectangle_width = rectangle_info.width
+  const cursor_x_position = get_cursor_position(event)[0]
+
+  rectangle.x_position = (cursor_x_position - rectangle_width/2) 
+
+
 }
 
 //TODO: lives makes functions non-general, fix it!
@@ -440,4 +451,8 @@ function create_hsl_expression(hue, saturation, lightness){
   return `hsl( ${hue}, ${saturation}%, ${lightness}%)`
 }
 
+function get_cursor_position(event) {
+  //finds the absolute coordinates clicked, given as distence from top left.
+  return [event.offsetX, event.offsetY];
+  }
 //TODO: when done here, add the general functions (and classes?) to library
