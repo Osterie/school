@@ -114,10 +114,9 @@ class Collection_rectangles {
 }
 
 //TODO: store all variables in local storage
-let paddle_move_id, animation_id 
+let animation_id 
 var canvas, ctx
 let lives
-
 
 window.onload = winInit;
 function winInit() {
@@ -127,7 +126,7 @@ function winInit() {
   const get_score_element = document.getElementById("score_placeholder");
   const get_lives_element = document.getElementById("lives_placeholder");
 
-  canvas = elGetId("canvas");
+  canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   let paddle_speed
   play_button.addEventListener("click", function() {
@@ -168,9 +167,6 @@ function winInit() {
     document.removeEventListener("keydown", function(event){ rectangle_key_handler(event, paddle, paddle_speed, 0) })
     document.removeEventListener("keyup", function(event) { rectangle_key_handler(event, paddle, paddle_speed, 0) })
   })
-
-
-
 }
 
 //Creates balls, draws background and detects ball collision
