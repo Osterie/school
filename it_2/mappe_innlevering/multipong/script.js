@@ -113,11 +113,6 @@ class Collection_rectangles {
   }
 }
 
-const play_button = document.getElementById("play_button")
-const restart_button = document.getElementById("restart_button")
-const get_score_elemenet = document.getElementById("score_placeholder");
-const get_lives_elemenet = document.getElementById("lives_placeholder");
-
 //TODO: store all variables in local storage
 let paddle_move_id, animation_id 
 var canvas, ctx
@@ -126,6 +121,11 @@ let lives
 
 window.onload = winInit;
 function winInit() {
+
+  const play_button = document.getElementById("play_button")
+  const restart_button = document.getElementById("restart_button")
+  const get_score_element = document.getElementById("score_placeholder");
+  const get_lives_element = document.getElementById("lives_placeholder");
 
   canvas = elGetId("canvas");
   ctx = canvas.getContext("2d");
@@ -151,7 +151,7 @@ function winInit() {
     
     const paddle = new Rectangle(ctx, canvas.width/2 - 75, paddle_width, canvas.height* 0.9, 20, random_color)
     
-    animation_id = setInterval( function () { draw_multipong_game(canvas, paddle, ball_array) }, 1000 / 50);
+    animation_id = setInterval( function () { draw_multipong_game(canvas, paddle, ball_array, lives, get_lives_element, get_score_element) }, 1000 / 50);
 
     canvas.addEventListener("mousemove", function(event){ rectangle_mouse_handler(event, paddle) })
     document.addEventListener("keydown", function(event){ rectangle_key_handler(event, paddle, paddle_speed, 0) })
@@ -168,16 +168,19 @@ function winInit() {
     document.removeEventListener("keydown", function(event){ rectangle_key_handler(event, paddle, paddle_speed, 0) })
     document.removeEventListener("keyup", function(event) { rectangle_key_handler(event, paddle, paddle_speed, 0) })
   })
+
+
+
 }
 
 //Creates balls, draws background and detects ball collision
-function draw_multipong_game(canvas, paddle, balls) {
+function draw_multipong_game(canvas, paddle, balls, lives, life_element, score_element) {
 
   draw_background(canvas, "black")
   draw_rectangle(canvas, paddle)
   draw_colliding_rectangles(canvas, balls, paddle)
-  text_to_element(balls.rectangles.length - 1, get_score_elemenet)
-  text_to_element(lives, get_lives_elemenet)
+  text_to_element(balls.rectangles.length - 1, score_element)
+  text_to_element(lives, life_element)
 }
 
 function rectangle_key_handler(event, rectangle, x_speed, y_speed){
@@ -287,14 +290,14 @@ function draw_colliding_rectangles(canvas, rectangle_array, obstacle){
     //rectangle misses obstacle
     else if ( rectangle_array.rectangles[i].rectangle_collides_direction( canvas.height, canvas.height, "y" ) ) {
 
-      lives -= 1
-
+      //stops pong animation, and does death drawing for a random ball
       if (lives === 0){
         clearInterval(animation_id)
         rectangle_array.rectangles[i].move(0, 0, 0, 0)
         const random_rectangle_id = random_integer_in_range(0, rectangle_array.rectangles.length)
         death_drawing_rectangle(canvas, rectangle_array.rectangles[random_rectangle_id])
       }
+      lives -= 1
       rectangle_array.remove_rectangle(i)
       rectangle_array.add_random_rectangle()
     }
