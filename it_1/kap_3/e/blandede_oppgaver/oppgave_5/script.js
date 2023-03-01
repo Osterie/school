@@ -1,23 +1,33 @@
-const input_field = document.getElementById('input')
-const button = document.getElementById('button')
-const output = document.getElementById('output')
 
-input_field.addEventListener('change', () => {    
-    input_handler(input_field)
-})
+//a
+const array = fill_array_ints(20)
+console.log(array)
 
-button.addEventListener('click', () =>{
-    button_handler(input_field)
-})
+//b
+const removed_values = remove_random_values(array, 10)
+console.log(removed_values)
+console.log(array)
 
-function input_handler(input){
 
-    const input_verdi = input.value
-    output.innerHTML = 'output'
+function remove_random_values(array, amount){
+
+    const removed_values = []
+
+    for (let i = 0; i < amount; i++) {
+        const random_value = random_integer_in_range(0, array.length)
+        removed_values.push(array.splice(random_value, 1).join())
+    }
+    return removed_values
 }
 
-function button_handler(input) {
-    const input_verdi = input.value
-    output.innerHtml = 'output'
-    //do stuff
+function fill_array_ints(amount) {
+    const array = []
+    for (let i = 0; i < amount; i++) {
+        array.push(i)
+    }
+    return array
 }
+
+function random_integer_in_range(lower_limit, upper_limit){
+    return Math.floor( (Math.random() * (upper_limit - lower_limit)) + lower_limit)
+  }

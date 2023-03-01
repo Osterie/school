@@ -1,23 +1,17 @@
-const input_field = document.getElementById('input')
-const button = document.getElementById('button')
-const output = document.getElementById('output')
 
-input_field.addEventListener('change', () => {    
-    input_handler(input_field)
-})
+const array = [1, 2, 3, 4, 5, 6, 7, 8, 9 ,10, 11, 12]
 
-button.addEventListener('click', () =>{
-    button_handler(input_field)
-})
 
-function input_handler(input){
+revese_array(array)
 
-    const input_verdi = input.value
-    output.innerHTML = 'output'
-}
+console.log(array)
 
-function button_handler(input) {
-    const input_verdi = input.value
-    output.innerHtml = 'output'
-    //do stuff
-}
+function revese_array(array) {
+
+    for (let i = 0; i < Math.floor(array.length/2); i++) {
+        const temp = array[i]
+        array[i] = array[array.length - i - 1]    
+        array[array.length - i - 1] = temp
+    }
+    return array
+}   
