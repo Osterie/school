@@ -32,21 +32,28 @@ function array_random_ints(amount, lowest, largest) {
 trekk_fra_array(rand_array_20, 7)
 console.log(rand_array_20)
 
-
-
 function trekk_fra_array(array, number){
-    for (let i = 0; i < number; i++) {
-  
-        //finnere indexen til det gitte tallet
-        subtract_index = array.indexOf(number)
-  
-        //fjerner verdien på plassen vi fant
-        array.splice(subtract_index, 1)
+    const length_before = array.length
+    for (let i = 0; i < array.length; i++) {
+
+        //finnere indexen til det gitte tallet, om det finnes
+        if (array.indexOf(number) != -1){
+            const subtract_index = array.indexOf(number)
+            //fjerner verdien på plassen vi fant
+            array.splice(subtract_index, 1)
+        }
+
     }
+    const length_after = array.length
+    //sjekker hvor lang arrayen var før og etter vi fjerner tallet, det blir da antall fjernet av det tallet
+    const antall_fjernet = length_before-length_after
+    console.log(`fjernet ${antall_fjernet} av tallet ${number}`)
     return array
-  }
+}
 
 // d
+
+skrivut_array_verdier(rand_array_20)
 
 //skrier ut hver verdi i arrayen og indeksen
 function skrivut_array_verdier(array){
@@ -54,5 +61,3 @@ function skrivut_array_verdier(array){
         console.log(`Verdi med indeks ${i}: ${array[i]}`)
     }
 }
-
-skrivut_array_verdier(rand_array_20)
