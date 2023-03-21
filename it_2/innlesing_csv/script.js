@@ -1,11 +1,11 @@
 var filinnhold = "";
-window.onload = winInit; 
-function winInit() {
+// window.onload = winInit; 
+// function winInit() {
 
-	// elGetId("lesFil1").onclick = lesFil1;
-	// elGetId("clear_gloser").onclick = clear_gloser;
-	// elGetId("legg_til_gloser").onclick = legg_til_gloser;
-}
+// 	// elGetId("lesFil1").onclick = lesFil1;
+// 	// elGetId("clear_gloser").onclick = clear_gloser;
+// 	// elGetId("legg_til_gloser").onclick = legg_til_gloser;
+// }
 
 
 // function elGetId(idName) {
@@ -21,41 +21,24 @@ let engelsk_gloser = [];
 //Used to check if csv is read.
 var created = 0;
 
-async function lesFil1() {
-  filinnhold = await lastInn("norsk-engelsk.csv");
 
-  var filinnhold_rows = filinnhold.split("\n");
+// read_csv("oppgave_05_sykkeltur.csv")
+// read_csv("short.csv")
+console.log(read_csv("short.csv"))
 
-  //Går gjennom alle rader i csv fil (utenom overskrift greie)
-  //sjekker om norsk_gloser arrayen allerede er lagd.
-  if (created < 2) {
-    created += 1;
-    for (let i = 1; i < filinnhold_rows.length; i++) {
+async function read_csv(csv_file, callback) {
+    filinnhold = await lastInn(csv_file);
+    callback(filinnhold)
+}
 
-      //Legger til det som kommer foran ";" i csv filen, som er det norske ordet, gjør også ordet til småe bokstaver for en bedre oversettelse.
-      norsk_gloser.push(
-        filinnhold_rows[i]
-          .slice(0, filinnhold_rows[i].indexOf(";"))
-          .toLowerCase()
-      );
-
-      //Legger til det som kommer etter ";" i csv filen, som er det engelske ordet
-      engelsk_gloser.push(
-        filinnhold_rows[i]
-          .slice(filinnhold_rows[i].indexOf(";") + 1)
-          .toLowerCase()
-      );
-    }
-  }
-
-  if (created < 2) {
-    created += 1;
-    for (let i = 0; i < norsk_glose_array.length; i++) {
-      norsk_gloser.push(norsk_glose_array[i]);
-      engelsk_gloser.push(engelsk_glose_array[i]);
-    }
-  }
-  visInnhold();
+function read_image(image_input,callback, array){ // Leser fil basert på popup-dialog (fra HTML Input tag type 'file')
+	let file   = image_input.files[0];
+	let reader = new FileReader();
+	reader.onload = function(evt) {
+					let fileContent = evt.target.result;
+					callback(fileContent, array);
+				    };
+    reader.readAsDataURL(file);
 }
 
 function visInnhold() {
