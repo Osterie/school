@@ -23,12 +23,26 @@ var created = 0;
 
 
 // read_csv("oppgave_05_sykkeltur.csv")
-// read_csv("short.csv")
-console.log(read_csv("short.csv"))
+read_csv("short.csv", store_csv)
+
+//TODO add paramaters for newline seperator and value seperator
+
+function store_csv(csv, array){
+
+    //create a 2d array and store each column in its array
+
+    csv = csv.split("\r\n")
+    console.log(csv)
+    for (let i = 0; i < csv.length; i++) {
+        // csv[i] = csv[i].split(";")
+    }
+    console.log(csv)
+}
+//TODO add paramaters for newline seperator and value seperator
 
 async function read_csv(csv_file, callback) {
     filinnhold = await lastInn(csv_file);
-    callback(filinnhold)
+        callback(filinnhold)
 }
 
 function read_image(image_input,callback, array){ // Leser fil basert på popup-dialog (fra HTML Input tag type 'file')
