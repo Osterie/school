@@ -34,7 +34,7 @@ console.log(rand_array_20)
 
 function trekk_fra_array(array, number){
     const length_before = array.length
-    for (let i = 0; i < array.length; i++) {
+    for (let i = 0; i <= array.length; i++) {
 
         //finnere indexen til det gitte tallet, om det finnes
         if (array.indexOf(number) != -1){
