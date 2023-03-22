@@ -1,27 +1,62 @@
 
+// testing_array[3] = start_location
+// testing_array[8] = end_location
+function oppstart() {
+  tegnBrukBakgrunn("white");
+  plot(testing_array[0], testing_array[5], "rød", "Maks temp");
+  plot(testing_array[0], testing_array[4], "svart", "Min temp");
+  tegnAkser("Måned", "Temperatur", 0, 1, true, true, false);
+}
+
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
 }
 
-let testing_array 
-
-// read_csv("oppgave_05_sykkeltur.csv", store_csv, test_array)
-(async () => {
-  testing_array = await read_csv("short.csv", store_csv);
-  console.log(testing_array);
-})();
-
-
-function changeNumber(num) {
-  num = 42; // This is the number we want to change to
-  return num;
+function plot(xliste, yliste, graf_farge, tekst) {
+  tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
+  tegnBrukXY(0, 10000, -20, 30);
+  tegnTekst(
+    tekst,
+    xliste[0],
+    yliste[0] - 3,
+    graf_farge,
+    0,
+    "left",
+    20,
+    "Calibri",
+    "bottom"
+  );
+  tegnKurve(xliste, yliste, graf_farge, "strek", 2);
+  console.log('ferdig')
 }
 
-let myNumber = 10;
-console.log(myNumber); // Output: 10
 
-myNumber = changeNumber(myNumber);
-console.log(myNumber); // Output: 42a
+
+
+function count_remove_instances(array){
+
+
+
+  const length_before = array.length
+
+  for (let i = 0; i <= array.length; i++) {
+      //finnere indexen til det gitte tallet, om det finnes
+      if (array.indexOf(item) != -1){
+          const subtract_index = array.indexOf(item)
+          //fjerner verdien på plassen vi fant
+          array.splice(subtract_index, 1)
+          i -=1
+      }
+
+  }
+  const length_after = array.length
+  const instances = length_before-length_after
+
+
+
+
+}
+
 
 
 //TODO add paramaters for newline seperator and value seperator
@@ -47,7 +82,6 @@ function store_csv(csv, array){
       
     }
 
-    console.log(array)
     return array
 }
 
@@ -72,7 +106,7 @@ function read_image(image_input,callback, array){ // Leser fil basert på popup-
 					let fileContent = evt.target.result;
 					callback(fileContent, array);
 				    };
-    reader.readAsDataURL(file);
+   reader.readAsDataURL(file);
 }
 
 function visInnhold() {
@@ -84,71 +118,43 @@ function visInnhold() {
   elGetId("utskrift").innerHTML = filinnhold;
 }
 
-// if (localStorage.getItem("Norsk Gloser")) {
-//   var norsk_glose_array = localStorage.getItem("Norsk Gloser").split(",");
-//   var engelsk_glose_array = localStorage.getItem("Engelsk Gloser").split(",");
-// }
-// else {
-//   var norsk_glose_array = [];
-//   var engelsk_glose_array = [];
-// }
+let testing_array 
 
-// function legg_til_gloser() {
-//   var norsk_glose_input = elGetId("norsk_glose").value.toLowerCase();
-//   var engelsk_glose_input = elGetId("engelsk_glose").value.toLowerCase();
+var canvas, ctx;
+window.onload = winInit;
 
-//   if (
-//     norsk_glose_array.includes(norsk_glose_input) &&
-//     engelsk_glose_array.includes(engelsk_glose_input)
-//   ) {
-//     elGetId("utskrift").innerHTML = "Oversettelsen finnes allerede!";
-//   } 
-//   else if (norsk_glose_input && engelsk_glose_input) {
-//     norsk_glose_array.push(norsk_glose_input);
-//     engelsk_glose_array.push(engelsk_glose_input);
-//   } 
-//   else {
-//     elGetId("utskrift").innerHTML = "Feil I Input Felt";
-//   }
+function winInit() {
 
-//   localStorage.setItem("Norsk Gloser", norsk_glose_array);
-//   localStorage.setItem("Engelsk Gloser", engelsk_glose_array);
-// }
+  canvas = document.getElementById("canvas"); 
+  ctx = canvas.getContext("2d");
+  tegnBrukCanvas("canvas"); 
 
-// function clear_gloser() {
-//   norsk_glose_array = [];
-//   engelsk_glose_array = [];
-//   localStorage.setItem("Norsk Gloser", norsk_glose_array);
-//   localStorage.setItem("Engelsk Gloser", engelsk_glose_array);
-// }
 
-// function translate() {
+(async () => {
+  testing_array = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  console.log(testing_array);
 
-//   var glossary = elGetId("translator").value.toLowerCase();
+  const testing_array_start = testing_array[3].slice()
+  most_frequent_element(testing_array_start)
 
-//   if (norsk_gloser.includes(glossary)) {
-//     elGetId("utskrift").innerHTML =
-//       engelsk_gloser[norsk_gloser.indexOf(glossary)];
-//   } 
-//   else if (engelsk_gloser.includes(glossary)) {
-//     elGetId("utskrift").innerHTML =
-//       norsk_gloser[engelsk_gloser.indexOf(glossary)];
-//   } 
-//   else if (norsk_gloser.length === 0) {
-//     elGetId("utskrift").innerHTML = "Du må først lese inn ordlisten";
-//   } 
-//   else {
-//     elGetId("utskrift").innerHTML = "Fant ikke ordet i ordlisten";
-//   }
-// }
+})();
 
-// elGetId("oversett").onclick = translate;
+}
 
-// if (elGetId("translator")) {
-//   elGetId("translator").addEventListener("keypress", function (event) {
-//     if (event.code === "Enter") {
-//       translate();
-//     }
-//   });
-// }
+
+function most_frequent_element(array){
+  array.sort()
+  
+  let max = 0
+
+  for (let i = 0; i < array.length; i++) {
+
+    
+
+  }
+
+
+
+
+}
 
