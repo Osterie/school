@@ -1,48 +1,68 @@
-var filinnhold = "";
-// window.onload = winInit; 
-// function winInit() {
-
-// 	// elGetId("lesFil1").onclick = lesFil1;
-// 	// elGetId("clear_gloser").onclick = clear_gloser;
-// 	// elGetId("legg_til_gloser").onclick = legg_til_gloser;
-// }
-
-
-// function elGetId(idName) {
-//   return document.getElementById(idName);
-// }
 
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
 }
 
-let norsk_gloser = [];
-let engelsk_gloser = [];
-//Used to check if csv is read.
-var created = 0;
+let testing_array 
+
+// read_csv("oppgave_05_sykkeltur.csv", store_csv, test_array)
+(async () => {
+  testing_array = await read_csv("short.csv", store_csv);
+  console.log(testing_array);
+})();
 
 
-// read_csv("oppgave_05_sykkeltur.csv")
-read_csv("short.csv", store_csv)
+function changeNumber(num) {
+  num = 42; // This is the number we want to change to
+  return num;
+}
+
+let myNumber = 10;
+console.log(myNumber); // Output: 10
+
+myNumber = changeNumber(myNumber);
+console.log(myNumber); // Output: 42a
+
 
 //TODO add paramaters for newline seperator and value seperator
 
 function store_csv(csv, array){
 
     //create a 2d array and store each column in its array
-
     csv = csv.split("\r\n")
-    console.log(csv)
+    const name_values = csv[0].split(";")
+
     for (let i = 0; i < csv.length; i++) {
-        // csv[i] = csv[i].split(";")
+        csv[i] = csv[i].split(";") 
     }
-    console.log(csv)
+
+    array = new Array(csv.length)
+
+    for (let i = 0; i < name_values.length; i++) {
+
+      array[i] = new Array(name_values.length)
+      for (let j = 0; j < csv.length; j++) {
+        array[i][j] = csv[j][i]
+      }
+      
+    }
+
+    console.log(array)
+    return array
 }
+
+
+function myFunction(a){
+  window['a'] = 20; // or window.a
+}
+
+
+
 //TODO add paramaters for newline seperator and value seperator
 
 async function read_csv(csv_file, callback) {
-    filinnhold = await lastInn(csv_file);
-        callback(filinnhold)
+    const filinnhold = await lastInn(csv_file);
+    return callback(filinnhold)
 }
 
 function read_image(image_input,callback, array){ // Leser fil basert på popup-dialog (fra HTML Input tag type 'file')
