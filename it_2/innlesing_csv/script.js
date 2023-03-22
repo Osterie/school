@@ -30,14 +30,27 @@ read_csv("short.csv", store_csv)
 function store_csv(csv, array){
 
     //create a 2d array and store each column in its array
-
     csv = csv.split("\r\n")
-    console.log(csv)
+    const name_values = csv[0].split(";")
+
     for (let i = 0; i < csv.length; i++) {
-        // csv[i] = csv[i].split(";")
+        csv[i] = csv[i].split(";")
     }
-    console.log(csv)
+
+    array = new Array(csv.length)
+
+    for (let i = 0; i < name_values.length; i++) {
+
+      array[i] = new Array(name_values.length)
+      for (let j = 0; j < csv.length; j++) {
+        array[i][j] = csv[j][i]
+      }
+      
+    }
+
+    console.log(array)
 }
+
 //TODO add paramaters for newline seperator and value seperator
 
 async function read_csv(csv_file, callback) {
