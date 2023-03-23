@@ -1,66 +1,5 @@
-
-
-function lastInn(file) {
-  return fetch(file).then((response) => response.text());
-}
-
-function plot(xliste, yliste, graf_farge, tekst) {
-  tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
-  tegnTekst(
-    tekst,
-    xliste[0],
-    yliste[0] - 3,
-    graf_farge,
-    0,
-    "left",
-    20,
-    "Calibri",
-    "bottom"
-  );
-  tegnKurve(xliste, yliste, graf_farge, "strek", 2);
-  console.log('ferdig')
-}
-
-
-
-
-
-//TODO add paramaters for newline seperator and value seperator
-
-function store_csv(csv, array){
-
-    //create a 2d array and store each column in its array
-    csv = csv.split("\r\n")
-    const name_values = csv[0].split(";")
-
-    for (let i = 0; i < csv.length; i++) {
-        csv[i] = csv[i].split(";") 
-    }
-
-    array = new Array(csv.length)
-
-    for (let i = 0; i < name_values.length; i++) {
-
-      array[i] = new Array(name_values.length)
-      for (let j = 0; j < csv.length; j++) {
-        array[i][j] = csv[j][i]
-      }
-      
-    }
-
-    return array
-}
-
-
-//TODO add paramaters for newline seperator and value seperator
-
-async function read_csv(csv_file, callback) {
-    const filinnhold = await lastInn(csv_file);
-    return callback(filinnhold)
-}
-
-
 let testing_array 
+
 
 var canvas, ctx;
 window.onload = winInit;
@@ -93,6 +32,65 @@ function winInit() {
 })();
 
 }
+
+
+
+
+
+function lastInn(file) {
+  return fetch(file).then((response) => response.text());
+}
+
+function plot(xliste, yliste, graf_farge, tekst) {
+  tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
+  tegnTekst(
+    tekst,
+    xliste[0],
+    yliste[0] - 3,
+    graf_farge,
+    0,
+    "left",
+    20,
+    "Calibri",
+    "bottom"
+  );
+  tegnKurve(xliste, yliste, graf_farge, "strek", 2);
+  console.log('ferdig')
+}
+
+//TODO add paramaters for newline seperator and value seperator
+
+function store_csv(csv, array){
+
+    //create a 2d array and store each column in its array
+    csv = csv.split("\r\n")
+    const name_values = csv[0].split(";")
+
+    for (let i = 0; i < csv.length; i++) {
+        csv[i] = csv[i].split(";") 
+    }
+
+    array = new Array(csv.length)
+
+    for (let i = 0; i < name_values.length; i++) {
+
+      array[i] = new Array(name_values.length)
+      for (let j = 0; j < csv.length; j++) {
+        array[i][j] = csv[j][i]
+      }
+      
+    }
+
+    return array
+}
+
+//TODO add paramaters for newline seperator and value seperator
+
+async function read_csv(csv_file, callback) {
+    const filinnhold = await lastInn(csv_file);
+    return callback(filinnhold)
+}
+
 
 function oppstart() {
   tegnBrukBakgrunn("white");
@@ -161,6 +159,3 @@ function sort_descending(array){
   array.sort(function(a, b) {return b - a;});
   return array
 }
-
-
-
