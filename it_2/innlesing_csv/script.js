@@ -1,7 +1,4 @@
 
-// testing_array[3] = start_location
-// testing_array[8] = end_location
-
 
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
@@ -25,31 +22,6 @@ function plot(xliste, yliste, graf_farge, tekst) {
 }
 
 
-
-
-function count_remove_instances(array){
-
-
-
-  const length_before = array.length
-
-  for (let i = 0; i <= array.length; i++) {
-      //finnere indexen til det gitte tallet, om det finnes
-      if (array.indexOf(item) != -1){
-          const subtract_index = array.indexOf(item)
-          //fjerner verdien på plassen vi fant
-          array.splice(subtract_index, 1)
-          i -=1
-      }
-
-  }
-  const length_after = array.length
-  const instances = length_before-length_after
-
-
-
-
-}
 
 
 
@@ -87,24 +59,6 @@ async function read_csv(csv_file, callback) {
     return callback(filinnhold)
 }
 
-function read_image(image_input,callback, array){ // Leser fil basert på popup-dialog (fra HTML Input tag type 'file')
-	let file   = image_input.files[0];
-	let reader = new FileReader();
-	reader.onload = function(evt) {
-					let fileContent = evt.target.result;
-					callback(fileContent, array);
-				    };
-   reader.readAsDataURL(file);
-}
-
-function visInnhold() {
-  filinnhold = filinnhold.split("\n").join("<br>") + "<br>";
-
-  for (let i = 0; i < norsk_glose_array.length; i++) {
-    filinnhold += norsk_glose_array[i] + ";" + engelsk_glose_array[i] + "<br>";
-  }
-  elGetId("utskrift").innerHTML = filinnhold;
-}
 
 let testing_array 
 
@@ -145,12 +99,6 @@ function oppstart() {
 
   tegnBrukXY(-1, 4, 0, 3000);
 
-  // for (let i = 0; i < 4; i++) {
-  //   tegnFyltRektangel(måneder[i] - 0.25, 0, 0.5 ,maks_temp[i], color);
-  // }
-
-  // plot(testing_array[0], testing_array[5], "rød", "Maks temp");
-  // plot(testing_array[0], testing_array[4], "svart", "Min temp");
   tegnAkser("Dag", "Temperatur", 0, 1, true, true, false);
 }
 
