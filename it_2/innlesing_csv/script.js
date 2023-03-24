@@ -1,4 +1,46 @@
+let testing_array 
 
+var canvas, ctx;
+window.onload = winInit;
+
+function winInit() {
+
+  canvas = document.getElementById("canvas"); 
+  ctx = canvas.getContext("2d");
+  tegnBrukCanvas("canvas"); 
+
+
+(async () => {
+  testing_array = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  console.log(testing_array);
+
+  const testing_array_start = testing_array[3].slice()
+  const most_popular_stations = three_most_frequent_elements(testing_array_start)
+  oppstart()
+
+  const most_popular_stations_ids = []
+  const most_popular_stations_values = []
+  
+  for (let i = 0; i < 3; i++) {
+    most_popular_stations_ids.push(most_popular_stations[i].most_frequent_element)
+    most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
+  }
+
+  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values)
+
+
+})();
+}
+
+function draw_bar_chart(x_values, y_values){
+  for (let i = 0; i < x_values.length; i++) {
+
+    tegnTekst( x_values[i], i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
+
+    tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
+
+  }
+}
 
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
@@ -60,39 +102,7 @@ async function read_csv(csv_file, callback) {
 }
 
 
-let testing_array 
 
-var canvas, ctx;
-window.onload = winInit;
-
-function winInit() {
-
-  canvas = document.getElementById("canvas"); 
-  ctx = canvas.getContext("2d");
-  tegnBrukCanvas("canvas"); 
-
-
-(async () => {
-  testing_array = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
-  console.log(testing_array);
-
-  const testing_array_start = testing_array[3].slice()
-  const most_popular_stations = three_most_frequent_elements(testing_array_start)
-  oppstart()
-
-  for (let i = 0; i < 3; i++) {
-
-    tegnTekst( most_popular_stations[i].most_frequent_element_value, i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
-
-    console.log(most_popular_stations[i].most_frequent_element_value)
-    console.log(most_popular_stations[i].most_frequent_value_frequency)
-    tegnFyltRektangel(i-0.25, 0, 0.5 ,most_popular_stations[i].most_frequent_value_frequency, "black");
-
-  }
-
-})();
-
-}
 
 function oppstart() {
   tegnBrukBakgrunn("white");
@@ -126,7 +136,7 @@ function three_most_frequent_elements(array){
 
   var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  let most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   const result = []
   result.push(most_frequent_element_object)
@@ -135,7 +145,7 @@ function three_most_frequent_elements(array){
 
   most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   result.push(most_frequent_element_object)
 
@@ -144,7 +154,7 @@ function three_most_frequent_elements(array){
 
   most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   result.push(most_frequent_element_object)
 
