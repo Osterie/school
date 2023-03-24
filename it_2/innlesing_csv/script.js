@@ -1,6 +1,5 @@
 let testing_array 
 
-
 var canvas, ctx;
 window.onload = winInit;
 
@@ -19,23 +18,29 @@ function winInit() {
   const most_popular_stations = three_most_frequent_elements(testing_array_start)
   oppstart()
 
+  const most_popular_stations_ids = []
+  const most_popular_stations_values = []
+  
   for (let i = 0; i < 3; i++) {
-
-    tegnTekst( most_popular_stations[i].most_frequent_element_value, i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
-
-    console.log(most_popular_stations[i].most_frequent_element_value)
-    console.log(most_popular_stations[i].most_frequent_value_frequency)
-    tegnFyltRektangel(i-0.25, 0, 0.5 ,most_popular_stations[i].most_frequent_value_frequency, "black");
-
+    most_popular_stations_ids.push(most_popular_stations[i].most_frequent_element)
+    most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
   }
 
-})();
+  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values)
 
+
+})();
 }
 
+function draw_bar_chart(x_values, y_values){
+  for (let i = 0; i < x_values.length; i++) {
 
+    tegnTekst( x_values[i], i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
 
+    tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
+  }
+}
 
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
@@ -57,6 +62,10 @@ function plot(xliste, yliste, graf_farge, tekst) {
   tegnKurve(xliste, yliste, graf_farge, "strek", 2);
   console.log('ferdig')
 }
+
+
+
+
 
 //TODO add paramaters for newline seperator and value seperator
 
@@ -84,12 +93,15 @@ function store_csv(csv, array){
     return array
 }
 
+
 //TODO add paramaters for newline seperator and value seperator
 
 async function read_csv(csv_file, callback) {
     const filinnhold = await lastInn(csv_file);
     return callback(filinnhold)
 }
+
+
 
 
 function oppstart() {
@@ -124,7 +136,7 @@ function three_most_frequent_elements(array){
 
   var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  let most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   const result = []
   result.push(most_frequent_element_object)
@@ -133,7 +145,7 @@ function three_most_frequent_elements(array){
 
   most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   result.push(most_frequent_element_object)
 
@@ -142,7 +154,7 @@ function three_most_frequent_elements(array){
 
   most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
-  most_frequent_element_object = { most_frequent_element_value: unique_values[most_frequent_value_id], most_frequent_value_frequency: Math.max(...frequency_array) }
+  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
   result.push(most_frequent_element_object)
 
@@ -159,3 +171,6 @@ function sort_descending(array){
   array.sort(function(a, b) {return b - a;});
   return array
 }
+
+
+
