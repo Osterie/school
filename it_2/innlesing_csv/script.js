@@ -16,7 +16,7 @@ function winInit() {
 
   const testing_array_start = testing_array[3].slice()
   const most_popular_stations = three_most_frequent_elements(testing_array_start)
-  oppstart()
+  
 
   const most_popular_stations_ids = []
   const most_popular_stations_values = []
@@ -26,13 +26,22 @@ function winInit() {
     most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
   }
 
-  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values)
+
+
+
+
+  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
 
 })();
 }
 
-function draw_bar_chart(x_values, y_values){
+function draw_bar_chart(x_values, y_values, x_axis, y_axis){
+
+  tegnBrukBakgrunn("white");
+  tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values)*1.2);
+  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
+
   for (let i = 0; i < x_values.length; i++) {
 
     tegnTekst( x_values[i], i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
@@ -104,13 +113,6 @@ async function read_csv(csv_file, callback) {
 
 
 
-function oppstart() {
-  tegnBrukBakgrunn("white");
-
-  tegnBrukXY(-1, 4, 0, 3000);
-
-  tegnAkser("Dag", "Temperatur", 0, 1, true, true, false);
-}
 
 
 function three_most_frequent_elements(array){
