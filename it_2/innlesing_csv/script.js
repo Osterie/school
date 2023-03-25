@@ -108,15 +108,10 @@ async function read_csv(csv_file, callback) {
 
 
 
+//returns an array with the frequency of each element of the given array.
+function create_frequency_array(array){
 
-
-
-function three_most_frequent_elements(array){
-  
   sort_ascending(array)
-  
-  let unique_values = new Set(array)
-  unique_values = Array.from(unique_values)
 
   let frequency_array = []
   let frequency = 0
@@ -129,32 +124,33 @@ function three_most_frequent_elements(array){
       frequency = 0
     }
   }
+  return frequency_array
+}
+
+function get_unique_values_sorted(array){
+
+  sort_ascending(array)
   
+  let unique_values = new Set(array)
+  unique_values = Array.from(unique_values)
+
+  return unique_values
+} 
 
 
-  var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
-
-  let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
+function three_most_frequent_elements(array){
   
+  const unique_values = get_unique_values_sorted(array)
+  const frequency_array = create_frequency_array(array)
   const result = []
-  result.push(most_frequent_element_object)
-
-  frequency_array.splice(most_frequent_value_id, 1)
-
-  most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
-
-  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
   
-  result.push(most_frequent_element_object)
-
-  
-  frequency_array.splice(most_frequent_value_id, 1)
-
-  most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
-
-  most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
-  
-  result.push(most_frequent_element_object)
+  for (let i = 0; i < 3; i++) {
+    var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
+    let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
+    
+    result.push(most_frequent_element_object)
+    frequency_array.splice(most_frequent_value_id, 1)
+  }
 
   return result
 }
