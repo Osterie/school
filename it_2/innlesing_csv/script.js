@@ -1,4 +1,3 @@
-let testing_array 
 
 var canvas, ctx;
 window.onload = winInit;
@@ -11,12 +10,11 @@ function winInit() {
 
 
 (async () => {
-  testing_array = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
-  console.log(testing_array);
 
-  const testing_array_start = testing_array[3].slice()
-  const most_popular_stations = three_most_frequent_elements(testing_array_start)
-  
+  const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+
+  const starting_stations = csv_cycling[3].slice()
+  const most_popular_stations = three_most_frequent_elements(starting_stations)
 
   const most_popular_stations_ids = []
   const most_popular_stations_values = []
@@ -25,10 +23,6 @@ function winInit() {
     most_popular_stations_ids.push(most_popular_stations[i].most_frequent_element)
     most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
   }
-
-
-
-
 
   draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
@@ -44,7 +38,7 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 
   for (let i = 0; i < x_values.length; i++) {
 
-    tegnTekst( x_values[i], i, -300, "black", 0, "left", 20, "Calibri", "bottom" );
+    tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "black", 0, "left", 20, "Calibri", "bottom" );
 
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
