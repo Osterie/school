@@ -108,15 +108,10 @@ async function read_csv(csv_file, callback) {
 
 
 
+//returns an array with the frequency of each element of the given array.
+function create_frequency_array(array){
 
-
-
-function three_most_frequent_elements(array){
-  
   sort_ascending(array)
-  
-  let unique_values = new Set(array)
-  unique_values = Array.from(unique_values)
 
   let frequency_array = []
   let frequency = 0
@@ -130,7 +125,21 @@ function three_most_frequent_elements(array){
     }
   }
   
+  return frequency_array
 
+}
+
+
+function three_most_frequent_elements(array){
+  
+  sort_ascending(array)
+  
+  let unique_values = new Set(array)
+  unique_values = Array.from(unique_values)
+
+
+  const frequency_array = create_frequency_array(array)
+  
 
   var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
 
