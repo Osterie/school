@@ -1,12 +1,12 @@
 
-var canvas, ctx;
+var canvas1, ctx;
 window.onload = winInit;
 
 function winInit() {
 
-  canvas = document.getElementById("canvas"); 
-  ctx = canvas.getContext("2d");
-  tegnBrukCanvas("canvas"); 
+  canvas1 = document.getElementById("canvas1"); 
+  ctx = canvas1.getContext("2d");
+  tegnBrukCanvas("canvas1"); 
 
 
 
@@ -15,6 +15,9 @@ function winInit() {
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
+  starting_stations.shift()
+
+
   const most_popular_stations = three_most_frequent_elements(starting_stations)
 
   const most_popular_stations_ids = []
@@ -27,6 +30,21 @@ function winInit() {
 
   draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
+
+
+  tegnBrukCanvas("canvas2"); 
+
+  const lest_popular_stations = three_least_frequent_elements(starting_stations)
+
+  const least_popular_stations_ids = []
+  const least_popular_stations_values = []
+  
+  for (let i = 0; i < 3; i++) {
+    least_popular_stations_ids.push(lest_popular_stations[i].least_frequent_element)
+    least_popular_stations_values.push(lest_popular_stations[i].least_frequent_element_frequency)
+  }
+
+  draw_bar_chart(least_popular_stations_ids, least_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
 })();
 }
@@ -108,6 +126,42 @@ async function read_csv(csv_file, callback) {
 
 
 
+
+
+function three_most_frequent_elements(array){
+  
+  const unique_values = get_unique_values_sorted(array)
+  const frequency_array = create_frequency_array(array)
+  const result = []
+  
+  for (let i = 0; i < 3; i++) {
+    var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
+    let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
+    
+    result.push(most_frequent_element_object)
+    frequency_array.splice(most_frequent_value_id, 1)
+  }
+
+  return result
+}
+
+function three_least_frequent_elements(array){
+
+  const unique_values = get_unique_values_sorted(array)
+  const frequency_array = create_frequency_array(array)
+  const result = []
+  
+  for (let i = 0; i < 3; i++) {
+    var least_frequent_value_id = frequency_array.indexOf(Math.min(...frequency_array));
+    let least_frequent_element_object = { least_frequent_element: unique_values[least_frequent_value_id], least_frequent_element_frequency: Math.min(...frequency_array) }
+    
+    result.push(least_frequent_element_object)
+    frequency_array.splice(least_frequent_value_id, 1)
+  }
+
+  return result
+}
+
 //returns an array with the frequency of each element of the given array.
 function create_frequency_array(array){
 
@@ -138,24 +192,6 @@ function get_unique_values_sorted(array){
 } 
 
 
-function three_most_frequent_elements(array){
-  
-  const unique_values = get_unique_values_sorted(array)
-  const frequency_array = create_frequency_array(array)
-  const result = []
-  
-  for (let i = 0; i < 3; i++) {
-    var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
-    let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
-    
-    result.push(most_frequent_element_object)
-    frequency_array.splice(most_frequent_value_id, 1)
-  }
-
-  return result
-}
-
-
 function sort_ascending(array){
   array.sort(function(a, b) {return a - b;});
   return array
@@ -165,6 +201,3 @@ function sort_descending(array){
   array.sort(function(a, b) {return b - a;});
   return array
 }
-
-
-
