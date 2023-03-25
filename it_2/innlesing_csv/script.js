@@ -9,6 +9,7 @@ function winInit() {
   tegnBrukCanvas("canvas"); 
 
 
+
 (async () => {
 
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
@@ -103,6 +104,7 @@ async function read_csv(csv_file, callback) {
     const filinnhold = await lastInn(csv_file);
     return callback(filinnhold)
 }
+
 
 
 
