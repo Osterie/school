@@ -15,6 +15,8 @@ function winInit() {
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
+  const starting_date = csv_cycling[0].slice()
+
   starting_stations.shift()
 
 
@@ -45,6 +47,9 @@ function winInit() {
   }
 
   draw_bar_chart(least_popular_stations_ids, least_popular_stations_values, 'Start stasjon', 'Ganger brukt')
+  starting_date.shift()
+  total_each_day(starting_date)
+
 
 })();
 }
@@ -87,6 +92,17 @@ function plot(xliste, yliste, graf_farge, tekst) {
 
 
 
+function total_each_day(days){
+  console.log(days)
+  const days_frequency = new Array(7).fill(0)
+  for (let i = 0; i < days.length; i++) {
+    const day = new Date(days[i]).getDay()  
+    if (!isNaN(day)){
+      days_frequency[day] += 1
+    }
+  }
+  console.log(days_frequency)
+}
 
 
 //TODO add paramaters for newline seperator and value seperator
