@@ -149,7 +149,22 @@ async function read_csv(csv_file, callback) {
 
 
 
+function average(array){
+  
+  const unique_values = get_unique_values_sorted(array)
+  const frequency_array = create_frequency_array(array)
+  const result = []
+  
+  for (let i = 0; i < 3; i++) {
+    var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
+    let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
+    
+    result.push(most_frequent_element_object)
+    frequency_array.splice(most_frequent_value_id, 1)
+  }
 
+  return result
+}
 
 
 function three_most_frequent_elements(array){
