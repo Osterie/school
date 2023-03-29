@@ -16,6 +16,9 @@ function winInit() {
 
   const starting_stations = csv_cycling[3].slice()
   const starting_date = csv_cycling[0].slice()
+  
+  const ending_stations = csv_cycling[8].slice()
+  const duration = csv_cycling[2].slice()
 
   starting_stations.shift()
 
@@ -47,7 +50,6 @@ function winInit() {
   }
 
   draw_bar_chart(least_popular_stations_ids, least_popular_stations_values, 'Start stasjon', 'Ganger brukt')
-
 
 
   tegnBrukCanvas("canvas3"); 
