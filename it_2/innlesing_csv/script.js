@@ -12,15 +12,15 @@ function winInit() {
 
 (async () => {
 
-  // const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
-  const csv_cycling = await read_csv("short.csv", store_csv)
+  const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  // const csv_cycling = await read_csv("short.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
   const starting_date = csv_cycling[0].slice()
   
   const ending_stations = csv_cycling[8].slice()
   ending_stations.splice(csv_cycling[8].length-1, 1)
-  
+
   const duration = csv_cycling[2].slice()
   duration.splice(csv_cycling[2].length-1, 1)
 
@@ -66,10 +66,12 @@ function winInit() {
 
   console.log(sort_ascending(ending_stations))
   console.log(sort_ascending(duration))
-  console.log(average(ending_stations, duration))
+  
+  tegnBrukCanvas("canvas4"); 
+  const test = average(ending_stations, duration)
 
 
-
+  draw_bar_chart(test[0], test[1], "test!", "what")
 
 })();
 }
@@ -82,8 +84,8 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 
   for (let i = 0; i < x_values.length; i++) {
 
+    console.log('what')
     tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "black", 0, "left", 20, "Calibri", "bottom" );
-
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
   }
