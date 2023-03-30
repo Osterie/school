@@ -65,6 +65,9 @@ function winInit() {
   console.log(sort_ascending(duration))
   console.log(average(ending_stations, duration))
 
+
+
+
 })();
 }
 
@@ -155,23 +158,27 @@ async function read_csv(csv_file, callback) {
 
 function average(name_values, num_values){
   
-  const unique_values = get_unique_values_sorted(name_values)
+  const sorted_name_values = sort_ascending(name_values)
 
-  let sorted_values = sort_ascending(num_values)
+  let sorted_num_values = sort_ascending(num_values)
 
-  let value = 0
-  let frequency = 0
-  let average_array = []
+  let value = 0;
+  let frequency = 0;
+  let average_array = [];
   
-  for (let i = 0; i < sorted_values.length; i++) {
+  for (let i = 0; i < sorted_name_values.length; i++) {
 
-    if (!isNaN(sorted_values[i])){
+    if (!isNaN(parseFloat(sorted_num_values[i]))){
       frequency += 1
-      value += sorted_values[i]
+      value += parseFloat(sorted_num_values[i])
     }
 
-    if (sorted_values[i] !== sorted_values[i+1] ) {
-      average_array.push((value/frequency).toFixed(4))
+    if (sorted_name_values[i] !== sorted_name_values[i+1] ) {
+      
+      let average_value = (value/frequency).toFixed(2)
+
+      average_array.push(average_value)
+
       value = 0
       frequency = 0
     }
