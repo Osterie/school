@@ -12,7 +12,8 @@ function winInit() {
 
 (async () => {
 
-  const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  // const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  const csv_cycling = await read_csv("short.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
   const starting_date = csv_cycling[0].slice()
@@ -60,6 +61,9 @@ function winInit() {
   
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
 
+  console.log(sort_ascending(ending_stations))
+  console.log(sort_ascending(duration))
+  console.log(average(ending_stations, duration))
 
 })();
 }
@@ -149,7 +153,33 @@ async function read_csv(csv_file, callback) {
 
 
 
+function average(name_values, num_values){
+  
+  const unique_values = get_unique_values_sorted(name_values)
 
+  let sorted_values = sort_ascending(num_values)
+
+  let value = 0
+  let frequency = 0
+  let average_array = []
+  
+  for (let i = 0; i < sorted_values.length; i++) {
+
+    if (!isNaN(sorted_values[i])){
+      frequency += 1
+      value += sorted_values[i]
+    }
+
+    if (sorted_values[i] !== sorted_values[i+1] ) {
+      average_array.push((value/frequency).toFixed(4))
+      value = 0
+      frequency = 0
+    }
+
+  }
+
+  return average_array
+}
 
 
 function three_most_frequent_elements(array){
