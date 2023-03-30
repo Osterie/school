@@ -19,7 +19,10 @@ function winInit() {
   const starting_date = csv_cycling[0].slice()
   
   const ending_stations = csv_cycling[8].slice()
+  ending_stations.splice(csv_cycling[8].length-1, 1)
+  
   const duration = csv_cycling[2].slice()
+  duration.splice(csv_cycling[2].length-1, 1)
 
   starting_stations.shift()
 
@@ -159,6 +162,7 @@ async function read_csv(csv_file, callback) {
 function average(name_values, num_values){
   
   const sorted_name_values = sort_ascending(name_values)
+  const unique_name_values = get_unique_values_sorted(name_values)
 
   let sorted_num_values = sort_ascending(num_values)
 
@@ -185,7 +189,7 @@ function average(name_values, num_values){
 
   }
 
-  return average_array
+  return [average_array, unique_name_values]
 }
 
 
