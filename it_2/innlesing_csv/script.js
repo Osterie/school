@@ -70,7 +70,7 @@ function winInit() {
   tegnBrukCanvas("canvas4"); 
   const test = average(ending_stations, duration)
 
-
+  console.log(test)
   draw_bar_chart(test[0], test[1], "test!", "what")
 
 })();
