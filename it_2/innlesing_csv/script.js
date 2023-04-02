@@ -22,6 +22,7 @@ function winInit() {
   ending_stations.splice(csv_cycling[8].length-1, 1)
   ending_stations.splice(0, 1)
 
+
   const duration = csv_cycling[2].slice()
   duration.splice(csv_cycling[2].length-1, 1)
   duration.splice(0, 1)
@@ -71,14 +72,13 @@ function winInit() {
 
   const test = average(ending_stations, duration)
 
-  // console.log(test)
-  // draw_bar_chart(test[0], test[1], "test!", "what")
+  console.log(test)
+  draw_bar_chart(test[1], test[0], "test!", "what")
 
 })();
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
-
   tegnBrukBakgrunn("white");
   tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values)*1.2);
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
@@ -166,7 +166,7 @@ function average(name_values, num_values){
   
   // const sorted_name_values = sort_ascending(name_values)
   const unique_name_values = get_unique_values_sorted(name_values)
-
+  console.log({unique_name_values}, {name_values})
   // let sorted_num_values = sort_ascending(num_values)
 
   let value = 0;
