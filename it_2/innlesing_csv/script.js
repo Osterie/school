@@ -196,6 +196,7 @@ function average(name_values, num_values){
   console.log(frequency_array)
   console.log(value_array )
   console.log(average_array)
+  return [average_array, unique_name_values]
 }
 
 
