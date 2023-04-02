@@ -20,9 +20,12 @@ function winInit() {
   
   const ending_stations = csv_cycling[8].slice()
   ending_stations.splice(csv_cycling[8].length-1, 1)
+  ending_stations.splice(0, 1)
+
 
   const duration = csv_cycling[2].slice()
   duration.splice(csv_cycling[2].length-1, 1)
+  duration.splice(0, 1)
 
   starting_stations.shift()
 
@@ -64,27 +67,23 @@ function winInit() {
   
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
 
-  console.log(sort_ascending(ending_stations))
-  console.log(sort_ascending(duration))
   
   tegnBrukCanvas("canvas4"); 
+
   const test = average(ending_stations, duration)
 
-  console.log(test)
-  draw_bar_chart(test[0], test[1], "test!", "what")
+  draw_bar_chart(test[1], test[0], "test!", "what")
 
 })();
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
-
   tegnBrukBakgrunn("white");
   tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values)*1.2);
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 
   for (let i = 0; i < x_values.length; i++) {
 
-    console.log('what')
     tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "black", 0, "left", 20, "Calibri", "bottom" );
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
@@ -163,34 +162,21 @@ async function read_csv(csv_file, callback) {
 
 function average(name_values, num_values){
   
-  const sorted_name_values = sort_ascending(name_values)
   const unique_name_values = get_unique_values_sorted(name_values)
 
-  let sorted_num_values = sort_ascending(num_values)
+  const frequency_array = new Array(unique_name_values.length).fill(0)
+  const value_array = new Array(unique_name_values.length).fill(0)
+  const average_array = []
 
-  let value = 0;
-  let frequency = 0;
-  let average_array = [];
-  
-  for (let i = 0; i < sorted_name_values.length; i++) {
-
-    if (!isNaN(parseFloat(sorted_num_values[i]))){
-      frequency += 1
-      value += parseFloat(sorted_num_values[i])
-    }
-
-    if (sorted_name_values[i] !== sorted_name_values[i+1] ) {
-      
-      let average_value = (value/frequency).toFixed(2)
-
-      average_array.push(average_value)
-
-      value = 0
-      frequency = 0
-    }
-
+  for (let i = 0; i < name_values.length; i++) {
+    const index = unique_name_values.indexOf(name_values[i])
+    value_array[index] += parseFloat(num_values[i])
+    frequency_array[index] += 1
   }
 
+  for (let i = 0; i < frequency_array.length; i++) {
+    average_array.push( parseFloat((value_array[i] / frequency_array[i]).toFixed(2)) )
+  }
   return [average_array, unique_name_values]
 }
 
