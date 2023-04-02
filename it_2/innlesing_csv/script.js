@@ -189,7 +189,7 @@ function average(name_values, num_values){
   }
 
   for (let i = 0; i < frequency_array.length; i++) {
-    average_array.push( value_array[i] / frequency_array[i] )
+    average_array.push( parseFloat((value_array[i] / frequency_array[i]).toFixed(2)) )
   }
 
 
