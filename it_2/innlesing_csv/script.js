@@ -72,7 +72,6 @@ function winInit() {
 
   const test = average(ending_stations, duration)
 
-  console.log(test)
   draw_bar_chart(test[1], test[0], "test!", "what")
 
 })();
@@ -85,7 +84,6 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 
   for (let i = 0; i < x_values.length; i++) {
 
-    console.log('what')
     tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "black", 0, "left", 20, "Calibri", "bottom" );
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
@@ -164,38 +162,21 @@ async function read_csv(csv_file, callback) {
 
 function average(name_values, num_values){
   
-  // const sorted_name_values = sort_ascending(name_values)
   const unique_name_values = get_unique_values_sorted(name_values)
-  console.log({unique_name_values}, {name_values})
-  // let sorted_num_values = sort_ascending(num_values)
 
-  let value = 0;
-  let frequency = 0;
-
-  let frequency_array = new Array(unique_name_values.length).fill(0)
-  let value_array = new Array(unique_name_values.length).fill(0)
+  const frequency_array = new Array(unique_name_values.length).fill(0)
+  const value_array = new Array(unique_name_values.length).fill(0)
   const average_array = []
 
   for (let i = 0; i < name_values.length; i++) {
-
     const index = unique_name_values.indexOf(name_values[i])
-    // console.log(index)
-    // if (isNaN(parseFloat(num_values[i]))){
-      value_array[index] += parseFloat(num_values[i])
-      frequency_array[index] += 1
-
-    // }
-
+    value_array[index] += parseFloat(num_values[i])
+    frequency_array[index] += 1
   }
 
   for (let i = 0; i < frequency_array.length; i++) {
     average_array.push( parseFloat((value_array[i] / frequency_array[i]).toFixed(2)) )
   }
-
-
-  console.log(frequency_array)
-  console.log(value_array )
-  console.log(average_array)
   return [average_array, unique_name_values]
 }
 
