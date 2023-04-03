@@ -71,8 +71,19 @@ function winInit() {
   tegnBrukCanvas("canvas4"); 
 
   const test = average(ending_stations, duration)
+  const test_results_ending_station = []
+  const test_results_duration = []
+  for (let i = 0; i < 3; i++) {
+    var longest_duration_id = test[0].indexOf(Math.max(...test[0]));
 
-  draw_bar_chart(test[1], test[0], "test!", "what")
+    
+    test_results_duration.push(test[0][longest_duration_id])
+    test_results_ending_station.push(test[1][longest_duration_id])
+    test[0].splice(longest_duration_id, 1)
+    test[1].splice(longest_duration_id, 1)
+  }
+
+  draw_bar_chart(test_results_ending_station, test_results_duration, "End station id", "Duration")
 
 })();
 }
