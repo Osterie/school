@@ -1,33 +1,29 @@
-
 var canvas1, ctx;
 window.onload = winInit;
 
 function winInit() {
-
   canvas1 = document.getElementById("canvas1"); 
   ctx = canvas1.getContext("2d");
-  tegnBrukCanvas("canvas1"); 
-
-
 
 (async () => {
-
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
-  // const csv_cycling = await read_csv("short.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
+  starting_stations.shift()
+
   const starting_date = csv_cycling[0].slice()
+  starting_date.shift()
+
+  const occurences_day_of_week = total_each_day(starting_date)
+  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
   const ending_stations = csv_cycling[8].slice()
-  ending_stations.splice(csv_cycling[8].length-1, 1)
-  ending_stations.splice(0, 1)
-
+  ending_stations.pop()
+  ending_stations.shift()
 
   const duration = csv_cycling[2].slice()
-  duration.splice(csv_cycling[2].length-1, 1)
-  duration.splice(0, 1)
-
-  starting_stations.shift()
+  duration.pop()
+  duration.shift()
 
 
   const most_popular_stations = three_most_frequent_elements(starting_stations)
@@ -40,11 +36,7 @@ function winInit() {
     most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
   }
 
-  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
-
-
-  tegnBrukCanvas("canvas2"); 
 
   const lest_popular_stations = three_least_frequent_elements(starting_stations)
 
@@ -56,34 +48,31 @@ function winInit() {
     least_popular_stations_values.push(lest_popular_stations[i].least_frequent_element_frequency)
   }
 
+
+  const average_duration = average_num_values(ending_stations, duration)
+  const three_longest_duration = []
+  const three_longest_duration_stations = []
+
+  for (let i = 0; i < 3; i++) {
+    var longest_duration_id = average_duration[0].indexOf(Math.max(...average_duration[0]));
+    three_longest_duration.push(average_duration[0][longest_duration_id])
+    three_longest_duration_stations.push(average_duration[1][longest_duration_id])
+    average_duration[0].splice(longest_duration_id, 1)
+    average_duration[1].splice(longest_duration_id, 1)
+  }
+  
+
+  tegnBrukCanvas("canvas1"); 
+  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
+
+  tegnBrukCanvas("canvas2"); 
   draw_bar_chart(least_popular_stations_ids, least_popular_stations_values, 'Start stasjon', 'Ganger brukt')
 
-
   tegnBrukCanvas("canvas3"); 
-
-  starting_date.shift()
-  const occurences_day_of_week = total_each_day(starting_date)
-  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
-
   
   tegnBrukCanvas("canvas4"); 
-
-  const test = average(ending_stations, duration)
-  const test_results_ending_station = []
-  const test_results_duration = []
-  for (let i = 0; i < 3; i++) {
-    var longest_duration_id = test[0].indexOf(Math.max(...test[0]));
-
-    
-    test_results_duration.push(test[0][longest_duration_id])
-    test_results_ending_station.push(test[1][longest_duration_id])
-    test[0].splice(longest_duration_id, 1)
-    test[1].splice(longest_duration_id, 1)
-  }
-
-  draw_bar_chart(test_results_ending_station, test_results_duration, "End station id", "Duration")
+  draw_bar_chart(three_longest_duration_stations, three_longest_duration, "End station id", "Duration")
 
 })();
 }
@@ -99,10 +88,6 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
   }
-}
-
-function lastInn(file) {
-  return fetch(file).then((response) => response.text());
 }
 
 function plot(xliste, yliste, graf_farge, tekst) {
@@ -169,9 +154,7 @@ async function read_csv(csv_file, callback) {
     return callback(filinnhold)
 }
 
-
-
-function average(name_values, num_values){
+function average_num_values(name_values, num_values){
   
   const unique_name_values = get_unique_values_sorted(name_values)
 
@@ -191,7 +174,6 @@ function average(name_values, num_values){
   return [average_array, unique_name_values]
 }
 
-
 function three_most_frequent_elements(array){
   
   const unique_values = get_unique_values_sorted(array)
@@ -205,7 +187,6 @@ function three_most_frequent_elements(array){
     result.push(most_frequent_element_object)
     frequency_array.splice(most_frequent_value_id, 1)
   }
-
   return result
 }
 
@@ -222,7 +203,6 @@ function three_least_frequent_elements(array){
     result.push(least_frequent_element_object)
     frequency_array.splice(least_frequent_value_id, 1)
   }
-
   return result
 }
 
@@ -230,7 +210,6 @@ function three_least_frequent_elements(array){
 function create_frequency_array(array){
 
   sort_ascending(array)
-
   let frequency_array = []
   let frequency = 0
 
@@ -246,15 +225,11 @@ function create_frequency_array(array){
 }
 
 function get_unique_values_sorted(array){
-
   sort_ascending(array)
-  
   let unique_values = new Set(array)
   unique_values = Array.from(unique_values)
-
   return unique_values
 } 
-
 
 function sort_ascending(array){
   array.sort(function(a, b) {return a - b;});
@@ -264,4 +239,8 @@ function sort_ascending(array){
 function sort_descending(array){
   array.sort(function(a, b) {return b - a;});
   return array
+}
+
+function lastInn(file) {
+  return fetch(file).then((response) => response.text());
 }
