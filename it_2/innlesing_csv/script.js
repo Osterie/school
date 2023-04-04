@@ -25,56 +25,37 @@ function winInit() {
   duration.pop()
   duration.shift()
 
-
+  
   const most_popular_stations = three_most_frequent_elements(starting_stations)
+  draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station", "Frequency")
 
-  const most_popular_stations_ids = []
-  const most_popular_stations_values = []
-  
-  for (let i = 0; i < 3; i++) {
-    most_popular_stations_ids.push(most_popular_stations[i].most_frequent_element)
-    most_popular_stations_values.push(most_popular_stations[i].most_frequent_element_frequency)
-  }
-
-
-
-  const lest_popular_stations = three_least_frequent_elements(starting_stations)
-
-  const least_popular_stations_ids = []
-  const least_popular_stations_values = []
-  
-  for (let i = 0; i < 3; i++) {
-    least_popular_stations_ids.push(lest_popular_stations[i].least_frequent_element)
-    least_popular_stations_values.push(lest_popular_stations[i].least_frequent_element_frequency)
-  }
-
-
-  const average_duration = average_num_values(ending_stations, duration)
-  const three_longest_duration = []
-  const three_longest_duration_stations = []
-
-  for (let i = 0; i < 3; i++) {
-    var longest_duration_id = average_duration[0].indexOf(Math.max(...average_duration[0]));
-    three_longest_duration.push(average_duration[0][longest_duration_id])
-    three_longest_duration_stations.push(average_duration[1][longest_duration_id])
-    average_duration[0].splice(longest_duration_id, 1)
-    average_duration[1].splice(longest_duration_id, 1)
-  }
-  
-
-  tegnBrukCanvas("canvas1"); 
-  draw_bar_chart(most_popular_stations_ids, most_popular_stations_values, 'Start stasjon', 'Ganger brukt')
-
-  tegnBrukCanvas("canvas2"); 
-  draw_bar_chart(least_popular_stations_ids, least_popular_stations_values, 'Start stasjon', 'Ganger brukt')
+  const least_popular_stations = three_least_frequent_elements(starting_stations)
+  draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station", "Frequency")
 
   tegnBrukCanvas("canvas3"); 
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
-  
-  tegnBrukCanvas("canvas4"); 
-  draw_bar_chart(three_longest_duration_stations, three_longest_duration, "End station id", "Duration")
 
+  const average_duration = average_num_values(ending_stations, duration)
+  draw_three_highest_value(average_duration[0], average_duration[1], "canvas4", "End Station Id", "Average Duration")
 })();
+}
+
+function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis){
+
+  const three_num_values = []
+  const three_name_values = []
+
+  for (let i = 0; i < 3; i++) {
+    var longest_duration_id = num_value.indexOf(Math.max(...num_value));
+
+    three_num_values.push(num_value[longest_duration_id])
+    three_name_values.push(name_value[longest_duration_id])
+    num_value.splice(longest_duration_id, 1)
+    name_value.splice(longest_duration_id, 1)
+  }
+
+  tegnBrukCanvas(canvas); 
+  draw_bar_chart(three_name_values, three_num_values, x_axis, y_axis)
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
@@ -124,26 +105,23 @@ function total_each_day(days){
 
 function store_csv(csv, array){
 
-    //create a 2d array and store each column in its array
-    csv = csv.split("\r\n")
-    const name_values = csv[0].split(";")
+  //create a 2d array and store each column in its array
+  csv = csv.split("\r\n")
+  const name_values = csv[0].split(";")
 
-    for (let i = 0; i < csv.length; i++) {
-        csv[i] = csv[i].split(";") 
+  for (let i = 0; i < csv.length; i++) {
+      csv[i] = csv[i].split(";") 
+  }
+
+  array = new Array(csv.length)
+
+  for (let i = 0; i < name_values.length; i++) {
+    array[i] = new Array(name_values.length)
+    for (let j = 0; j < csv.length; j++) {
+      array[i][j] = csv[j][i]
     }
-
-    array = new Array(csv.length)
-
-    for (let i = 0; i < name_values.length; i++) {
-
-      array[i] = new Array(name_values.length)
-      for (let j = 0; j < csv.length; j++) {
-        array[i][j] = csv[j][i]
-      }
-      
-    }
-
-    return array
+  }
+  return array
 }
 
 
@@ -177,37 +155,42 @@ function average_num_values(name_values, num_values){
 function three_most_frequent_elements(array){
   
   const unique_values = get_unique_values_sorted(array)
-  const frequency_array = create_frequency_array(array)
-  const result = []
+  const frequency_array = create_sorted_frequency_array(array)
+
+  const three_most_frequent_elements_frequency = []
+  const three_most_frequent_elements_id = []
   
   for (let i = 0; i < 3; i++) {
-    var most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
-    let most_frequent_element_object = { most_frequent_element: unique_values[most_frequent_value_id], most_frequent_element_frequency: Math.max(...frequency_array) }
-    
-    result.push(most_frequent_element_object)
+    const most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
+    three_most_frequent_elements_frequency.push(Math.max(...frequency_array))
+    three_most_frequent_elements_id.push(unique_values[most_frequent_value_id])
+
     frequency_array.splice(most_frequent_value_id, 1)
   }
-  return result
+  return[three_most_frequent_elements_id, three_most_frequent_elements_frequency]
 }
 
 function three_least_frequent_elements(array){
 
   const unique_values = get_unique_values_sorted(array)
-  const frequency_array = create_frequency_array(array)
-  const result = []
+  const frequency_array = create_sorted_frequency_array(array)
+
+
+  const three_least_frequent_elements_frequency = []
+  const three_least_frequent_elements_id = []
   
   for (let i = 0; i < 3; i++) {
-    var least_frequent_value_id = frequency_array.indexOf(Math.min(...frequency_array));
-    let least_frequent_element_object = { least_frequent_element: unique_values[least_frequent_value_id], least_frequent_element_frequency: Math.min(...frequency_array) }
-    
-    result.push(least_frequent_element_object)
+    const least_frequent_value_id = frequency_array.indexOf(Math.min(...frequency_array));
+    three_least_frequent_elements_frequency.push(Math.min(...frequency_array))
+    three_least_frequent_elements_id.push(unique_values[least_frequent_value_id])
+
     frequency_array.splice(least_frequent_value_id, 1)
   }
-  return result
+  return[three_least_frequent_elements_id, three_least_frequent_elements_frequency]
 }
 
 //returns an array with the frequency of each element of the given array.
-function create_frequency_array(array){
+function create_sorted_frequency_array(array){
 
   sort_ascending(array)
   let frequency_array = []
