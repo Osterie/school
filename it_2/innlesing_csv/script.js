@@ -1,13 +1,9 @@
-
 var canvas1, ctx;
 window.onload = winInit;
 
 function winInit() {
-
   canvas1 = document.getElementById("canvas1"); 
   ctx = canvas1.getContext("2d");
-
-
 
 (async () => {
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
@@ -53,7 +49,7 @@ function winInit() {
   }
 
 
-  const average_duration = average(ending_stations, duration)
+  const average_duration = average_num_values(ending_stations, duration)
   const three_longest_duration = []
   const three_longest_duration_stations = []
 
@@ -92,10 +88,6 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
   }
-}
-
-function lastInn(file) {
-  return fetch(file).then((response) => response.text());
 }
 
 function plot(xliste, yliste, graf_farge, tekst) {
@@ -162,9 +154,7 @@ async function read_csv(csv_file, callback) {
     return callback(filinnhold)
 }
 
-
-
-function average(name_values, num_values){
+function average_num_values(name_values, num_values){
   
   const unique_name_values = get_unique_values_sorted(name_values)
 
@@ -184,7 +174,6 @@ function average(name_values, num_values){
   return [average_array, unique_name_values]
 }
 
-
 function three_most_frequent_elements(array){
   
   const unique_values = get_unique_values_sorted(array)
@@ -198,7 +187,6 @@ function three_most_frequent_elements(array){
     result.push(most_frequent_element_object)
     frequency_array.splice(most_frequent_value_id, 1)
   }
-
   return result
 }
 
@@ -215,7 +203,6 @@ function three_least_frequent_elements(array){
     result.push(least_frequent_element_object)
     frequency_array.splice(least_frequent_value_id, 1)
   }
-
   return result
 }
 
@@ -223,7 +210,6 @@ function three_least_frequent_elements(array){
 function create_frequency_array(array){
 
   sort_ascending(array)
-
   let frequency_array = []
   let frequency = 0
 
@@ -239,15 +225,11 @@ function create_frequency_array(array){
 }
 
 function get_unique_values_sorted(array){
-
   sort_ascending(array)
-  
   let unique_values = new Set(array)
   unique_values = Array.from(unique_values)
-
   return unique_values
 } 
-
 
 function sort_ascending(array){
   array.sort(function(a, b) {return a - b;});
@@ -257,4 +239,8 @@ function sort_ascending(array){
 function sort_descending(array){
   array.sort(function(a, b) {return b - a;});
   return array
+}
+
+function lastInn(file) {
+  return fetch(file).then((response) => response.text());
 }
