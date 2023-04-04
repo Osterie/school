@@ -12,23 +12,23 @@ function winInit() {
 (async () => {
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
 
-
   const starting_stations = csv_cycling[3].slice()
+  starting_stations.shift()
 
   const starting_date = csv_cycling[0].slice()
   starting_date.shift()
+
   const occurences_day_of_week = total_each_day(starting_date)
   const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
   const ending_stations = csv_cycling[8].slice()
-  ending_stations.splice(csv_cycling[8].length-1, 1)
-  ending_stations.splice(0, 1)
+  ending_stations.pop()
+  ending_stations.shift()
 
   const duration = csv_cycling[2].slice()
-  duration.splice(csv_cycling[2].length-1, 1)
-  duration.splice(0, 1)
+  duration.pop()
+  duration.shift()
 
-  starting_stations.shift()
 
   const most_popular_stations = three_most_frequent_elements(starting_stations)
 
