@@ -32,7 +32,7 @@ function winInit() {
   const least_popular_stations = three_least_frequent_elements(starting_stations)
   draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station", "Frequency")
 
-  tegnBrukCanvas("canvas3"); 
+  tegnBrukCanvas("canvas3");
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
 
   const average_duration = average_num_values(ending_stations, duration)
