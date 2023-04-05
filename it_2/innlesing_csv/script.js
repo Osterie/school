@@ -73,26 +73,18 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 
 function plot(xliste, yliste, graf_farge, tekst) {
   tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
-  tegnTekst(
-    tekst,
-    xliste[0],
-    yliste[0] - 3,
-    graf_farge,
-    0,
-    "left",
-    20,
-    "Calibri",
-    "bottom"
-  );
+  tegnTekst( tekst, xliste[0], yliste[0] - 3, graf_farge, 0, "left", 20, "Calibri", "bottom" );
   tegnKurve(xliste, yliste, graf_farge, "strek", 2);
 }
 
-
-
 function total_each_day(days){
+
   const days_frequency = new Array(7).fill(0)
+
   for (let i = 0; i < days.length; i++) {
+
     const day = new Date(days[i]).getDay()  
+
     if (!isNaN(day)){
       days_frequency[day] += 1
     }
@@ -100,9 +92,7 @@ function total_each_day(days){
   return days_frequency
 }
 
-
 //TODO add paramaters for newline seperator and value seperator
-
 function store_csv(csv, array){
 
   //create a 2d array and store each column in its array
@@ -124,9 +114,7 @@ function store_csv(csv, array){
   return array
 }
 
-
 //TODO add paramaters for newline seperator and value seperator
-
 async function read_csv(csv_file, callback) {
     const filinnhold = await lastInn(csv_file);
     return callback(filinnhold)
