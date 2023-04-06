@@ -9,9 +9,11 @@ function winInit() {
   const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
 
   const starting_stations = csv_cycling[3].slice()
+  starting_stations.pop()
   starting_stations.shift()
 
   const starting_date = csv_cycling[0].slice()
+  starting_date.pop()
   starting_date.shift()
 
   const occurences_day_of_week = total_each_day(starting_date)
