@@ -45,29 +45,11 @@ function winInit() {
 function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis){
 
   const three_largest = three_largest_values(num_value, name_value)
-
   const three_largest_num_values = three_largest[0]
   const three_largest_name_values = three_largest[1]
 
-
   tegnBrukCanvas(canvas); 
   draw_bar_chart(three_largest_name_values, three_largest_num_values, x_axis, y_axis)
-}
-
-function three_largest_values(num_value, name_value){
-  const three_num_values = []
-  const three_name_values = []
-
-  for (let i = 0; i < 3; i++) {
-    var longest_duration_id = num_value.indexOf(Math.max(...num_value));
-
-    three_num_values.push(num_value[longest_duration_id])
-    three_name_values.push(name_value[longest_duration_id])
-    num_value.splice(longest_duration_id, 1)
-    name_value.splice(longest_duration_id, 1)
-  }
-  return [three_num_values, three_name_values]
-    
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
@@ -187,6 +169,21 @@ function three_least_frequent_elements(array){
     frequency_array.splice(least_frequent_value_id, 1)
   }
   return[three_least_frequent_elements_id, three_least_frequent_elements_frequency]
+}
+
+function three_largest_values(num_value, name_value){
+  const three_num_values = []
+  const three_name_values = []
+
+  for (let i = 0; i < 3; i++) {
+    var longest_duration_id = num_value.indexOf(Math.max(...num_value));
+
+    three_num_values.push(num_value[longest_duration_id])
+    three_name_values.push(name_value[longest_duration_id])
+    num_value.splice(longest_duration_id, 1)
+    name_value.splice(longest_duration_id, 1)
+  }
+  return [three_num_values, three_name_values]
 }
 
 //returns an array with the frequency of each element of the given array.
