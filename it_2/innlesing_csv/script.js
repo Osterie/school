@@ -44,6 +44,17 @@ function winInit() {
 
 function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis){
 
+  const three_largest = three_largest_values(num_value, name_value)
+
+  const three_largest_num_values = three_largest[0]
+  const three_largest_name_values = three_largest[1]
+
+
+  tegnBrukCanvas(canvas); 
+  draw_bar_chart(three_largest_name_values, three_largest_num_values, x_axis, y_axis)
+}
+
+function three_largest_values(num_value, name_value){
   const three_num_values = []
   const three_name_values = []
 
@@ -55,9 +66,8 @@ function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis)
     num_value.splice(longest_duration_id, 1)
     name_value.splice(longest_duration_id, 1)
   }
-
-  tegnBrukCanvas(canvas); 
-  draw_bar_chart(three_name_values, three_num_values, x_axis, y_axis)
+  return [three_num_values, three_name_values]
+    
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
