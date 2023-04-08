@@ -66,6 +66,7 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 }
 
 function plot(xliste, yliste, graf_farge, tekst) {
+  
   tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
   tegnTekst( tekst, xliste[0], yliste[0] - 3, graf_farge, 0, "left", 20, "Calibri", "bottom" );
   tegnKurve(xliste, yliste, graf_farge, "strek", 2);
@@ -156,7 +157,6 @@ function three_least_frequent_elements(array){
 
   const unique_values = get_unique_values_sorted(array)
   const frequency_array = create_sorted_frequency_array(array)
-
 
   const three_least_frequent_elements_frequency = []
   const three_least_frequent_elements_id = []
