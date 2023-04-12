@@ -55,21 +55,15 @@ function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis)
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
   tegnBrukBakgrunn("white");
   tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values)*1.2);
-  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 
   for (let i = 0; i < x_values.length; i++) {
 
-    tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "black", 0, "left", 20, "Calibri", "bottom" );
-    tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
+      tegnTekst( x_values[i], i, -Math.max(...y_values)*0.2 , "black", 0, "left", 20, "Calibri", "bottom" );
+      tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
 
-  }
-}
+    }
+  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 
-function plot(xliste, yliste, graf_farge, tekst) {
-  
-  tegnTittel("Tafjord [SN60500]", "svart", "18", "Calibri");
-  tegnTekst( tekst, xliste[0], yliste[0] - 3, graf_farge, 0, "left", 20, "Calibri", "bottom" );
-  tegnKurve(xliste, yliste, graf_farge, "strek", 2);
 }
 
 function total_each_day(days){
@@ -176,7 +170,7 @@ function three_largest_values(num_value, name_value){
   const three_name_values = []
 
   for (let i = 0; i < 3; i++) {
-    var longest_duration_id = num_value.indexOf(Math.max(...num_value));
+    const longest_duration_id = num_value.indexOf(Math.max(...num_value));
 
     three_num_values.push(num_value[longest_duration_id])
     three_name_values.push(name_value[longest_duration_id])
@@ -190,7 +184,7 @@ function three_largest_values(num_value, name_value){
 function create_sorted_frequency_array(array){
 
   sort_ascending(array)
-  let frequency_array = []
+  const frequency_array = []
   let frequency = 0
 
   for (let i = 0; i < array.length; i++) {
