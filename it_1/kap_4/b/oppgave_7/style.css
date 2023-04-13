@@ -1,0 +1,17 @@
+body {
+    background-color: #f5f5f5;
+    font-family: Georgia, serif;
+  }
+  #hoved {
+    width: 60%;                  
+    margin: 50px auto;          
+    padding: 40px;                 
+    background-color: white;   
+    border: 1px solid #cccccc; 
+  }
+  h1, h2 {
+    font-family: Arial, sans-serif;
+  }
+  img:hover {
+    cursor: pointer;
+  }
