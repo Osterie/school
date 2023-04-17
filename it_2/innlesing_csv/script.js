@@ -58,8 +58,8 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
 
   for (let i = 0; i < x_values.length; i++) {
 
-      tegnTekst( x_values[i], i, -Math.max(...y_values)*0.2 , "black", 0, "left", 20, "Calibri", "bottom" );
-      tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
+    tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
+    tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "red", 0, "left", 20, "Calibri", "bottom" );
 
     }
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
