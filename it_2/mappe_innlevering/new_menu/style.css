@@ -1,0 +1,38 @@
+html, body
+{
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+body
+{
+    background: rgb(131,58,180);
+    background: radial-gradient(circle, rgba(131,58,180,1) 0%, rgba(69,252,201,1) 29%, rgba(29,154,253,1) 34%);
+}
+
+#links{
+
+    display: inline-grid;
+    height: 100%;
+    width: 100%;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+}
+
+a {
+    display: flex;
+    width: 200px;
+    height: 200px;
+    background-color: #00adb5;
+    color: black;
+    border: 1px solid black;
+    border-radius: 100px;
+    align-items: center;
+    justify-content: center;
+  }
