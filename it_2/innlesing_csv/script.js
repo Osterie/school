@@ -6,8 +6,9 @@ function winInit() {
   ctx = canvas1.getContext("2d");
 
 (async () => {
-  const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv)
+  const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv, ";")
 
+  //removes name of column values, and last value, which is an empty value
   const starting_stations = csv_cycling[3].slice()
   starting_stations.pop()
   starting_stations.shift()
@@ -15,9 +16,6 @@ function winInit() {
   const starting_date = csv_cycling[0].slice()
   starting_date.pop()
   starting_date.shift()
-
-  const occurences_day_of_week = total_each_day(starting_date)
-  const weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   
   const ending_stations = csv_cycling[8].slice()
   ending_stations.pop()
@@ -29,30 +27,33 @@ function winInit() {
 
   
   const most_popular_stations = three_most_frequent_elements(starting_stations)
-  draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station", "Frequency")
+  draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency")
 
   const least_popular_stations = three_least_frequent_elements(starting_stations)
-  draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station", "Frequency")
+  draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency")
 
+  const occurences_day_of_week = total_each_day(starting_date)
+  const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   tegnBrukCanvas("canvas3");
   draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
 
   const average_duration = average_num_values(ending_stations, duration)
-  draw_three_highest_value(average_duration[0], average_duration[1], "canvas4", "End Station Id", "Average Duration")
+  draw_three_highest_value(average_duration[0], average_duration[1], "canvas4", "End Station ID", "Average Duration")
 })();
 }
 
 function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis){
 
-  const three_largest = three_largest_values(num_value, name_value)
-  const three_largest_num_values = three_largest[0]
-  const three_largest_name_values = three_largest[1]
+  const three_largest_pair_values = three_largest_values(num_value, name_value)
+  const three_largest_num_values = three_largest_pair_values[0]
+  const three_largest_name_values = three_largest_pair_values[1]
 
   tegnBrukCanvas(canvas); 
   draw_bar_chart(three_largest_name_values, three_largest_num_values, x_axis, y_axis)
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis){
+
   tegnBrukBakgrunn("white");
   tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values)*1.2);
 
@@ -61,18 +62,17 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis){
     tegnFyltRektangel(i-0.25, 0, 0.5 , y_values[i], "black");
     tegnTekst( x_values[i], i, -Math.max(...y_values)*0.1 , "red", 0, "left", 20, "Calibri", "bottom" );
 
-    }
+  }
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
-
 }
 
-function total_each_day(days){
+function total_each_day(date_array){
 
   const days_frequency = new Array(7).fill(0)
 
-  for (let i = 0; i < days.length; i++) {
+  for (let i = 0; i < date_array.length; i++) {
 
-    const day = new Date(days[i]).getDay()  
+    const day = new Date(date_array[i]).getDay()  
 
     if (!isNaN(day)){
       days_frequency[day] += 1
@@ -82,18 +82,18 @@ function total_each_day(days){
 }
 
 //TODO add paramaters for newline seperator and value seperator
-function store_csv(csv, array){
+function store_csv(csv, seperator){
 
   //create a 2d array and store each column in its array
   csv = csv.split("\r\n")
-  const name_values = csv[0].split(";")
+  const name_values = csv[0].split(seperator)
 
   for (let i = 0; i < csv.length; i++) {
-      csv[i] = csv[i].split(";") 
+      csv[i] = csv[i].split(seperator) 
   }
 
-  array = new Array(csv.length)
-
+  const array = new Array(csv.length)
+ 
   for (let i = 0; i < name_values.length; i++) {
     array[i] = new Array(name_values.length)
     for (let j = 0; j < csv.length; j++) {
@@ -103,16 +103,15 @@ function store_csv(csv, array){
   return array
 }
 
-//TODO add paramaters for newline seperator and value seperator
-async function read_csv(csv_file, callback) {
+async function read_csv(csv_file, callback, seperator) {
     const filinnhold = await lastInn(csv_file);
-    return callback(filinnhold)
+    return callback(filinnhold, seperator)
 }
 
 function average_num_values(name_values, num_values){
   
   const unique_name_values = get_unique_values_sorted(name_values)
-
+  
   const frequency_array = new Array(unique_name_values.length).fill(0)
   const value_array = new Array(unique_name_values.length).fill(0)
   const average_array = []
