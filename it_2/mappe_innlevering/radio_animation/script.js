@@ -14,17 +14,7 @@ function winInit()
 	elGetId("startAnim").onclick = startAnim
 	elGetId("stopAnim").onclick = stopAnim
     
-
-	elGetId("viskut").onclick     = viskUt;     // Oppsett av hendelse ved klikk på viskut-knapp
 }
-
-function viskUt()
-{
-	bgcol = elGetId("bakgrunn").value; // Henter verdien i feltet med id='bakgrunn'
-	tegnBrukBakgrunn(bgcol);
-	clearprint(); 
-}
-
 
 //------------------------------------|BEAM|----------------------------------------------------------------------------
 
