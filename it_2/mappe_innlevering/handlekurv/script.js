@@ -20,7 +20,6 @@ var troika = new Vare("troika", 17, 0);
 
 varer_available = [melk, egg, brød, ost, troika];
 
-
 const vare_elementer = document.querySelectorAll(".input_felter");
 
 vare_elementer.forEach((vare) => {
