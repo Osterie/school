@@ -5,6 +5,8 @@ function winInit() {
     canvas1 = document.getElementById("canvas1"); 
     ctx = canvas1.getContext("2d");
 
+    let main_csv;
+
     const overwrite_csv_button = document.getElementById("csv_overwrite_button")
     const add_csv_button = document.getElementById("csv_add_button")
     const draw_graphs_button = document.getElementById("draw_graphs_button")
@@ -13,68 +15,90 @@ function winInit() {
     const inputElement = document.getElementById('valgt_fil');
 
     inputElement.addEventListener('change', function() {
-      const file = inputElement.files[0];
-    
-      const reader = new FileReader();
-    
-      reader.onload = function(event) {
-        const fileContents = event.target.result;
 
-        console.log(fileContents);
-      };
-    
-      reader.readAsText(file);
     });
     
 
     overwrite_csv_button.addEventListener("click", function(){
-        console.log(inputElement.files[0])
-
-        
+        const file = inputElement.files[0];
+    
+        const reader = new FileReader();
+      
+        reader.onload = function(event) {
+          const fileContents = event.target.result;
+          main_csv = fileContents
+          main(main_csv)
+        };
+      
+        reader.readAsText(file);
     })
+
     add_csv_button.addEventListener("click", function(){
+        const file = inputElement.files[0];
+    
+        const reader = new FileReader();
+      
+        reader.onload = function(event) {
+          const fileContents = event.target.result;
+          main_csv += fileContents
+          main(main_csv)
+        };
+      
+        reader.readAsText(file);
 
     })
     draw_graphs_button.addEventListener("click", function(){
-        main()
+        // main()
     })
 
-    // main()
+    main()
 }
 
 async function main(){
-    const csv_cycling = await read_csv("oppgave_05_sykkeltur.csv", store_csv, ";")
+
+    // const csv_cycling = store_csv(csv, ";")
+    const csv_cycling = await read_csv("oppgave_05_sykkeltur copy.csv", store_csv, ";")
     
     //removes name of column values, and last value, which is an empty value
     const starting_stations = csv_cycling[3].slice()
-    starting_stations.pop()
     starting_stations.shift()
     
     const starting_date = csv_cycling[0].slice()
-    starting_date.pop()
     starting_date.shift()
     
     const ending_stations = csv_cycling[8].slice()
-    ending_stations.pop()
     ending_stations.shift()
+    ending_stations.pop()
     
-    const duration = csv_cycling[2].slice()
-    duration.pop()
+    let duration = csv_cycling[2].slice()
     duration.shift()
+    duration.pop()
     
     const most_popular_stations = three_most_frequent_elements(starting_stations)
-    draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency")
+    draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency, Most Popular Stations")
     
     const least_popular_stations = three_least_frequent_elements(starting_stations)
-    draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency")
+    draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency, Least Popular Stations")
     
     const occurences_day_of_week = total_each_day(starting_date)
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     tegnBrukCanvas("canvas3");
     draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
     
+    console.log(ending_stations, duration)
+    duration = string_to_int_array(duration)
+    console.log(ending_stations, duration)
     const average_durations_array = average_num_values(ending_stations, duration)
+    console.log(average_durations_array)
     draw_three_highest_value(average_durations_array[0], average_durations_array[1], "canvas4", "End Station ID", "Average Duration Seconds")
+}
+
+function string_to_int_array(array){
+
+    for (let i = 0; i < array.length; i++) {
+        array[i] = parseInt(array[i])        
+    }
+    return array
 }
 
 function draw_three_highest_value(num_value, name_value, canvas, x_axis, y_axis){
@@ -117,9 +141,9 @@ function total_each_day(date_array){
 }
 
 function average_num_values(name_values, num_values){
-  //Jeg lagde denne funksjonen selv! ikke chat-gpt, 
+  //Jeg lagde denne funksjonen selv, ikke chat-gpt, 
   //men jeg liker å kommentere på engelsk, men noen av kommentarene
-  //er chat-gpt:)
+  //er chat-gpt
 
   //creates a sorted set of the name values
   const unique_name_values = get_unique_values_sorted(name_values)
@@ -153,7 +177,6 @@ function three_most_frequent_elements(array){
   
   const unique_values = get_unique_values_sorted(array)
   const frequency_array = create_sorted_frequency_array(array)
-
   const three_most_frequent_elements_frequency = []
   const three_most_frequent_elements_id = []
   
@@ -161,8 +184,8 @@ function three_most_frequent_elements(array){
     const most_frequent_value_id = frequency_array.indexOf(Math.max(...frequency_array));
     three_most_frequent_elements_frequency.push(Math.max(...frequency_array))
     three_most_frequent_elements_id.push(unique_values[most_frequent_value_id])
-
     frequency_array.splice(most_frequent_value_id, 1)
+    unique_values.splice(most_frequent_value_id, 1)
   }
   return[three_most_frequent_elements_id, three_most_frequent_elements_frequency]
 }
@@ -181,6 +204,7 @@ function three_least_frequent_elements(array){
     three_least_frequent_elements_id.push(unique_values[least_frequent_value_id])
 
     frequency_array.splice(least_frequent_value_id, 1)
+    unique_values.splice(least_frequent_value_id, 1)
   }
   return[three_least_frequent_elements_id, three_least_frequent_elements_frequency]
 }
@@ -279,6 +303,5 @@ function handleFileSelect(event) {
 
 function handleFileLoad(event) {
   const fileContent = event.target.result;
-  console.log(fileContent);
   // Do something with the file content here
 }
