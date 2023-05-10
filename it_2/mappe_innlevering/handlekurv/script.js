@@ -1,3 +1,4 @@
+
 class Vare {
   constructor(navn, pris, antall) {
     this.navn = navn;
@@ -12,38 +13,49 @@ class Vare {
   }
 }
 
+window.onload = winInit; // Hendelse onload(nettsida ferdig lasta): winInit kjøres automatisk
+function winInit() {
+  
+  handlekurv_button.addEventListener("click", function(){
+    kassalapp();
+  })
+}
+const handlekurv_button = document.getElementById("handlekurv");
+
+
+// TODO make a function for creating the html for the products...
+
 var melk = new Vare("melk", 32, 0);
 var egg = new Vare("egg", 29, 0);
 var brød = new Vare("brød", 33, 0);
 var ost = new Vare("ost", 110, 0);
 var troika = new Vare("troika", 17, 0);
 
-varer_available = [melk, egg, brød, ost, troika];
+
+varer_available = [melk, egg, brød, ost, troika]; 
 
 const vare_elementer = document.querySelectorAll(".input_felter");
 
 vare_elementer.forEach((vare) => {
+
   vare.addEventListener("change", (event) => {
-    for (let i = 0; i < varer_available.length; i++) {
-      if (varer_available[i].navn == vare.id) {
-        varer_available[i].endring(vare.value);
-      }
-    }
-    sum = 0;
-    sum_antall = 0;
-    i = -1;
+
+    //finner indexen til den endret varen, også endrer varen sin verdi
+    const vare_index = varer_available.findIndex(obj => obj.navn === vare.id);
+    varer_available[vare_index].endring(vare.value);
+
+    let sum = 0;
+    let i = 0;
 
     vare_elementer.forEach((vare) => {
-      i += 1;
       document.getElementById("sum_" + vare.id).innerHTML = varer_available[i].sum;
-
       sum += varer_available[i].sum;
+      i += 1
     });
     document.getElementById("total_pris").innerHTML = "sum: " + sum + "kr";
   });
 });
 
-const handlekurv_button = document.getElementById("handlekurv");
 
 var grid = document.getElementById("grid");
 var handlekurv_side
@@ -51,45 +63,81 @@ var handlekurv_side
 function kassalapp() {
 	grid.style.display = "none";
 	handlekurv_button.style.display = "none";
-	var sum = 0;
 	var div;
 	
 	handlekurv_side = document.getElementById("handlekurv_side");
   
+  let vare_innerhtml_array = [];
+
+	var sum = 0;
+
+  
   for (let i = 0; i < varer_available.length; i++) {
-    div = document.createElement("div");
-    div.id = "vare_kassalapp";
-
+    let vare_innerhtml = varer_available[i].navn + " x " + varer_available[i].antall + " : " + varer_available[i].sum + "kr";
+    vare_innerhtml_array.push(vare_innerhtml)
     sum += varer_available[i].sum;
-    div.innerHTML = 
-      varer_available[i].navn + " x " +
-      varer_available[i].antall + " : " + 
-	  varer_available[i].sum + "kr";
-
-    handlekurv_side.appendChild(div);
-    //TODO litt lite tid igjen, men burde plasserer varesummen på høyre siden i div elementet sitt,
-    //kan løses med å bruke 2 flexbox elementer eller 1 grid.
   }
+
+
+  create_flexbox(handlekurv_side, varer_available, "vare_kassalapp", vare_innerhtml_array)
 
   div = document.createElement("div");
   div.id = "sum_kassalapp";
   div.innerHTML = "sum: " + sum + "kr ";
   handlekurv_side.appendChild(div);
 
+
   div = document.createElement("button");
   div.id = "bekreft";
   div.innerHTML = "Bekreft kjøp";
   handlekurv_side.appendChild(div);
   const bekreft_button = document.getElementById("bekreft");
-  bekreft_button.onclick = bekreft;
+
+  bekreft_button.addEventListener("click", function(){
+    replace_div(handlekurv_side, "bekreft_kjøp", "Kjøp Gjennoført", document.body)
+  })
 
   div = document.createElement("button");
   div.id = "tilbake";
   div.innerHTML = "Tilbake";
-  handlekurv_side.appendChild(div);
-  const tilbake_button = document.getElementById("tilbake");
-  tilbake_button.onclick = tilbake;
+  document.body.appendChild(div);
+  const tilbake_knapp = document.getElementById("tilbake");
+  
+  tilbake_knapp.addEventListener("click", function(){
+    tilbake()
+    this.remove()
+  })
 }
+
+function replace_div(old_div, new_div_id, new_div_text, new_div_location){
+
+  old_div.remove();
+  var div;
+  div = document.createElement("div");
+  div.id = new_div_id;
+  div.innerHTML = new_div_text;
+  new_div_location.appendChild(div);
+}
+
+
+function create_flexbox(flexbox_location, flexbox_array, child_id, child_texts){
+
+  let flexbox = document.createElement("div");
+  flexbox_location.appendChild(flexbox);
+
+  for (let i = 0; i < flexbox_array.length; i++) {
+
+    let div = document.createElement("div");
+    div.id = child_id;
+    sum += flexbox_array[i].sum;
+    div.innerHTML = child_texts[i]
+
+    flexbox.appendChild(div);
+  }
+
+
+}
+
 
 function bekreft() {
   handlekurv_side.remove();
@@ -99,6 +147,8 @@ function bekreft() {
   div.innerHTML = "Kjøp Gjennomført!";
   document.body.appendChild(div);
 }
+
+
 
 function tilbake() {
   grid.style.display = "grid";
@@ -111,7 +161,3 @@ function tilbake() {
   document.body.appendChild(div);
 }
 
-window.onload = winInit; // Hendelse onload(nettsida ferdig lasta): winInit kjøres automatisk
-function winInit() {
-  handlekurv_button.onclick = kassalapp;
-}
