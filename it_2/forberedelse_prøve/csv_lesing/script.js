@@ -58,21 +58,23 @@ async function main(){
 
     // const csv_cycling = store_csv(csv, ";")
     const csv_cycling = await read_csv("oppgave_05_sykkeltur copy.csv", store_csv, ";")
+
+    console.log(csv_cycling)
     
     //removes name of column values, and last value, which is an empty value
-    const starting_stations = csv_cycling[3].slice()
+    const starting_stations = csv_cycling[3]
     starting_stations.shift()
     
-    const starting_date = csv_cycling[0].slice()
+    const starting_date = csv_cycling[0]
     starting_date.shift()
     
-    const ending_stations = csv_cycling[8].slice()
+    const ending_stations = csv_cycling[8]
     ending_stations.shift()
-    ending_stations.pop()
+    // ending_stations.pop()
     
-    let duration = csv_cycling[2].slice()
+    let duration = csv_cycling[2]
     duration.shift()
-    duration.pop()
+    // duration.pop()
     
     const most_popular_stations = three_most_frequent_elements(starting_stations)
     draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency, Most Popular Stations")
@@ -85,9 +87,9 @@ async function main(){
     tegnBrukCanvas("canvas3");
     draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
     
+    // duration = string_to_int_array(duration)
     console.log(ending_stations, duration)
-    duration = string_to_int_array(duration)
-    console.log(ending_stations, duration)
+
     const average_durations_array = average_num_values(ending_stations, duration)
     console.log(average_durations_array)
     draw_three_highest_value(average_durations_array[0], average_durations_array[1], "canvas4", "End Station ID", "Average Duration Seconds")
@@ -145,14 +147,18 @@ function average_num_values(name_values, num_values){
   //men jeg liker å kommentere på engelsk, men noen av kommentarene
   //er chat-gpt
 
+  console.log(name_values, num_values)
   //creates a sorted set of the name values
-  const unique_name_values = get_unique_values_sorted(name_values)
+//   const unique_name_values = get_unique_values_sorted(name_values)
+const unique_name_values2 =  new Set(name_values);
+const unique_name_values = Array.from(unique_name_values2);
   
   //frequency array stores how many times we add to value array
   //value array stores the sum of all the unique num values
   const frequency_array = new Array(unique_name_values.length).fill(0)
   const value_array = new Array(unique_name_values.length).fill(0)
   const average_array = []
+
 
   //loop through the name_values array and update the corresponding value_array and frequency_array elements
   for (let i = 0; i < name_values.length; i++) {
@@ -167,9 +173,13 @@ function average_num_values(name_values, num_values){
   //loop through the frequency_array and compute the average value for each unique name value
   for (let i = 0; i < frequency_array.length; i++) {
     //divide the value_array element by the frequency_array element to get the average numerical value
+    console.log(value_array, frequency_array)
     const average_value = parseFloat((value_array[i] / frequency_array[i]).toFixed(2))
     average_array.push(average_value)
   }
+  average_array.pop()
+  unique_name_values.pop()
+  console.log(average_array, unique_name_values)
   return [average_array, unique_name_values]
 }
 
