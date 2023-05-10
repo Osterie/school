@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Cycling </title>
+
+</head>
+<body>
+    <p>jei</p>
+
+    <label for="files" >Velg Egen Data Fra Datamaskin(Kun CSV):</label>
+    <input id="valgt_fil" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+
+    <button id="csv_overwrite_button"> Overskriv Eksisterende CSV </button>
+    <button id="csv_add_button"> Legg Til I Eksisterende CSV</button>
+
+    <button id="draw_graphs_button"> Lag Grafer På Nytt</button>
+
+    <canvas id="canvas1" width="600px" height="600px"> </canvas> 
+    <canvas id="canvas2" width="600px" height="600px"> </canvas> 
+    <canvas id="canvas3" width="600px" height="600px"> </canvas> 
+    <canvas id="canvas4" width="600px" height="600px"> </canvas> 
+    
+</body>
+<script src="https://fulab.no/fulibs/fusionSDK.js"> </script>
+<script src="https://fulab.no/skolemappe/faa-vgs/bibliotek/IT-2/teamtools.js"> </script>
+<script src="script.js"></script>
+</html>
