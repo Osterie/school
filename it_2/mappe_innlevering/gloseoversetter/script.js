@@ -2,61 +2,44 @@ var filinnhold = "";
 window.onload = winInit; 
 function winInit() {
 
-	elGetId("lesFil1").onclick = lesFil1;
-	elGetId("clear_gloser").onclick = clear_gloser;
-	elGetId("legg_til_gloser").onclick = legg_til_gloser;
+
+
+  try {
+    elGetId("clear_gloser").addEventListener("click", function () {
+      clear_gloser()
+    });
+
+    elGetId("legg_til_gloser").addEventListener("click", function () {
+      legg_til_gloser()
+    });
+  } catch (error) {
+    
+  }
+
+	elGetId("lesFil1").addEventListener("click", function () {
+    lesFil1()
+  });
+
+  elGetId("oversett_knapp").addEventListener("click", function () {
+      translate()
+    });
+    if (elGetId("oversett_felt")) {
+      elGetId("oversett_felt").addEventListener("keypress", function (event) {
+        if (event.code === "Enter") {
+          translate();
+        }
+      });
+    }
 }
 
 
-function elGetId(idName) {
-  return document.getElementById(idName);
-}
-
-function lastInn(file) {
-  return fetch(file).then((response) => response.text());
-}
 
 let norsk_gloser = [];
 let engelsk_gloser = [];
 //Used to check if csv is read.
 var created = 0;
 
-async function lesFil1() {
-  filinnhold = await lastInn("norsk-engelsk.csv");
 
-  var filinnhold_rows = filinnhold.split("\n");
-
-  //Går gjennom alle rader i csv fil (utenom overskrift greie)
-  //sjekker om norsk_gloser arrayen allerede er lagd.
-  if (created < 2) {
-    created += 1;
-    for (let i = 1; i < filinnhold_rows.length; i++) {
-
-      //Legger til det som kommer foran ";" i csv filen, som er det norske ordet, gjør også ordet til småe bokstaver for en bedre oversettelse.
-      norsk_gloser.push(
-        filinnhold_rows[i]
-          .slice(0, filinnhold_rows[i].indexOf(";"))
-          .toLowerCase()
-      );
-
-      //Legger til det som kommer etter ";" i csv filen, som er det engelske ordet
-      engelsk_gloser.push(
-        filinnhold_rows[i]
-          .slice(filinnhold_rows[i].indexOf(";") + 1)
-          .toLowerCase()
-      );
-    }
-  }
-
-  if (created < 2) {
-    created += 1;
-    for (let i = 0; i < norsk_glose_array.length; i++) {
-      norsk_gloser.push(norsk_glose_array[i]);
-      engelsk_gloser.push(engelsk_glose_array[i]);
-    }
-  }
-  visInnhold();
-}
 
 function visInnhold() {
   filinnhold = filinnhold.split("\n").join("<br>") + "<br>";
@@ -107,8 +90,10 @@ function clear_gloser() {
 
 function translate() {
 
-  var glossary = elGetId("translator").value.toLowerCase();
+  var glossary = elGetId("oversett_felt").value.toLowerCase();
 
+  console.log(engelsk_gloser, glossary)
+  
   if (norsk_gloser.includes(glossary)) {
     elGetId("utskrift").innerHTML =
       engelsk_gloser[norsk_gloser.indexOf(glossary)];
@@ -125,13 +110,50 @@ function translate() {
   }
 }
 
-elGetId("oversett").onclick = translate;
+async function lesFil1() {
 
-if (elGetId("translator")) {
-  elGetId("translator").addEventListener("keypress", function (event) {
-    if (event.code === "Enter") {
-      translate();
+  filinnhold = await lastInn("norsk-engelsk.csv");
+
+  var filinnhold_rows = filinnhold.split("\n");
+
+  //Går gjennom alle rader i csv fil (utenom overskrift greie)
+  //sjekker om norsk_gloser arrayen allerede er lagd.
+  if (created < 2) {
+    created += 1;
+    for (let i = 1; i < filinnhold_rows.length; i++) {
+
+      //Legger til det som kommer foran ";" i csv filen, som er det norske ordet, gjør også ordet til småe bokstaver for en bedre oversettelse.
+      norsk_gloser.push(
+        filinnhold_rows[i]
+          .slice(0, filinnhold_rows[i].indexOf(";"))
+          .toLowerCase()
+          .replace("\r", "")
+      );
+
+      //Legger til det som kommer etter ";" i csv filen, som er det engelske ordet
+      engelsk_gloser.push(
+        filinnhold_rows[i]
+          .slice(filinnhold_rows[i].indexOf(";") + 1)
+          .toLowerCase()
+          .replace("\r", "")
+      );
     }
-  });
+  }
+
+  if (created < 2) {
+    created += 1;
+    for (let i = 0; i < norsk_glose_array.length; i++) {
+      norsk_gloser.push(norsk_glose_array[i]);
+      engelsk_gloser.push(engelsk_glose_array[i]);
+    }
+  }
+  visInnhold();
 }
 
+function lastInn(file) {
+  return fetch(file).then((response) => response.text());
+}
+
+function elGetId(idName) {
+  return document.getElementById(idName);
+}
