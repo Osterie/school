@@ -64,27 +64,27 @@ async function main(csv) {
   duration.shift();
 
   const most_popular_stations = get_n_frequency_elements(starting_stations, 3, true);
-  draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency, Most Popular Stations" );
+  draw_bar_chart( most_popular_stations[0], most_popular_stations[1], "Starting Station ID", "Frequency, Most Popular Stations", "canvas1" );
 
+  
   const least_popular_stations = get_n_frequency_elements(starting_stations, 3, false);
-  draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency, Least Popular Stations" );
+  draw_bar_chart( least_popular_stations[0], least_popular_stations[1], "Starting Station ID", "Frequency, Least Popular Stations", "canvas2" );
 
   const occurences_day_of_week = get_daily_totals(starting_date);
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  tegnBrukCanvas("canvas3");
-  draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences" );
+  draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences", "canvas3" );
 
   // duration = string_to_int_array(duration)
 
-  // const months_for_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  // tegnBrukCanvas("canvas4");
-  // draw_data_months(starting_date, duration, months_for_data, average_2d_array);
+  const months_for_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
 
   const average_durations_array = average_num_values(ending_stations, duration)
-  draw_three_highest_value(average_durations_array[0], average_durations_array[1], "canvas4", "End Station ID", "Average Duration Seconds")
+  console.log(average_durations_array)
+  draw_n_highest_value(3, average_durations_array[0], average_durations_array[1], "End Station ID", "Average Duration Seconds", "canvas5")
 }
 
-function draw_data_months(dates, target_data, months_to_draw, callback) {
+function draw_data_months(dates, target_data, months_to_draw, callback, canvas) {
   let result_data = [];
   for (let i = 0; i < months_to_draw.length; i++) {
     result_data[i] = Array();
@@ -105,19 +105,20 @@ function draw_data_months(dates, target_data, months_to_draw, callback) {
 
   let months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ];
   let months_to_draw_names = create_subarray(months, months_to_draw);
-  draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis");
+  draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis", canvas);
 }
 
-function draw_three_highest_value( num_value, name_value, canvas, x_axis, y_axis ) {
-  const three_largest_pair_values = three_largest_values(num_value, name_value);
-  const three_largest_num_values = three_largest_pair_values[0];
-  const three_largest_name_values = three_largest_pair_values[1];
+function draw_n_highest_value(n, num_value, name_value, x_axis, y_axis, canvas ) {
+  const n_largest_pair_values = n_largest_values(num_value, name_value, n);
+  const n_largest_num_values = n_largest_pair_values[0];
+  const n_largest_name_values = n_largest_pair_values[1];
 
   tegnBrukCanvas(canvas);
-  draw_bar_chart( three_largest_name_values, three_largest_num_values, x_axis, y_axis );
+  draw_bar_chart( n_largest_name_values, n_largest_num_values, x_axis, y_axis, canvas );
 }
 
-function draw_bar_chart(x_values, y_values, x_axis, y_axis) {
+function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
+  tegnBrukCanvas(canvas)
   tegnBrukBakgrunn("white");
   tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values) * 1.2);
 
@@ -128,18 +129,6 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis) {
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 }
 
-function get_daily_totals(date_array) {
-  const days_frequency = new Array(7).fill(0);
-
-  for (let i = 0; i < date_array.length; i++) {
-    const day = new Date(date_array[i]).getDay();
-
-    if (!isNaN(day)) {
-      days_frequency[day] += 1;
-    }
-  }
-  return days_frequency;
-}
 
 function average_num_values(name_values, num_values) {
   //Jeg lagde denne funksjonen selv, ikke chat-gpt,
@@ -178,11 +167,11 @@ function average_num_values(name_values, num_values) {
 }
 
 //todo make more general...
-function three_largest_values(num_value, name_value) {
+function n_largest_values(num_value, name_value, n) {
   const three_num_values = [];
   const three_name_values = [];
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < n; i++) {
     const longest_duration_id = num_value.indexOf(Math.max(...num_value));
 
     three_num_values.push(num_value[longest_duration_id]);
@@ -191,6 +180,19 @@ function three_largest_values(num_value, name_value) {
     name_value.splice(longest_duration_id, 1);
   }
   return [three_num_values, three_name_values];
+}
+
+function get_daily_totals(date_array) {
+  const days_frequency = new Array(7).fill(0);
+
+  for (let i = 0; i < date_array.length; i++) {
+    const day = new Date(date_array[i]).getDay();
+
+    if (!isNaN(day)) {
+      days_frequency[day] += 1;
+    }
+  }
+  return days_frequency;
 }
 
 //takes an array, a number value and a boolean
