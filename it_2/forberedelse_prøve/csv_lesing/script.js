@@ -51,30 +51,24 @@ function winInit() {
         // main()
     })
 
-    main()
+    // main()
 }
 
-async function main(){
+async function main(csv){
 
-    // const csv_cycling = store_csv(csv, ";")
-    const csv_cycling = await read_csv("oppgave_05_sykkeltur copy.csv", store_csv, ";")
+    const csv_cycling = store_csv(csv, ";")
+    // const csv_cycling = await read_csv("oppgave_05_sykkeltur copy.csv", store_csv, ";")
 
-    console.log(csv_cycling)
-    
-    //removes name of column values, and last value, which is an empty value
     const starting_stations = csv_cycling[3]
-    starting_stations.shift()
     
     const starting_date = csv_cycling[0]
     starting_date.shift()
     
     const ending_stations = csv_cycling[8]
     ending_stations.shift()
-    // ending_stations.pop()
     
     let duration = csv_cycling[2]
     duration.shift()
-    // duration.pop()
     
     const most_popular_stations = three_most_frequent_elements(starting_stations)
     draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency, Most Popular Stations")
@@ -88,11 +82,65 @@ async function main(){
     draw_bar_chart(weekdays, occurences_day_of_week, "Days of the week", "Occurences")
     
     // duration = string_to_int_array(duration)
-    console.log(ending_stations, duration)
 
-    const average_durations_array = average_num_values(ending_stations, duration)
-    console.log(average_durations_array)
-    draw_three_highest_value(average_durations_array[0], average_durations_array[1], "canvas4", "End Station ID", "Average Duration Seconds")
+    const months_for_data = [0, 1, 2, 3, 4,5 ,6 ,7 ,8, 9, 10, 11]
+    tegnBrukCanvas("canvas4")
+    draw_data_months(starting_date, duration, months_for_data, average_2d_array)
+
+    // const average_durations_array = average_num_values(ending_stations, duration)
+    // draw_three_highest_value(average_durations_array[0], average_durations_array[1], "canvas4", "End Station ID", "Average Duration Seconds")
+}
+
+function draw_data_months(dates, target_data, months_to_draw, callback){
+
+  let result_data = []
+  for (let i = 0; i < months_to_draw.length; i++) {
+    result_data[i] = Array()  
+  }
+
+  for (let i = 0; i < target_data.length; i++) {
+
+      const current_date = new Date(dates[i])
+      const current_month = current_date.getMonth()
+      const result_data_index = months_to_draw.indexOf(current_month)
+
+      if (current_month in months_to_draw) {
+
+        result_data[result_data_index].push(target_data[i])
+      }
+    }
+
+  let callback_result = callback(result_data)
+  callback_result = callback_result.map(value => isNaN(value) ? ' ' : value);
+
+  let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let months_to_draw_names = create_subarray(months, months_to_draw)
+  draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis")
+}
+
+function create_subarray(main_array, sub_array){
+
+  const new_array = []
+
+  for (let i = 0; i < sub_array.length; i++) {
+    sub_item = main_array[sub_array[i]]
+    new_array.push(sub_item)
+  }
+  return new_array
+}
+
+function average_2d_array(array){
+
+  let result_array = []
+  for (let i = 0; i < array.length; i++) {
+    let average_value_of_array = 0
+
+    for (let j = 0; j < array.length; j++) {
+      average_value_of_array += parseFloat(array[i][j])
+    }
+    result_array.push(average_value_of_array)
+  }
+  return result_array
 }
 
 function string_to_int_array(array){
@@ -149,9 +197,9 @@ function average_num_values(name_values, num_values){
 
   console.log(name_values, num_values)
   //creates a sorted set of the name values
-//   const unique_name_values = get_unique_values_sorted(name_values)
-const unique_name_values2 =  new Set(name_values);
-const unique_name_values = Array.from(unique_name_values2);
+  //const unique_name_values = get_unique_values_sorted(name_values)
+  const unique_name_values2 =  new Set(name_values);
+  const unique_name_values = Array.from(unique_name_values2);
   
   //frequency array stores how many times we add to value array
   //value array stores the sum of all the unique num values
@@ -173,13 +221,13 @@ const unique_name_values = Array.from(unique_name_values2);
   //loop through the frequency_array and compute the average value for each unique name value
   for (let i = 0; i < frequency_array.length; i++) {
     //divide the value_array element by the frequency_array element to get the average numerical value
-    console.log(value_array, frequency_array)
+    // console.log(value_array, frequency_array)
     const average_value = parseFloat((value_array[i] / frequency_array[i]).toFixed(2))
     average_array.push(average_value)
   }
   average_array.pop()
   unique_name_values.pop()
-  console.log(average_array, unique_name_values)
+  // console.log(average_array, unique_name_values)
   return [average_array, unique_name_values]
 }
 
@@ -262,7 +310,9 @@ function store_csv(csv, seperator){
       csv[i] = csv[i].split(seperator) 
   }
 
-  const array = new Array(csv.length)
+  // const array = new Array(csv.length)
+  const array = new Array()
+  console.log(array)
  
   for (let i = 0; i < name_values.length; i++) {
     array[i] = new Array(name_values.length)
@@ -298,8 +348,6 @@ function sort_descending(array){
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
 }
-
-
 
 
 
