@@ -64,9 +64,7 @@ async function main(csv) {
   duration.shift();
 
   const most_popular_stations = get_n_frequency_elements(starting_stations, 3, true);
-  console.log(most_popular_stations)
   draw_bar_chart( most_popular_stations[0], most_popular_stations[1], "Starting Station ID", "Frequency, Most Popular Stations", "canvas1" );
-
   
   const least_popular_stations = get_n_frequency_elements(starting_stations, 3, false);
   draw_bar_chart( least_popular_stations[0], least_popular_stations[1], "Starting Station ID", "Frequency, Least Popular Stations", "canvas2" );
@@ -75,14 +73,32 @@ async function main(csv) {
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences", "canvas3" );
 
-  // duration = string_to_int_array(duration)
-
   const months_for_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
   draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
 
-  const average_durations_array = average_num_values(ending_stations, duration)
-  console.log(average_durations_array)
+  const average_durations_array = get_average_num_values_pair_arrays(ending_stations, duration)
   draw_n_highest_value(3, average_durations_array[0], average_durations_array[1], "End Station ID", "Average Duration Seconds", "canvas5")
+}
+
+function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
+  tegnBrukCanvas(canvas)
+  tegnBrukBakgrunn("white");
+  tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values) * 1.2);
+
+  for (let i = 0; i < x_values.length; i++) {
+    tegnFyltRektangel(i - 0.25, 0, 0.5, y_values[i], "black");
+    tegnTekst( x_values[i], i, -Math.max(...y_values) * 0.1, "red", 0, "left", 20, "Calibri", "bottom" );
+  }
+  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
+}
+
+function draw_n_highest_value(n, num_value, name_value, x_axis, y_axis, canvas ) {
+  const n_largest_pair_values = get_n_extreme_values(num_value, name_value, n, true);
+  const n_largest_num_values = n_largest_pair_values[0];
+  const n_largest_name_values = n_largest_pair_values[1];
+
+  tegnBrukCanvas(canvas);
+  draw_bar_chart( n_largest_name_values, n_largest_num_values, x_axis, y_axis, canvas );
 }
 
 function draw_data_months(dates, target_data, months_to_draw, callback, canvas) {
@@ -109,32 +125,10 @@ function draw_data_months(dates, target_data, months_to_draw, callback, canvas) 
   draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis", canvas);
 }
 
-function draw_n_highest_value(n, num_value, name_value, x_axis, y_axis, canvas ) {
-  const n_largest_pair_values = get_n_extreme_values(num_value, name_value, n, true);
-  const n_largest_num_values = n_largest_pair_values[0];
-  const n_largest_name_values = n_largest_pair_values[1];
-
-  tegnBrukCanvas(canvas);
-  draw_bar_chart( n_largest_name_values, n_largest_num_values, x_axis, y_axis, canvas );
-}
-
-function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
-  tegnBrukCanvas(canvas)
-  tegnBrukBakgrunn("white");
-  tegnBrukXY(-1, x_values.length, 0, Math.max(...y_values) * 1.2);
-
-  for (let i = 0; i < x_values.length; i++) {
-    tegnFyltRektangel(i - 0.25, 0, 0.5, y_values[i], "black");
-    tegnTekst( x_values[i], i, -Math.max(...y_values) * 0.1, "red", 0, "left", 20, "Calibri", "bottom" );
-  }
-  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
-}
-
-
-function average_num_values(name_values, num_values) {
+function get_average_num_values_pair_arrays(name_values, num_values) {
   //Jeg lagde denne funksjonen selv, ikke chat-gpt,
   //men jeg liker å kommentere på engelsk, men noen av kommentarene
-  //er chat-gpt
+  //er med hjelp fra chat-gpt
 
   //creates a sorted set of the name values
   //const unique_name_values = get_unique_values_sorted(name_values)
@@ -167,17 +161,24 @@ function average_num_values(name_values, num_values) {
   return [average_array, unique_name_values];
 }
 
-//todo make more general...add "get_" to start of name
+//takes an array, a number value and a boolean
+//finds the n-most-or-least frequent elements in the array, easy to use.
+function get_n_frequency_elements(array, n, is_most_frequent) {
+  //the result of this means that each element in sorted_set will have a corresponding
+  //frequency of itself in the frequency array (same index)
+  const sorted_set = get_unique_values_sorted(array);
+  const frequency_array = create_sorted_frequency_array(array);
+  return get_n_extreme_values(frequency_array, sorted_set, n, is_most_frequent)
+}
+
 function get_n_extreme_values(num_array, name_array, n, is_largest) { 
-  const three_num_values = [];
-  const three_name_values = [];
+  const n_num_values = [];
+  const n_name_values = [];
 
   for (let i = 0; i < n; i++) {
 
     let index
-
     if (is_largest){
-      
       index = Math.max(...num_array)
     }
     else if (!is_largest){
@@ -185,16 +186,13 @@ function get_n_extreme_values(num_array, name_array, n, is_largest) {
     }
 
     const longest_duration_id = num_array.indexOf(index);
-
-    
-    three_num_values.push(num_array[longest_duration_id]);
-    three_name_values.push(name_array[longest_duration_id]);
-    
+    n_num_values.push(num_array[longest_duration_id]);
+    n_name_values.push(name_array[longest_duration_id]);
 
     num_array.splice(longest_duration_id, 1);
     name_array.splice(longest_duration_id, 1);
   }
-  return [three_num_values, three_name_values];
+  return [n_name_values, n_num_values];
 }
 
 function get_daily_totals(date_array) {
@@ -210,28 +208,9 @@ function get_daily_totals(date_array) {
   return days_frequency;
 }
 
-//takes an array, a number value and a boolean
-//finds the n-most-or-least frequent elements in the array, easy to use.
-function get_n_frequency_elements(array, n, is_most_frequent) {
-  //gives a sorted array with only unique values
-  const sorted_set = get_unique_values_sorted(array);
-  //sorts the array and then returns a new array of the frequencies of each array element
-  const frequency_array = create_sorted_frequency_array(array);
-  //the result of this means that each element in sorted_set will have a corresponding
-  //frequency of itself in the frequency array (same index)
-
-  const result = get_n_extreme_values(frequency_array, sorted_set, n, is_most_frequent)
-  console.log(result)
-
-  return [result[0], result[1]]
-
-  
-}
-
 //returns an array with the frequency of each element of the given array.
 function create_sorted_frequency_array(array) {
   sort_ascending(array);
-  console.log(array)
   const frequency_array = [];
   let frequency = 0;
 
@@ -242,7 +221,6 @@ function create_sorted_frequency_array(array) {
       frequency = 0;
     }
   }
-  console.log(frequency_array)
   return frequency_array;
 }
 
