@@ -69,7 +69,7 @@ async function main(csv) {
   const least_popular_stations = get_n_frequency_elements(starting_stations, 3, false);
   draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency, Least Popular Stations" );
 
-  const occurences_day_of_week = total_each_day(starting_date);
+  const occurences_day_of_week = get_daily_totals(starting_date);
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   tegnBrukCanvas("canvas3");
   draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences" );
@@ -108,36 +108,6 @@ function draw_data_months(dates, target_data, months_to_draw, callback) {
   draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis");
 }
 
-function create_subarray(main_array, sub_array) {
-  const new_array = [];
-
-  for (let i = 0; i < sub_array.length; i++) {
-    sub_item = main_array[sub_array[i]];
-    new_array.push(sub_item);
-  }
-  return new_array;
-}
-
-function average_2d_array(array) {
-  let result_array = [];
-  for (let i = 0; i < array.length; i++) {
-    let average_value_of_array = 0;
-
-    for (let j = 0; j < array.length; j++) {
-      average_value_of_array += parseFloat(array[i][j]);
-    }
-    result_array.push(average_value_of_array);
-  }
-  return result_array;
-}
-
-function string_to_int_array(array) {
-  for (let i = 0; i < array.length; i++) {
-    array[i] = parseInt(array[i]);
-  }
-  return array;
-}
-
 function draw_three_highest_value( num_value, name_value, canvas, x_axis, y_axis ) {
   const three_largest_pair_values = three_largest_values(num_value, name_value);
   const three_largest_num_values = three_largest_pair_values[0];
@@ -158,7 +128,7 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis) {
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 }
 
-function total_each_day(date_array) {
+function get_daily_totals(date_array) {
   const days_frequency = new Array(7).fill(0);
 
   for (let i = 0; i < date_array.length; i++) {
@@ -207,6 +177,22 @@ function average_num_values(name_values, num_values) {
   return [average_array, unique_name_values];
 }
 
+//todo make more general...
+function three_largest_values(num_value, name_value) {
+  const three_num_values = [];
+  const three_name_values = [];
+
+  for (let i = 0; i < 3; i++) {
+    const longest_duration_id = num_value.indexOf(Math.max(...num_value));
+
+    three_num_values.push(num_value[longest_duration_id]);
+    three_name_values.push(name_value[longest_duration_id]);
+    num_value.splice(longest_duration_id, 1);
+    name_value.splice(longest_duration_id, 1);
+  }
+  return [three_num_values, three_name_values];
+}
+
 //takes an array, a number value and a boolean
 //finds the n-most-or-least frequent elements in the array, easy to use.
 function get_n_frequency_elements(array, n, is_most_frequent) {
@@ -244,22 +230,6 @@ function get_n_frequency_elements(array, n, is_most_frequent) {
   return [ n_extreme_frequency_ids, n_extreme_frequency_array, ];
 }
 
-//todo make more general...
-function three_largest_values(num_value, name_value) {
-  const three_num_values = [];
-  const three_name_values = [];
-
-  for (let i = 0; i < 3; i++) {
-    const longest_duration_id = num_value.indexOf(Math.max(...num_value));
-
-    three_num_values.push(num_value[longest_duration_id]);
-    three_name_values.push(name_value[longest_duration_id]);
-    num_value.splice(longest_duration_id, 1);
-    name_value.splice(longest_duration_id, 1);
-  }
-  return [three_num_values, three_name_values];
-}
-
 //returns an array with the frequency of each element of the given array.
 function create_sorted_frequency_array(array) {
   sort_ascending(array);
@@ -277,6 +247,58 @@ function create_sorted_frequency_array(array) {
   console.log(frequency_array)
   return frequency_array;
 }
+
+function string_to_int_array(array) {
+  for (let i = 0; i < array.length; i++) {
+    array[i] = parseInt(array[i]);
+  }
+  return array;
+}
+
+function average_2d_array(array) {
+  let result_array = [];
+  for (let i = 0; i < array.length; i++) {
+    let average_value_of_array = 0;
+
+    for (let j = 0; j < array.length; j++) {
+      average_value_of_array += parseFloat(array[i][j]);
+    }
+    result_array.push(average_value_of_array);
+  }
+  return result_array;
+}
+
+function create_subarray(main_array, sub_array) {
+  const new_array = [];
+
+  for (let i = 0; i < sub_array.length; i++) {
+    sub_item = main_array[sub_array[i]];
+    new_array.push(sub_item);
+  }
+  return new_array;
+}
+
+function get_unique_values_sorted(array) {
+  sort_ascending(array);
+  let unique_values = new Set(array);
+  unique_values = Array.from(unique_values);
+  return unique_values;
+}
+
+function sort_ascending(array) {
+  array.sort(function (a, b) {
+    return a - b;
+  });
+  return array;
+}
+
+function sort_descending(array) {
+  array.sort(function (a, b) {
+    return b - a;
+  });
+  return array;
+}
+
 
 function store_csv(csv, seperator) {
   //create a 2d array and store each column in its array
@@ -303,27 +325,6 @@ function store_csv(csv, seperator) {
 async function read_csv(csv_file, callback, seperator) {
   const filinnhold = await lastInn(csv_file);
   return callback(filinnhold, seperator);
-}
-
-function get_unique_values_sorted(array) {
-  sort_ascending(array);
-  let unique_values = new Set(array);
-  unique_values = Array.from(unique_values);
-  return unique_values;
-}
-
-function sort_ascending(array) {
-  array.sort(function (a, b) {
-    return a - b;
-  });
-  return array;
-}
-
-function sort_descending(array) {
-  array.sort(function (a, b) {
-    return b - a;
-  });
-  return array;
 }
 
 function lastInn(file) {
