@@ -64,6 +64,7 @@ async function main(csv) {
   duration.shift();
 
   const most_popular_stations = get_n_frequency_elements(starting_stations, 3, true);
+  console.log(most_popular_stations)
   draw_bar_chart( most_popular_stations[0], most_popular_stations[1], "Starting Station ID", "Frequency, Most Popular Stations", "canvas1" );
 
   
@@ -109,7 +110,7 @@ function draw_data_months(dates, target_data, months_to_draw, callback, canvas) 
 }
 
 function draw_n_highest_value(n, num_value, name_value, x_axis, y_axis, canvas ) {
-  const n_largest_pair_values = n_largest_values(num_value, name_value, n);
+  const n_largest_pair_values = get_n_extreme_values(num_value, name_value, n, true);
   const n_largest_num_values = n_largest_pair_values[0];
   const n_largest_name_values = n_largest_pair_values[1];
 
@@ -166,18 +167,32 @@ function average_num_values(name_values, num_values) {
   return [average_array, unique_name_values];
 }
 
-//todo make more general...
-function n_largest_values(num_value, name_value, n) {
+//todo make more general...add "get_" to start of name
+function get_n_extreme_values(num_array, name_array, n, is_largest) { 
   const three_num_values = [];
   const three_name_values = [];
 
   for (let i = 0; i < n; i++) {
-    const longest_duration_id = num_value.indexOf(Math.max(...num_value));
 
-    three_num_values.push(num_value[longest_duration_id]);
-    three_name_values.push(name_value[longest_duration_id]);
-    num_value.splice(longest_duration_id, 1);
-    name_value.splice(longest_duration_id, 1);
+    let index
+
+    if (is_largest){
+      
+      index = Math.max(...num_array)
+    }
+    else if (!is_largest){
+      index = Math.min(...num_array)
+    }
+
+    const longest_duration_id = num_array.indexOf(index);
+
+    
+    three_num_values.push(num_array[longest_duration_id]);
+    three_name_values.push(name_array[longest_duration_id]);
+    
+
+    num_array.splice(longest_duration_id, 1);
+    name_array.splice(longest_duration_id, 1);
   }
   return [three_num_values, three_name_values];
 }
@@ -205,31 +220,12 @@ function get_n_frequency_elements(array, n, is_most_frequent) {
   //the result of this means that each element in sorted_set will have a corresponding
   //frequency of itself in the frequency array (same index)
 
-  const n_extreme_frequency_array = [];
-  const n_extreme_frequency_ids = [];
+  const result = get_n_extreme_values(frequency_array, sorted_set, n, is_most_frequent)
+  console.log(result)
 
-  for (let i = 0; i < n; i++) {
+  return [result[0], result[1]]
 
-    let most_frequent_value_id
-    let extreme_frequency_element
-
-    if (is_most_frequent){
-      extreme_frequency_element = Math.max(...frequency_array)
-    }
-    else if (!is_most_frequent){
-      extreme_frequency_element = Math.min(...frequency_array)
-    }
-
-    most_frequent_value_id = frequency_array.indexOf( extreme_frequency_element );
-    
-    n_extreme_frequency_array.push(extreme_frequency_element);
-    n_extreme_frequency_ids.push(sorted_set[most_frequent_value_id]);
-    
-    frequency_array.splice(most_frequent_value_id, 1);
-    sorted_set.splice(most_frequent_value_id, 1);
-  }
-
-  return [ n_extreme_frequency_ids, n_extreme_frequency_array, ];
+  
 }
 
 //returns an array with the frequency of each element of the given array.
