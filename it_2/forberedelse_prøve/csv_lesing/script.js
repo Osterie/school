@@ -63,10 +63,12 @@ async function main(csv) {
   let duration = csv_cycling[2];
   duration.shift();
 
-  const most_popular_stations = three_most_frequent_elements(starting_stations);
+  // const most_popular_stations = three_most_frequent_elements(starting_stations);
+  const most_popular_stations = get_n_frequency_elements(starting_stations, 3, true);
   draw_three_highest_value( most_popular_stations[1], most_popular_stations[0], "canvas1", "Starting Station ID", "Frequency, Most Popular Stations" );
 
-  const least_popular_stations = three_least_frequent_elements(starting_stations);
+  // const least_popular_stations = three_least_frequent_elements(starting_stations);
+  const least_popular_stations = get_n_frequency_elements(starting_stations, 3, false);
   draw_three_highest_value( least_popular_stations[1], least_popular_stations[0], "canvas2", "Starting Station ID", "Frequency, Least Popular Stations" );
 
   const occurences_day_of_week = total_each_day(starting_date);
@@ -207,41 +209,81 @@ function average_num_values(name_values, num_values) {
   return [average_array, unique_name_values];
 }
 
-function three_most_frequent_elements(array) {
-  const unique_values = get_unique_values_sorted(array);
+//takes an array, a number value and a boolean
+//finds the n-most-or-least frequent elements in the array, easy to use.
+function get_n_frequency_elements(array, n, is_most_frequent) {
+  //gives a sorted array with only unique values
+  const sorted_set = get_unique_values_sorted(array);
+  //sorts the array and then returns a new array of the frequencies of each array element
   const frequency_array = create_sorted_frequency_array(array);
-  const three_most_frequent_elements_frequency = [];
-  const three_most_frequent_elements_id = [];
+  //the result of this means that each element in sorted_set will have a corresponding
+  //frequency of itself in the frequency array (same index)
 
-  for (let i = 0; i < 3; i++) {
-    const most_frequent_value_id = frequency_array.indexOf( Math.max(...frequency_array) );
-    three_most_frequent_elements_frequency.push(Math.max(...frequency_array));
-    three_most_frequent_elements_id.push(unique_values[most_frequent_value_id]);
+  const n_extreme_frequency_array = [];
+  const n_extreme_frequency_ids = [];
+
+  for (let i = 0; i < n; i++) {
+
+    let most_frequent_value_id
+    let extreme_frequency_element
+
+    if (is_most_frequent){
+      extreme_frequency_element = Math.max(...frequency_array)
+    }
+    else if (!is_most_frequent){
+      extreme_frequency_element = Math.min(...frequency_array)
+    }
+
+    most_frequent_value_id = frequency_array.indexOf( extreme_frequency_element );
+    
+    //adds the 
+    n_extreme_frequency_array.push(most_least_frequent_element);
+    n_extreme_frequency_ids.push(sorted_set[most_frequent_value_id]);
+    
     frequency_array.splice(most_frequent_value_id, 1);
-    unique_values.splice(most_frequent_value_id, 1);
+    sorted_set.splice(most_frequent_value_id, 1);
   }
-  return [ three_most_frequent_elements_id, three_most_frequent_elements_frequency, ];
+
+  console.log(n_extreme_frequency_ids, n_extreme_frequency_array)
+  return [ n_extreme_frequency_ids, n_extreme_frequency_array, ];
 }
 
-function three_least_frequent_elements(array) {
-  const unique_values = get_unique_values_sorted(array);
-  const frequency_array = create_sorted_frequency_array(array);
+// function three_most_frequent_elements(array) {
+//   const unique_values = get_unique_values_sorted(array);
+//   const frequency_array = create_sorted_frequency_array(array);
 
-  const three_least_frequent_elements_frequency = [];
-  const three_least_frequent_elements_id = [];
+//   const three_most_frequent_elements_frequency = [];
+//   const three_most_frequent_elements_id = [];
 
-  for (let i = 0; i < 3; i++) {
-    const least_frequent_value_id = frequency_array.indexOf( Math.min(...frequency_array) );
-    three_least_frequent_elements_frequency.push(Math.min(...frequency_array));
-    three_least_frequent_elements_id.push(
-      unique_values[least_frequent_value_id]
-    );
+//   for (let i = 0; i < 3; i++) {
+//     const most_frequent_value_id = frequency_array.indexOf( Math.max(...frequency_array) );
+//     three_most_frequent_elements_frequency.push(Math.max(...frequency_array));
+//     three_most_frequent_elements_id.push(unique_values[most_frequent_value_id]);
+//     frequency_array.splice(most_frequent_value_id, 1);
+//     unique_values.splice(most_frequent_value_id, 1);
+//   }
+//   return [ three_most_frequent_elements_id, three_most_frequent_elements_frequency, ];
+// }
 
-    frequency_array.splice(least_frequent_value_id, 1);
-    unique_values.splice(least_frequent_value_id, 1);
-  }
-  return [ three_least_frequent_elements_id, three_least_frequent_elements_frequency, ];
-}
+// function three_least_frequent_elements(array) {
+//   const unique_values = get_unique_values_sorted(array);
+//   const frequency_array = create_sorted_frequency_array(array);
+
+//   const three_least_frequent_elements_frequency = [];
+//   const three_least_frequent_elements_id = [];
+
+//   for (let i = 0; i < 3; i++) {
+//     const least_frequent_value_id = frequency_array.indexOf( Math.min(...frequency_array) );
+//     three_least_frequent_elements_frequency.push(Math.min(...frequency_array));
+//     three_least_frequent_elements_id.push(
+//       unique_values[least_frequent_value_id]
+//     );
+
+//     frequency_array.splice(least_frequent_value_id, 1);
+//     unique_values.splice(least_frequent_value_id, 1);
+//   }
+//   return [ three_least_frequent_elements_id, three_least_frequent_elements_frequency, ];
+// }
 
 function three_largest_values(num_value, name_value) {
   const three_num_values = [];
@@ -261,6 +303,7 @@ function three_largest_values(num_value, name_value) {
 //returns an array with the frequency of each element of the given array.
 function create_sorted_frequency_array(array) {
   sort_ascending(array);
+  console.log(array)
   const frequency_array = [];
   let frequency = 0;
 
@@ -271,6 +314,7 @@ function create_sorted_frequency_array(array) {
       frequency = 0;
     }
   }
+  console.log(frequency_array)
   return frequency_array;
 }
 
@@ -325,6 +369,8 @@ function sort_descending(array) {
 function lastInn(file) {
   return fetch(file).then((response) => response.text());
 }
+
+
 
 function handleFileSelect(event) {
   const file = event.target.files[0];
