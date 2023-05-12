@@ -73,12 +73,11 @@ async function main(csv) {
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences", "canvas3" );
 
-  const months_for_data = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-  draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
-
   const average_durations_array = get_average_num_values_pair_arrays(ending_stations, duration)
-  console.log(average_durations_array)
   draw_n_highest_value(3, average_durations_array[0], average_durations_array[1], "End Station ID", "Average Duration Seconds", "canvas5")
+  
+  const months_for_data = [ 4, 5, 6, 7, 8, ];
+  draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
 }
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
@@ -105,7 +104,7 @@ function draw_n_highest_value(n, x_values, y_values, x_axis, y_axis, canvas ) {
 function draw_data_months(dates, target_data, months_to_draw, callback, canvas) {
   let result_data = [];
   for (let i = 0; i < months_to_draw.length; i++) {
-    result_data[i] = Array();
+    result_data[i] = [];
   }
 
   for (let i = 0; i < target_data.length; i++) {
@@ -113,7 +112,7 @@ function draw_data_months(dates, target_data, months_to_draw, callback, canvas) 
     const current_month = current_date.getMonth();
     const result_data_index = months_to_draw.indexOf(current_month);
 
-    if (current_month in months_to_draw) {
+    if (months_to_draw.includes(current_month)){
       result_data[result_data_index].push(target_data[i]);
     }
   }
@@ -124,6 +123,19 @@ function draw_data_months(dates, target_data, months_to_draw, callback, canvas) 
   let months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ];
   let months_to_draw_names = create_subarray(months, months_to_draw);
   draw_bar_chart(months_to_draw_names, callback_result, "x_axis", "y_axis", canvas);
+}
+
+function get_daily_totals(date_array) {
+  const days_frequency = new Array(7).fill(0);
+
+  for (let i = 0; i < date_array.length; i++) {
+    const day = new Date(date_array[i]).getDay();
+
+    if (!isNaN(day)) {
+      days_frequency[day] += 1;
+    }
+  }
+  return days_frequency;
 }
 
 function get_average_num_values_pair_arrays(name_values, num_values) {
@@ -178,13 +190,7 @@ function get_n_extreme_values(name_array, num_array, n, is_largest) {
 
   for (let i = 0; i < n; i++) {
 
-    let index
-    if (is_largest){
-      index = Math.max(...num_array)
-    }
-    else if (!is_largest){
-      index = Math.min(...num_array)
-    }
+    let index = get_extreme_value_index(num_array, is_largest)
 
     const longest_duration_id = num_array.indexOf(index);
     n_num_values.push(num_array[longest_duration_id]);
@@ -194,19 +200,6 @@ function get_n_extreme_values(name_array, num_array, n, is_largest) {
     name_array.splice(longest_duration_id, 1);
   }
   return [n_name_values, n_num_values];
-}
-
-function get_daily_totals(date_array) {
-  const days_frequency = new Array(7).fill(0);
-
-  for (let i = 0; i < date_array.length; i++) {
-    const day = new Date(date_array[i]).getDay();
-
-    if (!isNaN(day)) {
-      days_frequency[day] += 1;
-    }
-  }
-  return days_frequency;
 }
 
 //returns an array with the frequency of each element of the given array.
@@ -243,6 +236,17 @@ function average_2d_array(array) {
     result_array.push(average_value_of_array);
   }
   return result_array;
+}
+
+function get_extreme_value_index(array, is_largest){
+  let index
+  if (is_largest){
+    index = Math.max(...array)
+  }
+  else if (!is_largest){
+    index = Math.min(...array)
+  }
+  return index
 }
 
 function create_subarray(main_array, sub_array) {
@@ -286,9 +290,7 @@ function store_csv(csv, seperator) {
     csv[i] = csv[i].split(seperator);
   }
 
-  // const array = new Array(csv.length)
   const array = new Array();
-  console.log(array);
 
   for (let i = 0; i < name_values.length; i++) {
     array[i] = new Array(name_values.length);
