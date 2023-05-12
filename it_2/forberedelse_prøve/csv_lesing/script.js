@@ -118,6 +118,7 @@ function draw_data_months(dates, target_data, months_to_draw, callback, canvas) 
   }
 
   let callback_result = callback(result_data);
+  //replaces NaN with " "0
   callback_result = callback_result.map((value) => isNaN(value) ? " " : value );
 
   let months = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", ];

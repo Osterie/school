@@ -33,10 +33,6 @@ class Member extends Contact {
   paid_status(paid){
     this.paid = paid
   }
-
-  add_member(){}
-
-  remove_member(){}
 }
 // console.log(new Member("Adrian", "Bjørge", 986, "a@shit", "football", "ELL"))
 
