@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Cycling </title>
 
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
+
+    <a id = "tilbake_knapp" href="../oppgave_4/index.html"> Back </a>
+
 
     <label for="files" >Velg Egen Data Fra Datamaskin(Kun CSV):</label>
     <input id="valgt_fil" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
@@ -15,13 +20,8 @@
     <button id="csv_overwrite_button"> Overskriv Eksisterende CSV </button>
     <button id="csv_add_button"> Legg Til I Eksisterende CSV</button>
 
-    <button id="draw_graphs_button"> Lag Grafer På Nytt</button>
-
     <canvas id="canvas1" width="600px" height="600px"> </canvas> 
     <canvas id="canvas2" width="600px" height="600px"> </canvas> 
-    <canvas id="canvas3" width="600px" height="600px"> </canvas> 
-    <canvas id="canvas4" width="600px" height="600px"> </canvas> 
-    <canvas id="canvas5" width="600px" height="600px"> </canvas> 
     
 </body>
 <script src="https://fulab.no/fulibs/fusionSDK.js"> </script>

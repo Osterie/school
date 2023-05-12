@@ -9,7 +9,6 @@ function winInit() {
 
   const overwrite_csv_button = document.getElementById("csv_overwrite_button");
   const add_csv_button = document.getElementById("csv_add_button");
-  const draw_graphs_button = document.getElementById("draw_graphs_button");
 
   const inputElement = document.getElementById("valgt_fil");
 
@@ -40,45 +39,56 @@ function winInit() {
 
     reader.readAsText(file);
   });
-  draw_graphs_button.addEventListener("click", function () {
-    // main()
-  });
 
-  // main()
 }
 
 async function main(csv) {
-  const csv_cycling = store_csv(csv, ";");
-  // const csv_cycling = await read_csv("oppgave_05_sykkeltur copy.csv", store_csv, ";")
+  const stored_csv = store_csv(csv, ";");
 
-  const starting_stations = csv_cycling[3];
-  starting_stations.shift()
+  const dates = stored_csv[0]
+  dates.shift()
+  dates.shift()
 
-  const starting_date = csv_cycling[0];
-  starting_date.shift();
+  const hours = stored_csv[2]
+  hours.shift()
 
-  const ending_stations = csv_cycling[8];
-  ending_stations.shift();
-
-  let duration = csv_cycling[2];
-  duration.shift();
-
-  const most_popular_stations = get_n_frequency_elements(starting_stations, 3, true);
-  draw_bar_chart( most_popular_stations[0], most_popular_stations[1], "Starting Station ID", "Frequency, Most Popular Stations", "canvas1" );
-  
-  const least_popular_stations = get_n_frequency_elements(starting_stations, 3, false);
-  draw_bar_chart( least_popular_stations[0], least_popular_stations[1], "Starting Station ID", "Frequency, Least Popular Stations", "canvas2" );
-
-  const occurences_day_of_week = get_daily_totals(starting_date);
+  const occurences_day_of_week = get_daily_totals(dates);
   const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences", "canvas3" );
+  draw_bar_chart( weekdays, occurences_day_of_week, "Days of the week", "Occurences", "canvas1" );
 
-  const average_durations_array = get_average_num_values_pair_arrays(ending_stations, duration)
-  draw_n_highest_value(3, average_durations_array[0], average_durations_array[1], "End Station ID", "Average Duration Seconds", "canvas5")
+  let total_hours_weekday = get_num_sum_weekdays(dates, hours) 
+  let total_revenue_weekday = new Array(7).fill(0)
+
+  for (let i = 0; i < 7; i++) {
+      if (i < 1 || i > 4){
+        total_revenue_weekday[i] = total_hours_weekday[i]*200
+      }
   
-  const months_for_data = [ 4, 5, 6, 7, 8, ];
-  draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
+      else{
+        total_revenue_weekday[i] = total_hours_weekday[i]*150
+      }
+  }
+
+  draw_bar_chart( weekdays, total_revenue_weekday, "Days of the week", "Revenue", "canvas2" );
+
 }
+
+
+function get_num_sum_weekdays(dates, num_values){
+
+  let sums_weekdays = new Array(7).fill(0)
+
+  for (let i = 0; i < dates.length; i++) {
+    let date = new Date(dates[i])    
+    let day = date.getDay()
+    let numb = parseFloat(num_values[i])
+    sums_weekdays[day] += numb
+
+  }
+  return sums_weekdays
+}
+
+
 
 function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
   tegnBrukCanvas(canvas)
@@ -87,9 +97,9 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
 
   for (let i = 0; i < x_values.length; i++) {
     tegnFyltRektangel(i - 0.25, 0, 0.5, y_values[i], "black");
-    tegnTekst( x_values[i], i, -Math.max(...y_values) * 0.1, "red", 0, "left", 20, "Calibri", "bottom" );
+    tegnTekst( x_values[i], i-0.2, -Math.max(...y_values) * 0.1, "red", 0, "left", 20, "Calibri", "bottom" );
   }
-  tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
+  tegnAkser(x_axis, y_axis, 0, 1, false, true, false);
 }
 
 function draw_n_highest_value(n, x_values, y_values, x_axis, y_axis, canvas ) {
@@ -151,6 +161,8 @@ function get_average_num_values_pair_arrays(name_values, num_values) {
 
   //frequency array stores how many times we add to value array
   //value array stores the sum of all the unique num values
+  
+  
   const frequency_array = new Array(unique_name_values.length).fill(0);
   const value_array = new Array(unique_name_values.length).fill(0);
   const average_array = [];
