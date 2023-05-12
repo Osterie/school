@@ -77,7 +77,6 @@ async function main(csv) {
   draw_data_months(starting_date, duration, months_for_data, average_2d_array, "canvas4");
 
   const average_durations_array = get_average_num_values_pair_arrays(ending_stations, duration)
-  console.log(average_durations_array)
   draw_n_highest_value(3, average_durations_array[0], average_durations_array[1], "End Station ID", "Average Duration Seconds", "canvas5")
 }
 
@@ -93,10 +92,10 @@ function draw_bar_chart(x_values, y_values, x_axis, y_axis, canvas) {
   tegnAkser(x_axis, y_axis, 0, 1, true, true, false);
 }
 
-function draw_n_highest_value(n, x_values, y_values, x_axis, y_axis, canvas ) {
-  const n_largest_pair_values = get_n_extreme_values(x_values, y_values, n, true);
-  const n_largest_name_values = n_largest_pair_values[0];
-  const n_largest_num_values = n_largest_pair_values[1];
+function draw_n_highest_value(n, num_value, name_value, x_axis, y_axis, canvas ) {
+  const n_largest_pair_values = get_n_extreme_values(num_value, name_value, n, true);
+  const n_largest_num_values = n_largest_pair_values[0];
+  const n_largest_name_values = n_largest_pair_values[1];
 
   tegnBrukCanvas(canvas);
   draw_bar_chart( n_largest_name_values, n_largest_num_values, x_axis, y_axis, canvas );
@@ -169,10 +168,10 @@ function get_n_frequency_elements(array, n, is_most_frequent) {
   //frequency of itself in the frequency array (same index)
   const sorted_set = get_unique_values_sorted(array);
   const frequency_array = create_sorted_frequency_array(array);
-  return get_n_extreme_values(sorted_set, frequency_array, n, is_most_frequent)
+  return get_n_extreme_values(frequency_array, sorted_set, n, is_most_frequent)
 }
 
-function get_n_extreme_values(name_array, num_array, n, is_largest) { 
+function get_n_extreme_values(num_array, name_array, n, is_largest) { 
   const n_num_values = [];
   const n_name_values = [];
 
