@@ -1,0 +1,133 @@
+#head { height: 40px; }
+
+.errors { margin: 10px 0; color: red; font-weight: bold; }
+.errors LI { margin: 10px 0; }
+.msg {  margin: 10px 0; color: green; font-weight: bold; }
+
+#contact_form p strong { margin: 5px 5px 8px 0; display: block; }
+
+.common-typos .ad-leaderboard {
+  margin: 11px 0 8px;
+}
+
+.input-style {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  height: 20px;
+  border: 2px solid rgb(117,188,220);
+  font-size: 13px;
+  margin: 0 5px 0 0;
+  padding: 0 5px;
+}
+
+/* added due small inputs on contact page */
+.input-style {
+  height: 30px; 
+}
+
+.big-button {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  height: 46px;
+  background: rgb(117,188,220);
+  color: white;
+  font-size: 20px;
+}
+
+.alert ul {
+  padding-left: 15px;
+}
+
+/* Phones */
+@media screen and (max-width: 767px) {
+  #head { height: 15px; }
+}
+
+body.dictionary #head, body.grammar #head, body.user #head {
+  height: 0;
+}
+
+#columnchart_values {
+  min-height: 400px;
+}
+
+.breadcrumb.search {
+  margin-top: -22px;
+}
+
+.dictionary .breadcrumb.search, .grammar .breadcrumb.search, .user .breadcrumb.search {
+  margin-top: 0;
+}
+
+.progress {
+  margin: 10px 0 8px;
+}
+
+/* user page */
+
+.or {
+  font-size: 30px;
+  margin: 50px 0 0 -25px;
+  text-align: center;
+}
+.social-login-btns .btn {
+  text-shadow: none;
+  line-height: 30px;
+  color: white;
+  width: 295px;
+  text-align: left;
+}
+.social-login-btns .fa {
+  float: left;
+  font-size: 30px;
+  width: 40px;
+}
+.social-login-btns.sm .fa {
+  float: left;
+  font-size: 20px;
+  width: 24px;
+}
+.social-login-btns.sm A {
+  font-weight: normal;
+}
+.social-login-btns .google {
+  background: #CF4830;
+}
+.social-login-btns .facebook {
+  background: #3e5b97;
+}
+.social-login-btns .twitter {
+  background: #2aa7de;
+}
+.social-login-btns .windows {
+  background: #454545;
+}
+.jumbotron.login {
+  margin-bottom: 10px;
+}
+
+.input-group.user-info {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Phones */
+@media screen and (max-width: 767px) {
+  .jumbotron.login {
+    padding: 15px 15px;
+  }
+  .jumbotron.login p {
+    font-size: 14px;
+  }
+  .or {
+      font-size: 25px;
+      margin: 0 0 20px;
+  }  
+  .social-login-btns .btn {
+    width: 100%;
+  }
+}
