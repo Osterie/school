@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="no">
+
+<head>
+
+	<meta charset="utf-8" />
+	<title> Graphical Playground </title>
+	<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+	<a href="../index.html" id='back'>Back</a>
+
+
+	<div id = "informative_title">
+		<p> Write an expression with X and Y(only capitalized letters) (Can use Math.sin(X)*100 and such).  Zoom using mouse and drag, hold ctrl and click to unzoom</p>
+	</div>
+    
+	<div id = "container_all_content">
+
+		<div id = "container_paramaters">
+
+			<div id ='color_components' class = "paramater_container">
+
+				<h4> Write expressions for Hue, Saturation and Lightness!</h4>
+				<label for="hue_expression">Hue:</label>
+				<input id='hue_expression' placeholder="Hue" cols="40" rows="5" value="X*Y">
+				<label for="saturation_expression">Saturation:</label>
+				<input id='saturation_expression' placeholder="Saturation" cols="40" rows="5" value="75">
+				<label for="lightness_expression">lightness:</label>
+				<input id='lightness_expression' placeholder="Lightness" cols="40" rows="5" value="50">
+				
+			</div>
+			
+			<div id ='size_manipulation' class = "paramater_container"> 
+				
+				<h4> Change the size of each pixel, lower size or upper size </h4>
+				<label for="size_lower">size lower:</label>
+				<input id='size_lower' type='number' placeholder="Size Lower" value='-10'>
+				<label for="size_upper">size upper:</label>
+				<input id='size_upper' type='number' placeholder="Size Upper" value='10' oninput="this.value = ~~(this.value);">
+				<label for="pixel_ratio">pixel ratio:</label>
+				<input id='pixel_ratio' type="number" placeholder="Pixel Ratio" value="1" min="0.1" step="0.1">
+				
+			</div>
+			
+			<div id = "variable_container" class = "paramater_container">
+				
+				<p> This is an optional, custom variable field, if you want a custom variable, please fill all fields!</p>
+				<p id = 'custom_variable_name'></p>
+				<p id = custom_variable_error_handler></p>
+				<label for="pixel_ratio">From:</label> 
+				<input id = 'custom_variable_from' type="number" placeholder="From" value="1">
+				<label for="pixel_ratio">To:</label> 
+				<input id = 'custom_variable_to' type="number" placeholder="To"> 
+				<label for="pixel_ratio">Step:</label> 
+				<input id = 'custom_variable_step' type="number" placeholder="Step" min="0"> 
+				<label for="pixel_ratio">Frequency:</label> 
+				<input id = 'custom_variable_frequency' type="number" placeholder="Frequency" max="5" min="0">
+				<button id = 'custom_variable_activate'> Activate Variable And Start Loop </button> 
+				<button id = 'custom_variable_stop'> Stop Loop </button> 
+			
+			</div>
+
+			<button id='upscale'> upscale </button>
+
+		</div>
+
+
+		<div id = "container_canvas">
+			
+			<p> Use mouse to zoom, hold ctrl and click to unzoom </p>
+			<canvas id="canvas" width="500px" height="500px"> </canvas> <br>
+		
+		</div>
+
+	</div>
+
+	<script src="./library/functions.js"></script>
+	<script src="./library/classdefinitions.js"></script>
+	<script src="script.js"> </script>
+
+</body>
+
+</html>
