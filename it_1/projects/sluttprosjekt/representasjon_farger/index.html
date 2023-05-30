@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Meg selv </title>
+
+    <link rel="stylesheet" type="text/css" href="../global_style.css" />
+	<link rel="stylesheet" type="text/css" href="style.css" />
+
+</head>
+
+<body>
+
+	<a href="../index.html" id='back'>Back</a>
+
+    <div>
+        <h1 id="title"> Digital representasjon av farger </h1>
+    </div>
+
+    <div id="fargemodeller_table">
+        <h2> Ulike fargemodeller som blir brukt: </h2>
+        <ul>
+            <li>HSL</li>
+            <li>RGB</li>
+            <li>HEX (ikke en fargemodell i seg selv)</li>
+        </ul>
+    </div>
+
+
+    <div id="container_container">
+        
+        <div class="color_model_container">
+            
+            <h2> HSL </h2>
+            <p> HSL står for "Hue, Saturation, Lightness"</p>
+            
+            <h3> Hue </h3>
+            <p> Hue refererer til selv fargen, og er representert med et tall fra og med 0 til og med 360. 
+                Men det som er spesielt med hue er at den kan ha høyere verdier enn 360, men da blir verdien justert til å passe innen 0-360 grensen.
+                Dette kan vi se ut i fra dette bildet, vi fortsetter bare rundt i en sirkel: </p>
+        
+            <img src="./imgs/hue_fargehjul.png" alt="fargehjul">
+        
+            <h3> Saturation </h3>
+            <p> Saturation påvirker intensiteten til fargen. Saturation har en prosentverdi som går fra og med 0 til og med 100, hvor 0 gir en helt gråtonet farge, og 100 gir en helt utmettet farge.</p>
+        
+            <h3> Lightness </h3>
+            <p> Som navnet tilsier, påvirker lightness lysheten til fargen. Som saturation har lightness en prosentverdi som går fra og med 0 til og med 100.
+                0 gir svart, 50 gir den originale fargen, mens 100 gir hvit
+            </p>
+        </div>
+    
+        <div class="color_model_container">
+    
+            <h2> RGB </h2>
+            <p> RGB står for "Rød, Grønn, Blå", og er en additiv fargemodell. Dette vil si at for å lage en farge kombinerer man 
+                ulike mengder av rød, grønn og blå for å lage den ønskede fargen. Den er i stor grad brukt i maskin grafikk og display.
+                Hver verdi av rød, grønn og blå blir representert med en byte, som er 8 bits. Siden datamaskiner bruker binært til å 
+                lagre informasjon, vil dette si hver verdi av rød, grønn og blå blir representert med et tall som er fra og med 0 til og med 255.
+            </p>
+
+            <img src="./imgs/rgb.png" alt="rgb fargemodell">
+    
+            <h2> HEX (ikke en fargemodell i seg selv) </h2>
+            <p> Hexadesmial er ikke en farge modell, men er allikevel nyttig å vite om. HEX bruker 16-tallsystemet til å representere farger. HEX baserer seg på RGB farge modellen for å lage farger. For å lage en farge kombineres tre par med hexidesimale verdier for rød, grønn og blå.
+                Det hexadesmilae tallsystemt bruker tallene 0 til 9, i tillegg til A, B, C, D, E og F for å lage tall. Hver par verdi går fra 00 til FF, hvor 00 er minst mulig farge og FF er mest mulig farge.
+                En fordel med HEX er at den gir en menneksevennlig og kompakt måte å lese farge representasjoner.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div id="container_table">
+        <h2> Oppsummering og egenskaper</h2>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Egenskaper</th>
+                    <th>HSL</th>
+                    <th>RGB</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Additiv</td>
+                    <td>NEI</td>
+                    <td>JA</td>
+                </tr>
+                <tr class="active-row">
+                    <td>Subtraktive</td>
+                    <td>NEI</td>
+                    <td>NEI</td>
+                </tr>
+                <tr class="active-row">
+                    <td>Lett å lage ønsket farge</td>
+                    <td>JA</td>
+                    <td>NEI</td>
+                </tr>
+                <tr class="active-row">
+                    <td> Populære bruks områder </td>
+                    <td> Grafisk design </td>
+                    <td> Digitale skjermer og datagrafikk </td>
+                </tr>
+                <tr class="active-row">
+                    <td> Gøye å lære om </td>
+                    <td> JA </td>
+                    <td> NEI </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>

@@ -1,0 +1,15 @@
+li{
+    margin-top: 10px;
+}
+
+#container_containers{
+    display: flex;
+}
+
+.learned_container{
+    flex-grow: 1;
+}
+
+.informative_text{
+    font-weight: bold;
+}

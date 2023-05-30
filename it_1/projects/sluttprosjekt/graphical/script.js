@@ -170,12 +170,6 @@ function handle_canvas_event_zoom(event) {
   }
 }
 
-
-
-
-
-
-
 function custom_variable_handler(){
 
   const custom_variable_start = parseFloat(document.getElementById('custom_variable_from').value)
@@ -212,37 +206,3 @@ function custom_variable_handler(){
     update_image(canvas, resizing_img)
   }, 1000/custom_variable_frequency);
 }
-
-//!HUGE? TODO: use webworkers, not viable? passing information between webworker and main script removes class
-//TODO: !check out complex plotting or whatever, make an option to change to using complex numbers?
-
-//TODO: create a settings button where settings can be changed/toggled?
-//TODO:! add a button for the option to redraw the black background, creates very interesting patterns when the size of the pixels are < 1
-//TODO: make an option to turn on the sawtooth pattern for hue too? and create lower and upper limit, this.hue =  Math.abs(( (100 + Function("return " + hue_expression)()) % 200) - 100)
-//!TODO: Create a option to toggle between clicking a button to run script and running script when a variable is changed.
-//!TODO: quality mode and fast mode, ise ctx.drawimage method for fast and redraw every pixel every time for fast mode.
-//TODO: save settings in localstorage
-
-
-//TODO: when changing size, the direction of which the new image is drawn in is wrong..
-//TODO: Add more color models, i.e rgb and such
-//TODO: Make it possible to click a button, or hold down shift, or something, and then be able to hover a pixel, get the position and color(both see the color as a larger image and see the values for the color)?
-
-//*------------------------------------------------COMPLETED---------------------------------------
-//* Create variable for width and height of pixels(or just size of pixels), must change array size to compensate
-//* Create vector to angle function and make it usable in hue, saturation and color variables. Works for radians and degrees!
-//* Make a smooth tranistion for saturation and lighness
-//* Maybe will have to, but make a "enhance" button, if the image is unclear, it should be possible to redraw every pixel
-//* It is probably faster/more efficient to just change color of all pixels when changing color, instead of creating new pixels
-//* Use same draw image method for zoom_outline
-//* Fix: pixel_ratio creates a bug when changing size
-//* Fix: dont need to make new Image() everytime resizing_img is declared or whatever
-//* No point in drawing everything of only a small part is shown,
-//* make it so that you can only draw complete pixels with zoom_guider, and only draw and show the pixels "selected"
-//* HUGE create own functions and such instead of using fulabl libraries. Functions to be made self include : drawFyltRektangel, drawfirkant, drawBrukXY, drawBrukBakgrunn, drawBrukSynsfelt, drawBrukCanvas
-//* size_lower_changed and size_upper_changed turned into one function
-//* WONTFIX Minor fix in the new_pixels function, it creates the corner piece twice
-//* make it possible to zoom in on inzoomed image.
-//* made zooming more general
-//* made functions into methods
-//* created option to make a variable that changes every second f.eks. goes from 1 to 10 then 10 to 1, call it n and then n can be used in the color chooser
