@@ -35,7 +35,6 @@ class Square {
     this.lightness = Math.abs( ((100 + Function(`return ${expression.replace(/X/g, x).replace(/Y/g, y).replace(/N/g, n)}`)()) % 200) - 100 );
   }
 }
-
 class Square_matrix {
   constructor(canvas, hue, saturation, lightness) {
     this.canvas = canvas;
@@ -75,7 +74,7 @@ class Square_matrix {
       for (let y = start_y, runs = length; y <= runs; y++) {
         const color_x = x * this.pixel_ratio;
         const color_y = y * this.pixel_ratio;
-        const color_n = this.custom_variable * this.pixel_ratio
+        let color_n = this.custom_variable * this.pixel_ratio
 
         const hue = Function( `return ${this.hue_expression.replace(/X/g, color_x).replace(/Y/g, color_y).replace(/N/g, color_n)}` )();
         const saturation = Math.abs( ((100 + Function( `return + ${this.saturation_expression.replace(/X/g, color_x).replace(/Y/g, color_y).replace(/N/g, color_n)}` )()) % 200) - 100 );
